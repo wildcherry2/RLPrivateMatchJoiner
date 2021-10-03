@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "MatchJoinerBakkesComponent.h"
 
-/* Plugin Settings Window code here
+
 std::string MatchJoinerBakkesComponent::GetPluginName() {
-	return "MatchJoinerBakkesComponent";
+	return "Match Joiner";
 }
 
 void MatchJoinerBakkesComponent::SetImGuiContext(uintptr_t ctx) {
@@ -14,9 +14,8 @@ void MatchJoinerBakkesComponent::SetImGuiContext(uintptr_t ctx) {
 // This will show up in bakkesmod when the plugin is loaded at
 //  f2 -> plugins -> MatchJoinerBakkesComponent
 void MatchJoinerBakkesComponent::RenderSettings() {
-	ImGui::TextUnformatted("MatchJoinerBakkesComponent plugin settings");
+	ImGui::TextUnformatted("Match Joiner plugin settings");
 }
-*/
 
 /*
 // Do ImGui rendering here

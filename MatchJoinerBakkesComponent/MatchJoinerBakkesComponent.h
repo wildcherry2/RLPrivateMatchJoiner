@@ -8,7 +8,7 @@
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
 
-class MatchJoinerBakkesComponent: public BakkesMod::Plugin::BakkesModPlugin/*, public BakkesMod::Plugin::PluginSettingsWindow*//*, public BakkesMod::Plugin::PluginWindow*/
+class MatchJoinerBakkesComponent: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow/*, public BakkesMod::Plugin::PluginWindow*/
 {
 
 	//std::shared_ptr<bool> enabled;
@@ -18,13 +18,15 @@ class MatchJoinerBakkesComponent: public BakkesMod::Plugin::BakkesModPlugin/*, p
 	virtual void onUnload();
 	void createPrivateMatch(std::string name, std::string pass);
 	void joinPrivateMatch(std::string name, std::string pass);
+	void gotoPrivateMatch();
+	void setServerCvars();
 
 	// Inherited via PluginSettingsWindow
-	/*
+	
 	void RenderSettings() override;
 	std::string GetPluginName() override;
 	void SetImGuiContext(uintptr_t ctx) override;
-	*/
+	
 
 	// Inherited via PluginWindow
 	/*

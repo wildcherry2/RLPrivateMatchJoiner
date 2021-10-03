@@ -6,11 +6,22 @@ BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a pipe and c
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
+//for testing, comment out once pipe is implemented
+const std::string events = "0";
+const std::string name = "b12";
+const std::string pass = "b11";
+
 void MatchJoinerBakkesComponent::onLoad()
 {
 	_globalCvarManager = cvarManager;
 	cvarManager->log("Match joiner plugin loaded");
-	createPrivateMatch("b1000","8xma");
+	cvarManager->registerCvar("MJEventType","1","Set to 0 for create mode, 1 for join mode",true,true,0,true,1,false);
+	cvarManager->registerCvar("MJServerName", "default", "Enter the server name", true, false, false, false);
+	cvarManager->registerCvar("MJServerPass", "", "Enter the server password", true, false, false, false);
+	cvarManager->registerNotifier("matchjoiner", [this](std::vector<std::string> args) { //first arg is bool (true = join, false = create), next 2 are lobby info
+		setServerCvars();
+		},"", PERMISSION_ALL);
+	//createPrivateMatch("b1000","8xma");
 	//cvarManager->log("Plugin loaded!");
 
 	//cvarManager->registerNotifier("my_aweseome_notifier", [&](std::vector<std::string> args) {
@@ -50,15 +61,17 @@ void MatchJoinerBakkesComponent::onUnload()
 	cvarManager->log("Match joiner unloaded.");
 }
 
+//check that user is in freeplay or main menu (gamewrapper getonlinegame)
 void MatchJoinerBakkesComponent::createPrivateMatch(std::string name, std::string pass) {
 	MatchmakingWrapper* mm = new MatchmakingWrapper(true);
 	CustomMatchTeamSettings* blue = new CustomMatchTeamSettings();
 	CustomMatchTeamSettings* red = new CustomMatchTeamSettings();
 	CustomMatchSettings* cm = new CustomMatchSettings();
-	ServerWrapper* sw = &(gameWrapper->GetCurrentGameState()); //set num bots method here?
+	//GameWrapper* gw = &gameWrapper;
+	ServerWrapper sw = (gameWrapper->GetCurrentGameState());
 	
-	cm->GameTags = "?BotsNone"; //or NoBots
-	cm->MapName = "EuroStadium_P";
+	cm->GameTags = "BotsNone";
+	cm->MapName = "EuroStadium_P"; //map options
 	cm->ServerName = name;
 	cm->Password = pass;
 	cm->BlueTeamSettings = *blue;
@@ -82,4 +95,19 @@ void MatchJoinerBakkesComponent::joinPrivateMatch(std::string name, std::string 
 	mm->JoinPrivateMatch(name, pass);
 
 	delete mm;
+}
+
+//remember to add tab into rl functionality
+void MatchJoinerBakkesComponent::gotoPrivateMatch() {
+	if (cvarManager->getCvar("MJEventType").getBoolValue() == true) joinPrivateMatch(cvarManager->getCvar("MJServerName").getStringValue(), cvarManager->getCvar("MJServerPass").getStringValue());
+	else createPrivateMatch(cvarManager->getCvar("MJServerName").getStringValue(), cvarManager->getCvar("MJServerPass").getStringValue());
+}
+
+void MatchJoinerBakkesComponent::setServerCvars() {
+	//replace with pipe functionality, placeholder for now
+	//listen for changes on each cvar? define them with no defaults if so 
+	cvarManager->getCvar("MJEventType").setValue(events);
+	cvarManager->getCvar("MJServerName").setValue(name);
+	cvarManager->getCvar("MJServerPass").setValue(pass);
+	gotoPrivateMatch();
 }
