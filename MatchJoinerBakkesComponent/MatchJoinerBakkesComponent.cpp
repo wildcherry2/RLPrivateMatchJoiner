@@ -7,24 +7,18 @@ BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a pipe and c
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 MAPS maps;
-//for testing, comment out once pipe is implemented
-//const std::string events = "0";
-//const std::string name = "b12";
-//const std::string pass = "b11";
 
 void MatchJoinerBakkesComponent::onLoad()
 {
 	_globalCvarManager = cvarManager;
-	cvarManager->log("Match joiner plugin loaded");
 	cvarManager->registerCvar("MJEventType","1","Set to 0 for create mode, 1 for join mode",true,true,0,true,1,false);
 	cvarManager->registerCvar("MJServerName", "", "Enter the server name", true, false, false, false);
 	cvarManager->registerCvar("MJServerPass", "", "Enter the server password", true, false, false, false);
 	cvarManager->registerCvar("MJMap", maps.mannfield,"Enter internal map names (see MapsStruct.h for names)", true, false, false, false); //gonna want to save this choice
 	cvarManager->registerCvar("MJRegion", "", "Enter the region code", true, false, false, false);//add cvar for region choice
 	cvarManager->registerNotifier("MJGotoMatch", [this](std::vector<std::string> args) {
-		gotoPrivateMatch();//setServerCvars(); //listen for changes before this, maybe change above notifier
+		gotoPrivateMatch(); //listen for changes before this, maybe change/add above notifier
 		},"", PERMISSION_ALL);
-	//createPrivateMatch("b1000","8xma");
 
 }
 
@@ -39,7 +33,6 @@ void MatchJoinerBakkesComponent::createPrivateMatch(std::string name, std::strin
 	CustomMatchTeamSettings* blue = new CustomMatchTeamSettings();
 	CustomMatchTeamSettings* red = new CustomMatchTeamSettings();
 	CustomMatchSettings* cm = new CustomMatchSettings();
-	//GameWrapper* gw = &gameWrapper;
 	ServerWrapper sw = (gameWrapper->GetCurrentGameState());
 	Region reg = getRegion(region); //needs testing
 
@@ -77,15 +70,6 @@ void MatchJoinerBakkesComponent::gotoPrivateMatch() {
 	if (cvarManager->getCvar("MJEventType").getBoolValue() == true) joinPrivateMatch(cvarManager->getCvar("MJServerName").getStringValue(), cvarManager->getCvar("MJServerPass").getStringValue());
 	else createPrivateMatch(cvarManager->getCvar("MJServerName").getStringValue(), cvarManager->getCvar("MJServerPass").getStringValue(), cvarManager->getCvar("MJMap").getStringValue(), cvarManager->getCvar("MJRegion").getIntValue());
 }
-
-//void MatchJoinerBakkesComponent::setServerCvars() {
-//	//replace with pipe functionality, placeholder for now
-//	//listen for changes on each cvar? define them with no defaults if so 
-//	cvarManager->getCvar("MJEventType").setValue(events);
-//	cvarManager->getCvar("MJServerName").setValue(name);
-//	cvarManager->getCvar("MJServerPass").setValue(pass);
-//	gotoPrivateMatch();
-//}
 
 Region MatchJoinerBakkesComponent::getRegion(int region) {
 	switch (region) {

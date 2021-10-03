@@ -14,14 +14,12 @@ class MatchJoinerBakkesComponent: public BakkesMod::Plugin::BakkesModPlugin/*, p
 public:
 	//std::shared_ptr<bool> enabled;
 
-	//Boilerplate
 	virtual void onLoad();
 	virtual void onUnload();
 	void createPrivateMatch(std::string name, std::string pass, std::string map, int region);
 	void joinPrivateMatch(std::string name, std::string pass);
 	void gotoPrivateMatch();
 	Region getRegion(int region);
-	/*void setServerCvars();*/
 
 
 	// Inherited via PluginSettingsWindow
