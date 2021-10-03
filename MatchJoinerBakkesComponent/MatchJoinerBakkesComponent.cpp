@@ -7,19 +7,21 @@ BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a pipe and c
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
 //for testing, comment out once pipe is implemented
-const std::string events = "0";
-const std::string name = "b12";
-const std::string pass = "b11";
+//const std::string events = "0";
+//const std::string name = "b12";
+//const std::string pass = "b11";
 
 void MatchJoinerBakkesComponent::onLoad()
 {
 	_globalCvarManager = cvarManager;
+	MAPS map;
 	cvarManager->log("Match joiner plugin loaded");
 	cvarManager->registerCvar("MJEventType","1","Set to 0 for create mode, 1 for join mode",true,true,0,true,1,false);
 	cvarManager->registerCvar("MJServerName", "default", "Enter the server name", true, false, false, false);
 	cvarManager->registerCvar("MJServerPass", "", "Enter the server password", true, false, false, false);
+	cvarManager->registerCvar("MJMap", map.mannfield,"Enter internal map names (see the struct in the main header for names)", true, false, false, true);
 	cvarManager->registerNotifier("matchjoiner", [this](std::vector<std::string> args) { //first arg is bool (true = join, false = create), next 2 are lobby info
-		setServerCvars();
+		gotoPrivateMatch();//setServerCvars();
 		},"", PERMISSION_ALL);
 	//createPrivateMatch("b1000","8xma");
 
@@ -40,7 +42,7 @@ void MatchJoinerBakkesComponent::createPrivateMatch(std::string name, std::strin
 	ServerWrapper sw = (gameWrapper->GetCurrentGameState());
 	
 	cm->GameTags = "BotsNone";
-	cm->MapName = "EuroStadium_P"; //map options
+	cm->MapName = cvarManager->getCvar("MJMap").getStringValue(); //map options
 	cm->ServerName = name;
 	cm->Password = pass;
 	cm->BlueTeamSettings = *blue;
@@ -73,11 +75,12 @@ void MatchJoinerBakkesComponent::gotoPrivateMatch() {
 	else createPrivateMatch(cvarManager->getCvar("MJServerName").getStringValue(), cvarManager->getCvar("MJServerPass").getStringValue());
 }
 
-void MatchJoinerBakkesComponent::setServerCvars() {
-	//replace with pipe functionality, placeholder for now
-	//listen for changes on each cvar? define them with no defaults if so 
-	cvarManager->getCvar("MJEventType").setValue(events);
-	cvarManager->getCvar("MJServerName").setValue(name);
-	cvarManager->getCvar("MJServerPass").setValue(pass);
-	gotoPrivateMatch();
-}
+//void MatchJoinerBakkesComponent::setServerCvars() {
+//	//replace with pipe functionality, placeholder for now
+//	//listen for changes on each cvar? define them with no defaults if so 
+//	cvarManager->getCvar("MJEventType").setValue(events);
+//	cvarManager->getCvar("MJServerName").setValue(name);
+//	cvarManager->getCvar("MJServerPass").setValue(pass);
+//	gotoPrivateMatch();
+//}
+

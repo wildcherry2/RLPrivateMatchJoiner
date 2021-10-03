@@ -3,20 +3,20 @@
 #include "MatchJoinerBakkesComponent.h"
 
 
-std::string MatchJoinerBakkesComponent::GetPluginName() {
-	return "Match Joiner";
-}
-
-void MatchJoinerBakkesComponent::SetImGuiContext(uintptr_t ctx) {
-	ImGui::SetCurrentContext(reinterpret_cast<ImGuiContext*>(ctx));
-}
-
-// Render the plugin settings here
-// This will show up in bakkesmod when the plugin is loaded at
-//  f2 -> plugins -> MatchJoinerBakkesComponent
-void MatchJoinerBakkesComponent::RenderSettings() {
-	ImGui::TextUnformatted("Match Joiner plugin settings");
-}
+//std::string MatchJoinerBakkesComponent::GetPluginName() {
+//	return "Match Joiner";
+//}
+//
+//void MatchJoinerBakkesComponent::SetImGuiContext(uintptr_t ctx) {
+//	ImGui::SetCurrentContext(reinterpret_cast<ImGuiContext*>(ctx));
+//}
+//
+//// Render the plugin settings here
+//// This will show up in bakkesmod when the plugin is loaded at
+////  f2 -> plugins -> MatchJoinerBakkesComponent
+//void MatchJoinerBakkesComponent::RenderSettings() {
+//	ImGui::TextUnformatted("Match Joiner plugin settings");
+//}
 
 /*
 // Do ImGui rendering here
