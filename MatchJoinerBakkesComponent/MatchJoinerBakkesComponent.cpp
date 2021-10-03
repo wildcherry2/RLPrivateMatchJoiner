@@ -6,7 +6,7 @@
 BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a pipe and creates/joins a private match", plugin_version, PLUGINTYPE_FREEPLAY)
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
-MatchJoinerBakkesComponent::MAPS maps;
+MAPS maps;
 //for testing, comment out once pipe is implemented
 //const std::string events = "0";
 //const std::string name = "b12";
@@ -19,7 +19,7 @@ void MatchJoinerBakkesComponent::onLoad()
 	cvarManager->registerCvar("MJEventType","1","Set to 0 for create mode, 1 for join mode",true,true,0,true,1,false);
 	cvarManager->registerCvar("MJServerName", "", "Enter the server name", true, false, false, false);
 	cvarManager->registerCvar("MJServerPass", "", "Enter the server password", true, false, false, false);
-	cvarManager->registerCvar("MJMap", maps.mannfield,"Enter internal map names (see the struct in the main header for names)", true, false, false, false); //gonna want to save this choice
+	cvarManager->registerCvar("MJMap", maps.mannfield,"Enter internal map names (see MapsStruct.h for names)", true, false, false, false); //gonna want to save this choice
 	cvarManager->registerCvar("MJRegion", "", "Enter the region code", true, false, false, false);//add cvar for region choice
 	cvarManager->registerNotifier("MJGotoMatch", [this](std::vector<std::string> args) {
 		gotoPrivateMatch();//setServerCvars(); //listen for changes before this, maybe change above notifier
@@ -41,7 +41,7 @@ void MatchJoinerBakkesComponent::createPrivateMatch(std::string name, std::strin
 	CustomMatchSettings* cm = new CustomMatchSettings();
 	//GameWrapper* gw = &gameWrapper;
 	ServerWrapper sw = (gameWrapper->GetCurrentGameState());
-	Region reg = getRegion(region);
+	Region reg = getRegion(region); //needs testing
 
 	cm->GameTags = "BotsNone";
 	cm->MapName = map;
