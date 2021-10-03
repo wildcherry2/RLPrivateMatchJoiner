@@ -1,3 +1,4 @@
+//https://bakkesmodwiki.github.io/bakkesmod_api/
 #pragma once
 
 #include "bakkesmod/plugin/bakkesmodplugin.h"
@@ -9,15 +10,16 @@ constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_M
 
 class MatchJoinerBakkesComponent: public BakkesMod::Plugin::BakkesModPlugin/*, public BakkesMod::Plugin::PluginSettingsWindow*//*, public BakkesMod::Plugin::PluginWindow*/
 {
-
+public:
 	//std::shared_ptr<bool> enabled;
 
 	//Boilerplate
 	virtual void onLoad();
 	virtual void onUnload();
-	void createPrivateMatch(std::string name, std::string pass);
+	void createPrivateMatch(std::string name, std::string pass, std::string map, int region);
 	void joinPrivateMatch(std::string name, std::string pass);
 	void gotoPrivateMatch();
+	Region getRegion(int region);
 	/*void setServerCvars();*/
 
 	//https://github.com/Stanbroek/RocketPlugin/blob/main/source/RocketPlugin/RLConstants.inc
