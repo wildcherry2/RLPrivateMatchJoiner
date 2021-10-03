@@ -16,6 +16,8 @@ class MatchJoinerBakkesComponent: public BakkesMod::Plugin::BakkesModPlugin/*, p
 	//Boilerplate
 	virtual void onLoad();
 	virtual void onUnload();
+	void createPrivateMatch(std::string name, std::string pass);
+	void joinPrivateMatch(std::string name, std::string pass);
 
 	// Inherited via PluginSettingsWindow
 	/*

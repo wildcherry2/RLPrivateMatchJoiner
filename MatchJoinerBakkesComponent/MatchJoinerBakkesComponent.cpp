@@ -2,13 +2,15 @@
 #include "MatchJoinerBakkesComponent.h"
 
 
-BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "write a plugin description here", plugin_version, PLUGINTYPE_FREEPLAY)
+BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a pipe and creates/joins a private match", plugin_version, PLUGINTYPE_FREEPLAY)
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
 void MatchJoinerBakkesComponent::onLoad()
 {
 	_globalCvarManager = cvarManager;
+	cvarManager->log("Match joiner plugin loaded");
+	createPrivateMatch("b1000","8xma");
 	//cvarManager->log("Plugin loaded!");
 
 	//cvarManager->registerNotifier("my_aweseome_notifier", [&](std::vector<std::string> args) {
@@ -45,4 +47,39 @@ void MatchJoinerBakkesComponent::onLoad()
 
 void MatchJoinerBakkesComponent::onUnload()
 {
+	cvarManager->log("Match joiner unloaded.");
+}
+
+void MatchJoinerBakkesComponent::createPrivateMatch(std::string name, std::string pass) {
+	MatchmakingWrapper* mm = new MatchmakingWrapper(true);
+	CustomMatchTeamSettings* blue = new CustomMatchTeamSettings();
+	CustomMatchTeamSettings* red = new CustomMatchTeamSettings();
+	CustomMatchSettings* cm = new CustomMatchSettings();
+	ServerWrapper* sw = &(gameWrapper->GetCurrentGameState()); //set num bots method here?
+	
+	cm->GameTags = "?BotsNone"; //or NoBots
+	cm->MapName = "EuroStadium_P";
+	cm->ServerName = name;
+	cm->Password = pass;
+	cm->BlueTeamSettings = *blue;
+	cm->OrangeTeamSettings = *red;
+	cm->bClubServer = false;
+
+	//while (sw->IsNull()) {
+		mm->CreatePrivateMatch(Region::USE,*cm);
+		//add 10-15 sec delay before trying again/check to be on menu, black screen edge case?
+	//}
+	
+
+	delete mm;
+	delete blue;
+	delete red;
+	delete cm;
+}
+
+void MatchJoinerBakkesComponent::joinPrivateMatch(std::string name, std::string pass) {
+	MatchmakingWrapper* mm = new MatchmakingWrapper(true);
+	mm->JoinPrivateMatch(name, pass);
+
+	delete mm;
 }
