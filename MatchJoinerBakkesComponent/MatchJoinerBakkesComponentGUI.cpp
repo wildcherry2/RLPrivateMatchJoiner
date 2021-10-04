@@ -1,23 +1,47 @@
 //https://bakkesmodwiki.github.io/bakkesmod_api/
 #include "pch.h"
 #include "MatchJoinerBakkesComponent.h"
+#include <cstring>
+#include <string>
 
 
-//std::string MatchJoinerBakkesComponent::GetPluginName() {
-//	return "Match Joiner";
-//}
-//
-//void MatchJoinerBakkesComponent::SetImGuiContext(uintptr_t ctx) {
-//	ImGui::SetCurrentContext(reinterpret_cast<ImGuiContext*>(ctx));
-//}
-//
-//// Render the plugin settings here
-//// This will show up in bakkesmod when the plugin is loaded at
-////  f2 -> plugins -> MatchJoinerBakkesComponent
-//void MatchJoinerBakkesComponent::RenderSettings() {
-//	ImGui::TextUnformatted("Match Joiner plugin settings");
-//}
+std::string MatchJoinerBakkesComponent::GetPluginName() {
+	return "Match Joiner Settings";
+}
 
+void MatchJoinerBakkesComponent::SetImGuiContext(uintptr_t ctx) {
+	ImGui::SetCurrentContext(reinterpret_cast<ImGuiContext*>(ctx));
+}
+
+void MatchJoinerBakkesComponent::RenderSettings() {
+	renderModEnabledCheckbox();
+	renderMapCombobox();
+	
+}
+
+void MatchJoinerBakkesComponent::renderModEnabledCheckbox() {
+	CVarWrapper cv = cvarManager->getCvar("MJModEnabled");
+	if (!cv) return;
+	bool enabled = cv.getBoolValue();
+
+	if (ImGui::Checkbox("Enabled", &enabled), true) 
+		cv.setValue(enabled);
+}
+
+void MatchJoinerBakkesComponent::renderMapCombobox() {
+	
+	CVarWrapper cv = cvarManager->getCvar("MJExtMapNameSelection");
+	if (!cv) return;
+	int current = cv.getIntValue();
+	if(ImGui::Combo("Maps",&current,map_normalnames,IM_ARRAYSIZE(map_normalnames))) cv.setValue(current);
+	//cvarManager->log(std::string(map_normalnames[current]) + " is " + map_codenames[current]);
+}
+
+//void MatchJoinerBakkesComponent::getMapArray(char** maps) {
+//	char* test1[4] = "test";
+//	std::string test2 = "test2";
+//	maps[0] = test1;
+//}
 /*
 // Do ImGui rendering here
 void MatchJoinerBakkesComponent::Render()

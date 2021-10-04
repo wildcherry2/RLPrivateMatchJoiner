@@ -6,7 +6,8 @@
 BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a pipe and creates/joins a private match", plugin_version, PLUGINTYPE_FREEPLAY)
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
-MAPS maps;
+//MAPS maps;
+
 
 void MatchJoinerBakkesComponent::onLoad()
 {
@@ -14,8 +15,10 @@ void MatchJoinerBakkesComponent::onLoad()
 	cvarManager->registerCvar("MJEventType","1","Set to 0 for create mode, 1 for join mode",true,true,0,true,1,false);
 	cvarManager->registerCvar("MJServerName", "", "Enter the server name", true, false, false, false);
 	cvarManager->registerCvar("MJServerPass", "", "Enter the server password", true, false, false, false);
-	cvarManager->registerCvar("MJMap", maps.mannfield,"Enter internal map names (see MapsStruct.h for names)", true, false, false, false); //gonna want to save this choice
-	cvarManager->registerCvar("MJRegion", "", "Enter the region code", true, false, false, false);//add cvar for region choice
+	cvarManager->registerCvar("MJModEnabled", "1", "Is mod enabled?", false, true, 0, true, 1, false);
+	cvarManager->registerCvar("MJMap", map_codenames[17],"Enter internal map names (see MapsStruct.h for names)", true, false, false, true); //gonna want to save this choice
+	cvarManager->registerCvar("MJRegion", "", "Enter the region code (0-9)", true, true, 0, true, 9, false);
+	cvarManager->registerCvar("MJExtMapNameSelection", "18", "Enter map name", true, false, false, false);
 	cvarManager->registerNotifier("MJGotoMatch", [this](std::vector<std::string> args) {
 		gotoPrivateMatch(); //listen for changes before this, maybe change/add above notifier
 		},"", PERMISSION_ALL);
@@ -46,7 +49,7 @@ void MatchJoinerBakkesComponent::createPrivateMatch(std::string name, std::strin
 
 	//while (sw->IsNull()) {
 		mm->CreatePrivateMatch(reg,*cm);
-		//add 10-15 sec delay before trying again/check to be on menu, black screen edge case?
+		//add 10-15 sec delay before trying again/check to be on menu, black screen edge case (for testing, invalid server settings force black screens)
 	//}
 	
 

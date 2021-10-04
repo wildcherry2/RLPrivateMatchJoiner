@@ -122,7 +122,7 @@
     <ClInclude Include="version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MapsStruct.h">
+    <ClInclude Include="MapsStruct2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
