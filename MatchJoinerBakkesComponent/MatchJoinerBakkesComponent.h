@@ -28,8 +28,15 @@ public:
 	std::string GetPluginName() override;
 	void SetImGuiContext(uintptr_t ctx) override;
 	void renderModEnabledCheckbox();
-	void renderMapCombobox();
+	void renderMapCombobox(std::string name);
+	void renderRegionCombobox(std::string name);
+	void renderQuickWindowBtn();
+
+	void renderQuickWindow();
+	void renderQWNameField();
+	void renderQWPassField();
 	
+	//name arrays, could use std::map, but this is more efficient
 	const std::string map_codenames[35] = {
 		"Underwater_P",
 		"Park_P",
@@ -67,7 +74,6 @@ public:
 		"wasteland_s_p",
 		"wasteland_Night_S_P"
 	};
-
 	const char* map_normalnames[35] = {
 		"Aquadome",
 		"Beckwith Park",
@@ -104,6 +110,18 @@ public:
 		"Utopia Coliseum (Snowy)",
 		"Wasteland",
 		"Wasteland (Night)"
+	};
+	const char* region_names[10] = {
+		"US-East (USE)",
+		"Europe (EU)",
+		"US-West (USW)",
+		"Asia SE-Mainland (ASC)",
+		"Asia SE-Maritime (ASM)",
+		"Asia East (JPN)",
+		"Middle East (ME)",
+		"Oceania (OCE)",
+		"South Africa (SAF)",
+		"South America (SAM)"
 	};
 
 	// Inherited via PluginWindow

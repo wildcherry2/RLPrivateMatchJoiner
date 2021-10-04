@@ -15,7 +15,16 @@ void MatchJoinerBakkesComponent::SetImGuiContext(uintptr_t ctx) {
 
 void MatchJoinerBakkesComponent::RenderSettings() {
 	renderModEnabledCheckbox();
-	renderMapCombobox();
+	renderMapCombobox("Default map when creating private matches");
+	renderRegionCombobox("Default region when creating private matches");
+	renderQuickWindowBtn();
+
+
+	//this block will compose the window, in f2 menu for now
+	/*cvarManager->getCvar("MJIsQuickMatchWindowEnabled").addOnValueChanged([this]{
+		
+		}));*/
+
 	
 }
 
@@ -24,17 +33,54 @@ void MatchJoinerBakkesComponent::renderModEnabledCheckbox() {
 	if (!cv) return;
 	bool enabled = cv.getBoolValue();
 
-	if (ImGui::Checkbox("Enabled", &enabled), true) 
-		cv.setValue(enabled);
+	if (ImGui::Checkbox("Enabled", &enabled), true) cv.setValue(enabled);
 }
 
-void MatchJoinerBakkesComponent::renderMapCombobox() {
+void MatchJoinerBakkesComponent::renderMapCombobox(std::string name) {
 	
 	CVarWrapper cv = cvarManager->getCvar("MJExtMapNameSelection");
 	if (!cv) return;
 	int current = cv.getIntValue();
-	if(ImGui::Combo("Maps",&current,map_normalnames,IM_ARRAYSIZE(map_normalnames))) cv.setValue(current);
+	if(ImGui::Combo(name.c_str(),&current,map_normalnames,IM_ARRAYSIZE(map_normalnames))) cv.setValue(current);
 	//cvarManager->log(std::string(map_normalnames[current]) + " is " + map_codenames[current]);
+	//tooltip saying this is default
+}
+
+void MatchJoinerBakkesComponent::renderRegionCombobox(std::string name){
+	CVarWrapper cv = cvarManager->getCvar("MJRegion");
+	if (!cv) return;
+	int current = cv.getIntValue();
+	if (ImGui::Combo(name.c_str(), &current, region_names, IM_ARRAYSIZE(region_names))) cv.setValue(current);
+}
+
+void MatchJoinerBakkesComponent::renderQuickWindowBtn() {
+	CVarWrapper cv = cvarManager->getCvar("MJIsQuickMatchWindowEnabled");
+	if (!cv) return;
+	bool enabled = cv.getBoolValue();
+
+	if (ImGui::Button("Toggle Quick Private Match Window")) {
+		enabled = !enabled;
+		if (enabled) {
+			renderQuickWindow();
+		}
+		//else close, add on to sub components a bool that can turn on/off components, less functions
+		cv.setValue(enabled);
+	}
+}
+
+void MatchJoinerBakkesComponent::renderQuickWindow(){
+	renderQWNameField();
+	renderQWPassField();
+	renderMapCombobox("Map");
+	renderRegionCombobox("Region");
+}
+
+void MatchJoinerBakkesComponent::renderQWNameField() {
+
+}
+
+void MatchJoinerBakkesComponent::renderQWPassField() {
+
 }
 
 //void MatchJoinerBakkesComponent::getMapArray(char** maps) {

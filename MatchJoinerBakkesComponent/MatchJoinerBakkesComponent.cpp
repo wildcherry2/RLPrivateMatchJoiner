@@ -17,8 +17,9 @@ void MatchJoinerBakkesComponent::onLoad()
 	cvarManager->registerCvar("MJServerPass", "", "Enter the server password", true, false, false, false);
 	cvarManager->registerCvar("MJModEnabled", "1", "Is mod enabled?", false, true, 0, true, 1, false);
 	cvarManager->registerCvar("MJMap", map_codenames[17],"Enter internal map names (see MapsStruct.h for names)", true, false, false, true); //gonna want to save this choice
-	cvarManager->registerCvar("MJRegion", "", "Enter the region code (0-9)", true, true, 0, true, 9, false);
+	cvarManager->registerCvar("MJRegion", "0", "Enter the region code (0-9)", true, true, 0, true, 9, false);
 	cvarManager->registerCvar("MJExtMapNameSelection", "18", "Enter map name", true, false, false, false);
+	cvarManager->registerCvar("MJIsQuickMatchWindowEnabled", "0", "Toggles quick private match join/create window", true, true, 0, true, 1, false); //change to notifier
 	cvarManager->registerNotifier("MJGotoMatch", [this](std::vector<std::string> args) {
 		gotoPrivateMatch(); //listen for changes before this, maybe change/add above notifier
 		},"", PERMISSION_ALL);
