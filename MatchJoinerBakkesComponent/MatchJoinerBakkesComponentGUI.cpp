@@ -1,4 +1,5 @@
 //https://bakkesmodwiki.github.io/bakkesmod_api/
+//https://pthom.github.io/imgui_manual_online/manual/imgui_manual.html
 #include "pch.h"
 #include "MatchJoinerBakkesComponent.h"
 #include <cstring>
@@ -17,9 +18,16 @@ void MatchJoinerBakkesComponent::RenderSettings() {
 	renderModEnabledCheckbox();
 	renderMapCombobox("Default map when creating private matches");
 	renderRegionCombobox("Default region when creating private matches");
-	renderQuickWindowBtn();
+	//renderQuickWindow();
+	
+	renderMapCombobox("Map");
+	renderRegionCombobox("Region");
+	renderQWNameField();
+	renderQWPassField();
+	renderQWCreate();
+	renderQWJoin();
 
-
+	//line 3267 in the demo can set the text on the left 
 	//this block will compose the window, in f2 menu for now
 	/*cvarManager->getCvar("MJIsQuickMatchWindowEnabled").addOnValueChanged([this]{
 		
@@ -53,34 +61,37 @@ void MatchJoinerBakkesComponent::renderRegionCombobox(std::string name){
 	if (ImGui::Combo(name.c_str(), &current, region_names, IM_ARRAYSIZE(region_names))) cv.setValue(current);
 }
 
-void MatchJoinerBakkesComponent::renderQuickWindowBtn() {
-	CVarWrapper cv = cvarManager->getCvar("MJIsQuickMatchWindowEnabled");
-	if (!cv) return;
-	bool enabled = cv.getBoolValue();
+void MatchJoinerBakkesComponent::renderQWCreate() {
+	CVarWrapper cv = cvarManager->getCvar("MJCreateBtnClicked");
+	
+	cv.addOnValueChanged([this](std::string, CVarWrapper cvar) {
+		//cvarManager->getCvar("MJEventType").setValue(0);
 
-	if (ImGui::Button("Toggle Quick Private Match Window")) {
-		enabled = !enabled;
-		if (enabled) {
-			renderQuickWindow();
-		}
-		//else close, add on to sub components a bool that can turn on/off components, less functions
-		cv.setValue(enabled);
-	}
-}
+		gotoPrivateMatch();
+		});
+	ImGui::Button("Create");
+	if(ImGui::IsItemActive())
+		cv.setValue(1);
+	//ImGui::set
+};
+void MatchJoinerBakkesComponent::renderQWJoin() {
 
-void MatchJoinerBakkesComponent::renderQuickWindow(){
-	renderQWNameField();
-	renderQWPassField();
-	renderMapCombobox("Map");
-	renderRegionCombobox("Region");
-}
+};
+
 
 void MatchJoinerBakkesComponent::renderQWNameField() {
-
+	char in[100] = "";
+	ImGui::InputText("Name: ", in, IM_ARRAYSIZE(in));
+	if (!ImGui::IsItemActive())
+		cvarManager->getCvar("MJServerName").setValue(std::string(in));
 }
 
 void MatchJoinerBakkesComponent::renderQWPassField() {
-
+	char in[100] = "";
+	ImGui::InputText("Pass: ", in, IM_ARRAYSIZE(in));
+	if (!ImGui::IsItemActive())
+		cvarManager->getCvar("MJServerPass").setValue(std::string(in));
+	//cvarManager->getCvar("MJServerPass").setValue(std::string(in1));
 }
 
 //void MatchJoinerBakkesComponent::getMapArray(char** maps) {

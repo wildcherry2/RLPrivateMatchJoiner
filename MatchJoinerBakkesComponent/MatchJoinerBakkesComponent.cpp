@@ -1,5 +1,6 @@
 //https://bakkesmodwiki.github.io/bakkesmod_api/
 #include "pch.h"
+#include <algorithm>
 #include "MatchJoinerBakkesComponent.h"
 
 
@@ -12,6 +13,7 @@ std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 void MatchJoinerBakkesComponent::onLoad()
 {
 	_globalCvarManager = cvarManager;
+	
 	cvarManager->registerCvar("MJEventType","1","Set to 0 for create mode, 1 for join mode",true,true,0,true,1,false);
 	cvarManager->registerCvar("MJServerName", "", "Enter the server name", true, false, false, false);
 	cvarManager->registerCvar("MJServerPass", "", "Enter the server password", true, false, false, false);
@@ -19,9 +21,17 @@ void MatchJoinerBakkesComponent::onLoad()
 	cvarManager->registerCvar("MJMap", map_codenames[17],"Enter internal map names (see MapsStruct.h for names)", true, false, false, true); //gonna want to save this choice
 	cvarManager->registerCvar("MJRegion", "0", "Enter the region code (0-9)", true, true, 0, true, 9, false);
 	cvarManager->registerCvar("MJExtMapNameSelection", "18", "Enter map name", true, false, false, false);
+	cvarManager->registerCvar("MJCreateBtnClicked", "0", "", false, true, 0, true, 1, false);
 	cvarManager->registerCvar("MJIsQuickMatchWindowEnabled", "0", "Toggles quick private match join/create window", true, true, 0, true, 1, false); //change to notifier
 	cvarManager->registerNotifier("MJGotoMatch", [this](std::vector<std::string> args) {
-		gotoPrivateMatch(); //listen for changes before this, maybe change/add above notifier
+		//first arg is cvar name, so skip
+		if (args.size() > 1) {
+			cvarManager->getCvar("MJEventType").setValue(args[1]);
+			cvarManager->getCvar("MJServerName").setValue(args[2]);
+			cvarManager->getCvar("MJServerPass").setValue(args[3]);
+			gotoPrivateMatch();
+		}
+		else gotoPrivateMatch();
 		},"", PERMISSION_ALL);
 
 }

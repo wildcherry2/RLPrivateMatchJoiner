@@ -13,7 +13,7 @@ constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_M
 class MatchJoinerBakkesComponent: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow/*, public BakkesMod::Plugin::PluginWindow*/
 {
 public:
-	//std::shared_ptr<bool> enabled;
+	//std::shared_ptr<bool> createbtn = std::make_shared<bool>(false);
 
 	virtual void onLoad();
 	virtual void onUnload();
@@ -30,13 +30,15 @@ public:
 	void renderModEnabledCheckbox();
 	void renderMapCombobox(std::string name);
 	void renderRegionCombobox(std::string name);
-	void renderQuickWindowBtn();
+	//void renderQuickWindowBtn();
 
-	void renderQuickWindow();
+	//void renderQuickWindow();
 	void renderQWNameField();
 	void renderQWPassField();
+	void renderQWCreate();
+	void renderQWJoin();
 	
-	//name arrays, could use std::map, but this is more efficient
+	//name arrays, could use std::map, but this is more efficient, gui requires c strings ??
 	const std::string map_codenames[35] = {
 		"Underwater_P",
 		"Park_P",
@@ -111,6 +113,8 @@ public:
 		"Wasteland",
 		"Wasteland (Night)"
 	};
+
+	//maybe remove switch function in favor of something like this and above
 	const char* region_names[10] = {
 		"US-East (USE)",
 		"Europe (EU)",
