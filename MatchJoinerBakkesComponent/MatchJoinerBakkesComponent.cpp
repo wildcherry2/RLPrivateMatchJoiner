@@ -2,7 +2,9 @@
 #include "pch.h"
 #include <algorithm>
 #include "MatchJoinerBakkesComponent.h"
+#include <regex>
 
+//simplewebserver requires including .net 4.7 in settings
 
 BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a pipe and creates/joins a private match", plugin_version, PLUGINTYPE_FREEPLAY)
 
@@ -14,7 +16,7 @@ void MatchJoinerBakkesComponent::onLoad()
 {
 	_globalCvarManager = cvarManager;
 	
-	cvarManager->registerCvar("MJEventType","1","Set to 0 for create mode, 1 for join mode",true,true,0,true,1,false);
+	cvarManager->registerCvar("MJEventType","join","Set to 0 for create mode, 1 for join mode",true,true,0,true,1,false);
 	cvarManager->registerCvar("MJServerName", "", "Enter the server name", true, false, false, false);
 	cvarManager->registerCvar("MJServerPass", "", "Enter the server password", true, false, false, false);
 	cvarManager->registerCvar("MJModEnabled", "1", "Is mod enabled?", false, true, 0, true, 1, false);
@@ -25,11 +27,27 @@ void MatchJoinerBakkesComponent::onLoad()
 	cvarManager->registerCvar("MJIsQuickMatchWindowEnabled", "0", "Toggles quick private match join/create window", true, true, 0, true, 1, false); //change to notifier
 	cvarManager->registerNotifier("MJGotoMatch", [this](std::vector<std::string> args) {
 		//first arg is cvar name, so skip
-		if (args.size() > 1) {
+		if (args.size() > 3) {
 			cvarManager->getCvar("MJEventType").setValue(args[1]);
 			cvarManager->getCvar("MJServerName").setValue(args[2]);
 			cvarManager->getCvar("MJServerPass").setValue(args[3]);
 			gotoPrivateMatch();
+		}
+		else if (args.size() == 3) {
+			cvarManager->getCvar("MJEventType").setValue(args[1]);
+			std::string* str = new std::string(args[2]);
+			std::regex* namereg = new std::regex("(?!Username:\\s)(?:[b]\\d{1,})", std::regex_constants::ECMAScript);
+			std::regex* passreg = new std::regex("(?:(\\b[a-z0-9]{4}\\b)(?!\\bUsername:\\s[b]\\d{1,}Password:\\s\\b))", std::regex_constants::ECMAScript);
+			std::smatch* namematch = new std::smatch();
+			std::smatch* passmatch = new std::smatch();
+
+			regex_search(*str, *namematch, *namereg);
+			regex_search(*str, *passmatch, *passreg);
+
+			cvarManager->getCvar("MJServerName").setValue(namematch[0].str());
+			cvarManager->getCvar("MJServerPass").setValue(passmatch[0].str());
+
+			delete str, namereg, passreg, namematch, passmatch;
 		}
 		else gotoPrivateMatch();
 		},"", PERMISSION_ALL);
@@ -81,7 +99,7 @@ void MatchJoinerBakkesComponent::joinPrivateMatch(std::string name, std::string 
 
 //remember to add tab into rl functionality
 void MatchJoinerBakkesComponent::gotoPrivateMatch() {
-	if (cvarManager->getCvar("MJEventType").getBoolValue() == true) joinPrivateMatch(cvarManager->getCvar("MJServerName").getStringValue(), cvarManager->getCvar("MJServerPass").getStringValue());
+	if (cvarManager->getCvar("MJEventType").getStringValue() == "join") joinPrivateMatch(cvarManager->getCvar("MJServerName").getStringValue(), cvarManager->getCvar("MJServerPass").getStringValue());
 	else createPrivateMatch(cvarManager->getCvar("MJServerName").getStringValue(), cvarManager->getCvar("MJServerPass").getStringValue(), cvarManager->getCvar("MJMap").getStringValue(), cvarManager->getCvar("MJRegion").getIntValue());
 }
 
