@@ -4,9 +4,14 @@
 #include "bakkesmod/plugin/bakkesmodplugin.h"
 #include "bakkesmod/plugin/pluginwindow.h"
 #include "bakkesmod/plugin/PluginSettingsWindow.h"
-#include "websocketpp/server.hpp"
-
+#include <regex>
+#include <algorithm>
 #include "version.h"
+#include "Simple-Web-Server/server_http.hpp">;
+#include <boost/filesystem.hpp>
+#include <fstream>
+#include <vector>
+#include <thread>
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
 
@@ -23,6 +28,9 @@ public:
 	void gotoPrivateMatch();
 	Region getRegion(int region);
 
+	void initInternalCvars();
+	void initServerCvars();
+	void initGuiCvars();
 
 	//f2 gui
 	void RenderSettings() override;
@@ -128,6 +136,14 @@ public:
 		"South Africa (SAF)",
 		"South America (SAM)"
 	};
+
+
+	SimpleWeb::Server<SimpleWeb::HTTP>* server;
+	bool* serverEnabled = new bool(true);
+	std::thread* server_thread;
+	void initServer();
+
+	//bool serverStarted = true;
 
 	// Inherited via PluginWindow
 	/*
