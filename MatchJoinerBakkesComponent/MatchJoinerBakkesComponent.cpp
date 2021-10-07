@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "MatchJoinerBakkesComponent.h"
 
+//https://bakkesmodwiki.github.io/bakkesmod_api/Classes/Wrappers/Modals/ModalWrapper/ for dealing with annoying popup
 
 BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a pipe and creates/joins a private match", plugin_version, PLUGINTYPE_FREEPLAY)
 
@@ -14,11 +15,13 @@ void MatchJoinerBakkesComponent::onLoad()
 	_globalCvarManager = cvarManager;
 	initInternalCvars();
 	initGuiCvars();
-	initServer();
+	cvarManager->executeCommand("MJServerEnabledNotifier 1"); //init server
 }
 
 void MatchJoinerBakkesComponent::onUnload()
 {
+	delete serverEnabled;
+	delete[] region_names, map_normalnames, map_codenames;
 	cvarManager->log("Match joiner unloaded.");
 }
 

@@ -137,11 +137,12 @@ public:
 		"South America (SAM)"
 	};
 
-
-	SimpleWeb::Server<SimpleWeb::HTTP>* server;
-	bool* serverEnabled = new bool(true);
-	std::thread* server_thread;
+	//server
+	SimpleWeb::Server<SimpleWeb::HTTP>* server = nullptr;
+	bool* serverEnabled = new bool();
+	std::thread* server_thread = nullptr;
 	void initServer();
+	void stopServer();
 
 	//bool serverStarted = true;
 

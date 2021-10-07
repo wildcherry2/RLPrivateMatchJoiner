@@ -37,23 +37,7 @@ void MatchJoinerBakkesComponent::initServer() {
         auto fields = request->parse_query_string();
         for (auto& field : fields) 
             cvarManager->log(field.first + " " + field.second);
-
-            //stream << field.first << ": " << field.second << "<br>";
-        /*stringstream stream;
-        stream << "<h1>Request from " << request->remote_endpoint_address() << ":" << request->remote_endpoint_port() << "</h1>";
-
-        stream << request->method << " " << request->path << " HTTP/" << request->http_version;
-
-        stream << "<h2>Query Fields</h2>";
-        auto query_fields = request->parse_query_string();
-        for (auto& field : query_fields)
-            stream << field.first << ": " << field.second << "<br>";
-
-        stream << "<h2>Header Fields</h2>";
-        for (auto& field : request->header)
-            stream << field.first << ": " << field.second << "<br>";*/
-
-        response->write("");
+        response->write(""); //put valid response / html here
     };
 
     server_thread = new std::thread([this]() {
@@ -62,4 +46,13 @@ void MatchJoinerBakkesComponent::initServer() {
     });
 
     server_thread->detach();
+}
+
+void MatchJoinerBakkesComponent::stopServer() {
+    cvarManager->log("Stopping server...");
+    server->stop();
+    server_thread->~thread();
+    delete server, server_thread;
+    server = nullptr;
+    server_thread = nullptr;
 }

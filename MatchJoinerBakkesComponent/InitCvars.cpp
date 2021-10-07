@@ -19,7 +19,7 @@ void MatchJoinerBakkesComponent::initInternalCvars() {
 			cvarManager->getCvar("MJEventType").setValue(args[1]);
 			std::string* str = new std::string(args[2]);
 
-			//only works for rank b
+			//broken regex
 			std::regex* namereg = new std::regex("(?!Username:\\s)(?:[b]\\d{1,})", std::regex_constants::ECMAScript);
 			std::regex* passreg = new std::regex("(?:(\\b[a-z0-9]{4}\\b)(?!\\bUsername:\\s[b]\\d{1,}Password:\\s\\b))", std::regex_constants::ECMAScript);
 			std::smatch* namematch = new std::smatch();
@@ -45,7 +45,17 @@ void MatchJoinerBakkesComponent::initGuiCvars() {
 }
 
 void MatchJoinerBakkesComponent::initServerCvars() {
-	cvarManager->registerNotifier("MJServerEnabled", [this](std::vector<std::string> args) {
-		
+	cvarManager->registerNotifier("MJServerEnabledNotifier", [this](std::vector<std::string> args) {
+		if (args[1] == "1" && server == nullptr) {
+			initServer();
+			*serverEnabled = true;
+		}
+		else if (args[1] == "0" && server != nullptr) {
+			stopServer();
+			*serverEnabled = false;
+		}
+		else {
+			cvarManager->log("Invalid args");
+		}
 		}, "", PERMISSION_ALL);
 }
