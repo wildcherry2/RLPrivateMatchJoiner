@@ -4,7 +4,7 @@
 
 //https://bakkesmodwiki.github.io/bakkesmod_api/Classes/Wrappers/Modals/ModalWrapper/ for dealing with annoying popup
 
-BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a pipe and creates/joins a private match", plugin_version, PLUGINTYPE_FREEPLAY)
+BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a link to a localhost webserver to join a private match", plugin_version, PLUGINTYPE_FREEPLAY)
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 //MAPS maps;
@@ -15,6 +15,7 @@ void MatchJoinerBakkesComponent::onLoad()
 	_globalCvarManager = cvarManager;
 	initInternalCvars();
 	initGuiCvars();
+	initServerCvars();
 	cvarManager->executeCommand("MJServerEnabledNotifier 1"); //init server
 }
 

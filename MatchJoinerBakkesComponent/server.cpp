@@ -55,4 +55,5 @@ void MatchJoinerBakkesComponent::stopServer() {
     delete server, server_thread;
     server = nullptr;
     server_thread = nullptr;
+    cvarManager->log("Server stopped!");
 }
