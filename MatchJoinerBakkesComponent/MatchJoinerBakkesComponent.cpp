@@ -16,24 +16,26 @@ void MatchJoinerBakkesComponent::onLoad()
 	initInternalCvars();
 	initGuiCvars();
 	initServerCvars();
-	cvarManager->executeCommand("MJServerEnabledNotifier 1"); //init server
+	initServer();
+	startServer();
 }
 
 void MatchJoinerBakkesComponent::onUnload()
 {
-	delete serverEnabled;
-	delete[] region_names, map_normalnames, map_codenames;
+	stopServer(); //no thread unloaded message??
 	cvarManager->log("Match joiner unloaded.");
 }
 
 //check that user is in freeplay or main menu (gamewrapper getonlinegame)
 void MatchJoinerBakkesComponent::createPrivateMatch(std::string name, std::string pass, std::string map, int region) {
-	MatchmakingWrapper* mm = new MatchmakingWrapper(true);
+	MatchmakingWrapper* mm = new MatchmakingWrapper(false);
 	CustomMatchTeamSettings* blue = new CustomMatchTeamSettings();
 	CustomMatchTeamSettings* red = new CustomMatchTeamSettings();
 	CustomMatchSettings* cm = new CustomMatchSettings();
-	ServerWrapper sw = (gameWrapper->GetCurrentGameState());
-	Region reg = getRegion(region); //needs testing
+	//ServerWrapper sw = (gameWrapper->GetCurrentGameState());
+	Region reg = getRegion(region);
+
+	//mm->
 
 	cm->GameTags = "BotsNone";
 	cm->MapName = map;
@@ -44,7 +46,7 @@ void MatchJoinerBakkesComponent::createPrivateMatch(std::string name, std::strin
 	cm->bClubServer = false;
 
 	//while (sw->IsNull()) {
-		mm->CreatePrivateMatch(reg,*cm);
+	mm->CreatePrivateMatch(reg,*cm);
 		//add 10-15 sec delay before trying again/check to be on menu, black screen edge case (for testing, invalid server settings force black screens)
 	//}
 	

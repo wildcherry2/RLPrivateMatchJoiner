@@ -12,6 +12,9 @@
 #include <fstream>
 #include <vector>
 #include <thread>
+#include <functional>
+#include <iostream>
+#include <utility>
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
 
@@ -139,10 +142,13 @@ public:
 
 	//server
 	SimpleWeb::Server<SimpleWeb::HTTP>* server = nullptr;
-	bool* serverEnabled = new bool();
-	std::thread* server_thread = nullptr;
+	bool* server_enabled = new bool();
+	
 	void initServer();
+	void startServer();
 	void stopServer();
+	std::thread server_thread; /*= std::thread(&MatchJoinerBakkesComponent::startServer,this);*/
+	//void deleteServer();
 
 	//bool serverStarted = true;
 

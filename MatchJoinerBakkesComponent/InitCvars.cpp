@@ -2,11 +2,12 @@
 #include "MatchJoinerBakkesComponent.h"
 
 void MatchJoinerBakkesComponent::initInternalCvars() {
-	cvarManager->registerCvar("MJEventType", "join", "Set to 0 for create mode, 1 for join mode", true, true, 0, true, 1, false);
+	cvarManager->registerCvar("MJEventType", "1", "Set to 0 for create mode, 1 for join mode", true, true, 0, true, 1, false);
 	cvarManager->registerCvar("MJServerName", "", "Enter the server name", true, false, false, false);
 	cvarManager->registerCvar("MJServerPass", "", "Enter the server password", true, false, false, false);
 	cvarManager->registerCvar("MJMap", map_codenames[17], "Enter internal map names (see MapsStruct.h for names)", true, false, false, true); //gonna want to save this choice
 	cvarManager->registerCvar("MJRegion", "0", "Enter the region code (0-9)", true, true, 0, true, 9, false);
+	cvarManager->registerCvar("MJServerHasSetVars", "0", "", true, true, 0, true, 1, false);
 	cvarManager->registerNotifier("MJGotoMatch", [this](std::vector<std::string> args) {
 		//first arg is cvar name, so skip
 		if (args.size() == 4) {
@@ -35,6 +36,17 @@ void MatchJoinerBakkesComponent::initInternalCvars() {
 		}
 		else gotoPrivateMatch();
 		}, "", PERMISSION_ALL);
+
+	cvarManager->registerNotifier("MJGetMatchVars", [this](std::vector<std::string> args) {
+		cvarManager->log("Event= " + cvarManager->getCvar("MJEventType").getStringValue());
+		cvarManager->log("Name= " + cvarManager->getCvar("MJServerName").getStringValue());
+		cvarManager->log("Pass= " + cvarManager->getCvar("MJServerPass").getStringValue());
+		cvarManager->log("Region= " + cvarManager->getCvar("MJRegion").getStringValue());
+		}, "", PERMISSION_ALL);
+
+	cvarManager->getCvar("MJServerHasSetVars").addOnValueChanged([this](std::string,CVarWrapper) {
+		cvarManager->executeCommand("MJGotoMatch");
+		});
 }
 
 void MatchJoinerBakkesComponent::initGuiCvars() {
@@ -46,13 +58,13 @@ void MatchJoinerBakkesComponent::initGuiCvars() {
 
 void MatchJoinerBakkesComponent::initServerCvars() {
 	cvarManager->registerNotifier("MJServerEnabledNotifier", [this](std::vector<std::string> args) {
-		if (args[1] == "1" && server == nullptr) {
-			initServer();
-			*serverEnabled = true;
+		if (args[1] == "1") {
+			startServer();
+			*server_enabled = true;
 		}
-		else if (args[1] == "0" && server != nullptr) {
+		else if (args[1] == "0") {
 			stopServer();
-			*serverEnabled = false;
+			*server_enabled = false;
 		}
 		else {
 			cvarManager->log("Invalid args");
