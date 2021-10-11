@@ -14,34 +14,39 @@ void MatchJoinerBakkesComponent::initServer() {
         this->cvarManager->log("Request received...");
         auto fields = request->parse_query_string();
 
-        auto it = fields.begin();                                         
+        auto it = fields.begin();
         this->cvarManager->getCvar("MJEventType").setValue(it->second);
+        event_code = std::stoi(it->second);
         it++;
         this->cvarManager->getCvar("MJServerName").setValue(it->second);
+        name = it->second;
         it++;
         this->cvarManager->getCvar("MJServerPass").setValue(it->second);
+        pass = it->second;
         it++;
         this->cvarManager->getCvar("MJRegion").setValue(it->second);
-        //this->cvarManager->getCvar("MJServerHasSetVars").setValue("1"); //doesnt work what the fuck, works when gotomatch called manually, correctly interprets event, maybe copypasta whole function in thread
-        response->write("alright"); //put valid response / html here
+        region = getRegion(std::stoi(it->second));
 
-        //this->cvarManager->executeCommand("MJGotoMatch");
-        //gotoPrivateMatch(); //cant call member function?? probably a problem with calling this in a thread
+        response->close_connection_after_response = true;
+        response->write(SimpleWeb::StatusCode::success_accepted, "alright");
+        response->send();
+
+        stopServer();
     };
 }
 
-
-
-void MatchJoinerBakkesComponent::startServer() {
-    server_thread = std::thread([this](){
+void MatchJoinerBakkesComponent::startServer() {  
+    server_thread = std::thread([this](){      
         cvarManager->log("Starting server...");
         this->server->start();
-        cvarManager->log("Thread closed.");
+        
         return;
         });
-    
-    server_thread.detach(); 
-}
+    cvarManager->log("Joining thread...");
+    server_thread.join();
+    cvarManager->log("Thread closed.");
+    gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); }); //holy shit it works
+    }
 
 void MatchJoinerBakkesComponent::stopServer() {
     cvarManager->log("Stopping server...");

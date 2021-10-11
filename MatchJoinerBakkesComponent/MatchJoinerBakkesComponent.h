@@ -4,6 +4,8 @@
 #include "bakkesmod/plugin/bakkesmodplugin.h"
 #include "bakkesmod/plugin/pluginwindow.h"
 #include "bakkesmod/plugin/PluginSettingsWindow.h"
+#include "bakkesmod/wrappers/gamewrapper.h"
+#include "bakkesmod/wrappers/MatchmakingWrapper.h"
 #include <regex>
 #include <algorithm>
 #include "version.h"
@@ -26,9 +28,7 @@ public:
 
 	virtual void onLoad();
 	virtual void onUnload();
-	void createPrivateMatch(std::string name, std::string pass, std::string map, int region);
-	void joinPrivateMatch(std::string name, std::string pass);
-	void gotoPrivateMatch();
+	void createPrivateMatch(/*std::string name, std::string pass, std::string map, int region*/);
 	Region getRegion(int region);
 
 	void initInternalCvars();
@@ -147,10 +147,14 @@ public:
 	void initServer();
 	void startServer();
 	void stopServer();
-	std::thread server_thread; /*= std::thread(&MatchJoinerBakkesComponent::startServer,this);*/
-	//void deleteServer();
+	std::thread server_thread;
 
-	//bool serverStarted = true;
+	//match info
+	std::string name, pass; 
+	std::string gametags = "BotsNone";
+	Region region;
+	int event_code;
+
 
 	// Inherited via PluginWindow
 	/*

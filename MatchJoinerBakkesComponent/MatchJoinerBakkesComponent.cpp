@@ -4,7 +4,7 @@
 
 //https://bakkesmodwiki.github.io/bakkesmod_api/Classes/Wrappers/Modals/ModalWrapper/ for dealing with annoying popup
 
-BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a link to a localhost webserver to join a private match", plugin_version, PLUGINTYPE_FREEPLAY)
+BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a link to a localhost webserver to join a private match", plugin_version, PLUGINTYPE_THREADED) //changed to threaded
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 //MAPS maps;
@@ -22,55 +22,33 @@ void MatchJoinerBakkesComponent::onLoad()
 
 void MatchJoinerBakkesComponent::onUnload()
 {
-	stopServer(); //no thread unloaded message??
+	stopServer();
 	cvarManager->log("Match joiner unloaded.");
 }
 
-//check that user is in freeplay or main menu (gamewrapper getonlinegame)
-void MatchJoinerBakkesComponent::createPrivateMatch(std::string name, std::string pass, std::string map, int region) {
-	MatchmakingWrapper* mm = new MatchmakingWrapper(false);
-	CustomMatchTeamSettings* blue = new CustomMatchTeamSettings();
-	CustomMatchTeamSettings* red = new CustomMatchTeamSettings();
-	CustomMatchSettings* cm = new CustomMatchSettings();
-	//ServerWrapper sw = (gameWrapper->GetCurrentGameState());
-	Region reg = getRegion(region);
+//check that user is in freeplay or main menu (gamewrapper getonlinegame), also retry on join, black screen edge case
+void MatchJoinerBakkesComponent::createPrivateMatch() {
+	if (event_code == 0) {
+		MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
+		CustomMatchSettings cm = CustomMatchSettings();
+		CustomMatchTeamSettings blue = CustomMatchTeamSettings();
+		CustomMatchTeamSettings red = CustomMatchTeamSettings();
 
-	//mm->
+		if (mw && !gameWrapper->IsInOnlineGame()) {
 
-	cm->GameTags = "BotsNone";
-	cm->MapName = map;
-	cm->ServerName = name;
-	cm->Password = pass;
-	cm->BlueTeamSettings = *blue;
-	cm->OrangeTeamSettings = *red;
-	cm->bClubServer = false;
+			cm.GameTags = gametags;
+			cm.MapName = map_codenames[2];
+			cm.ServerName = name;
+			cm.Password = pass;
+			cm.BlueTeamSettings = blue;
+			cm.OrangeTeamSettings = red;
+			cm.bClubServer = false;
 
-	//while (sw->IsNull()) {
-	mm->CreatePrivateMatch(reg,*cm);
-		//add 10-15 sec delay before trying again/check to be on menu, black screen edge case (for testing, invalid server settings force black screens)
-	//}
-	
-
-	delete mm;
-	delete blue;
-	delete red;
-	delete cm;
+			mw.CreatePrivateMatch(region, cm);
+		}
+	}
 }
 
-//needs testing, try joining every 20? seconds
-//hot key to manually retry joining/creating?
-void MatchJoinerBakkesComponent::joinPrivateMatch(std::string name, std::string pass) {
-	MatchmakingWrapper* mm = new MatchmakingWrapper(true);
-	mm->JoinPrivateMatch(name, pass);
-
-	delete mm;
-}
-
-//remember to add tab into rl functionality
-void MatchJoinerBakkesComponent::gotoPrivateMatch() {
-	if (cvarManager->getCvar("MJEventType").getStringValue() == "join") joinPrivateMatch(cvarManager->getCvar("MJServerName").getStringValue(), cvarManager->getCvar("MJServerPass").getStringValue());
-	else createPrivateMatch(cvarManager->getCvar("MJServerName").getStringValue(), cvarManager->getCvar("MJServerPass").getStringValue(), cvarManager->getCvar("MJMap").getStringValue(), cvarManager->getCvar("MJRegion").getIntValue());
-}
 
 Region MatchJoinerBakkesComponent::getRegion(int region) {
 	switch (region) {

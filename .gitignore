@@ -366,3 +366,5 @@ FodyWeavers.xsd
 /BDPluginLibrary
 /vcpkg
 /regex
+/MatchJoinerBakkesComponent/Match.cpp
+/MatchJoinerBakkesComponent/Match.h

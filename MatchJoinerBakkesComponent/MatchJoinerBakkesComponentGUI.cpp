@@ -64,11 +64,6 @@ void MatchJoinerBakkesComponent::renderRegionCombobox(std::string name){
 void MatchJoinerBakkesComponent::renderQWCreate() {
 	CVarWrapper cv = cvarManager->getCvar("MJCreateBtnClicked");
 	
-	cv.addOnValueChanged([this](std::string, CVarWrapper cvar) {
-		//cvarManager->getCvar("MJEventType").setValue(0);
-
-		gotoPrivateMatch();
-		});
 	ImGui::Button("Create");
 	if(ImGui::IsItemActive())
 		cv.setValue(1);

@@ -8,34 +8,6 @@ void MatchJoinerBakkesComponent::initInternalCvars() {
 	cvarManager->registerCvar("MJMap", map_codenames[17], "Enter internal map names (see MapsStruct.h for names)", true, false, false, true); //gonna want to save this choice
 	cvarManager->registerCvar("MJRegion", "0", "Enter the region code (0-9)", true, true, 0, true, 9, false);
 	cvarManager->registerCvar("MJServerHasSetVars", "0", "", true, true, 0, true, 1, false);
-	cvarManager->registerNotifier("MJGotoMatch", [this](std::vector<std::string> args) {
-		//first arg is cvar name, so skip
-		if (args.size() == 4) {
-			cvarManager->getCvar("MJEventType").setValue(args[1]);
-			cvarManager->getCvar("MJServerName").setValue(args[2]);
-			cvarManager->getCvar("MJServerPass").setValue(args[3]);
-			gotoPrivateMatch();
-		}
-		else if (args.size() == 3) {
-			cvarManager->getCvar("MJEventType").setValue(args[1]);
-			std::string* str = new std::string(args[2]);
-
-			//broken regex
-			std::regex* namereg = new std::regex("(?!Username:\\s)(?:[b]\\d{1,})", std::regex_constants::ECMAScript);
-			std::regex* passreg = new std::regex("(?:(\\b[a-z0-9]{4}\\b)(?!\\bUsername:\\s[b]\\d{1,}Password:\\s\\b))", std::regex_constants::ECMAScript);
-			std::smatch* namematch = new std::smatch();
-			std::smatch* passmatch = new std::smatch();
-
-			regex_search(*str, *namematch, *namereg);
-			regex_search(*str, *passmatch, *passreg);
-
-			cvarManager->getCvar("MJServerName").setValue(namematch[0].str());
-			cvarManager->getCvar("MJServerPass").setValue(passmatch[0].str());
-
-			delete str, namereg, passreg, namematch, passmatch;
-		}
-		else gotoPrivateMatch();
-		}, "", PERMISSION_ALL);
 
 	cvarManager->registerNotifier("MJGetMatchVars", [this](std::vector<std::string> args) {
 		cvarManager->log("Event= " + cvarManager->getCvar("MJEventType").getStringValue());
@@ -44,9 +16,10 @@ void MatchJoinerBakkesComponent::initInternalCvars() {
 		cvarManager->log("Region= " + cvarManager->getCvar("MJRegion").getStringValue());
 		}, "", PERMISSION_ALL);
 
-	cvarManager->getCvar("MJServerHasSetVars").addOnValueChanged([this](std::string,CVarWrapper) {
-		cvarManager->executeCommand("MJGotoMatch");
-		});
+	cvarManager->registerNotifier("MJReady", [this](std::vector<std::string> args) {
+		createPrivateMatch();
+		}, "", PERMISSION_ALL);
+
 }
 
 void MatchJoinerBakkesComponent::initGuiCvars() {
