@@ -28,7 +28,7 @@ public:
 
 	virtual void onLoad();
 	virtual void onUnload();
-	void createPrivateMatch(/*std::string name, std::string pass, std::string map, int region*/);
+	void gotoPrivateMatch();
 	Region getRegion(int region);
 
 	void initInternalCvars();

@@ -26,10 +26,10 @@ void MatchJoinerBakkesComponent::onUnload()
 	cvarManager->log("Match joiner unloaded.");
 }
 
-//check that user is in freeplay or main menu (gamewrapper getonlinegame), also retry on join, black screen edge case
-void MatchJoinerBakkesComponent::createPrivateMatch() {
+//retry on join, black screen edge case
+void MatchJoinerBakkesComponent::gotoPrivateMatch() {
+	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
 	if (event_code == 0) {
-		MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
 		CustomMatchSettings cm = CustomMatchSettings();
 		CustomMatchTeamSettings blue = CustomMatchTeamSettings();
 		CustomMatchTeamSettings red = CustomMatchTeamSettings();
@@ -45,8 +45,19 @@ void MatchJoinerBakkesComponent::createPrivateMatch() {
 			cm.bClubServer = false;
 
 			mw.CreatePrivateMatch(region, cm);
+			//add reset vars function
 		}
+		else cvarManager->log("Error creating lobby, you are in a game or mmw is invalid"); //add retry function
 	}
+	else if (event_code == 1) {
+		if (mw && !gameWrapper->IsInOnlineGame()) {
+			mw.JoinPrivateMatch(name, pass);
+			//add reset vars function
+		}
+		else cvarManager->log("Error joining lobby, you are in a game or mmw is invalid");
+
+	}
+	else cvarManager->log("Invalid event code!");
 }
 
 

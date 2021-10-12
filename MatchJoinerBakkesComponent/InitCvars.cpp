@@ -17,7 +17,7 @@ void MatchJoinerBakkesComponent::initInternalCvars() {
 		}, "", PERMISSION_ALL);
 
 	cvarManager->registerNotifier("MJReady", [this](std::vector<std::string> args) {
-		createPrivateMatch();
+		gotoPrivateMatch();
 		}, "", PERMISSION_ALL);
 
 }
