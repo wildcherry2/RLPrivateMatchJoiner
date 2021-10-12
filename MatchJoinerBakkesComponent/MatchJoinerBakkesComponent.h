@@ -20,6 +20,7 @@
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
 
+
 class MatchJoinerBakkesComponent: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow/*, public BakkesMod::Plugin::PluginWindow*/
 {
 public:
@@ -50,43 +51,7 @@ public:
 	void renderQWCreate();
 	void renderQWJoin();
 	
-	//server functions
-	void initServer();
-	void startServer();
-	void stopServer();
-	
-
-	// Inherited via PluginWindow
-	/*
-
-	bool isWindowOpen_ = false;
-	bool isMinimized_ = false;
-	std::string menuTitle_ = "MatchJoinerBakkesComponent";
-
-	virtual void Render() override;
-	virtual std::string GetMenuName() override;
-	virtual std::string GetMenuTitle() override;
-	virtual void SetImGuiContext(uintptr_t ctx) override;
-	virtual bool ShouldBlockInput() override;
-	virtual bool IsActiveOverlay() override;
-	virtual void OnOpen() override;
-	virtual void OnClose() override;
-	
-	*/
-
-private:
-	//match info vars
-	std::string name, pass;
-	std::string gametags = "BotsNone";
-	Region region;
-	int event_code;
-
-	//server vars
-	std::thread server_thread;
-	SimpleWeb::Server<SimpleWeb::HTTP>* server = nullptr;
-	bool* server_enabled = new bool();
-
-	//name arrays
+	//name arrays, could use std::map, but this is more efficient, gui requires c strings ??
 	const std::string map_codenames[35] = {
 		"Underwater_P",
 		"Park_P",
@@ -176,4 +141,36 @@ private:
 		"South America (SAM)"
 	};
 
+	//server
+	SimpleWeb::Server<SimpleWeb::HTTP>* server = nullptr;
+	bool* server_enabled = new bool();	
+	void initServer();
+	void startServer();
+	void stopServer();
+	std::thread server_thread;
+
+	//match info
+	std::string name, pass; 
+	std::string gametags = "BotsNone";
+	Region region;
+	int event_code;
+
+
+	// Inherited via PluginWindow
+	/*
+
+	bool isWindowOpen_ = false;
+	bool isMinimized_ = false;
+	std::string menuTitle_ = "MatchJoinerBakkesComponent";
+
+	virtual void Render() override;
+	virtual std::string GetMenuName() override;
+	virtual std::string GetMenuTitle() override;
+	virtual void SetImGuiContext(uintptr_t ctx) override;
+	virtual bool ShouldBlockInput() override;
+	virtual bool IsActiveOverlay() override;
+	virtual void OnOpen() override;
+	virtual void OnClose() override;
+	
+	*/
 };

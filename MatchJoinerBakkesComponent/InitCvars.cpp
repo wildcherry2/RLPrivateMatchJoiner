@@ -7,6 +7,8 @@ void MatchJoinerBakkesComponent::initInternalCvars() {
 	cvarManager->registerCvar("MJServerPass", "", "Enter the server password", true, false, false, false);
 	cvarManager->registerCvar("MJMap", map_codenames[17], "Enter internal map names (see MapsStruct.h for names)", true, false, false, true); //gonna want to save this choice
 	cvarManager->registerCvar("MJRegion", "0", "Enter the region code (0-9)", true, true, 0, true, 9, false);
+	cvarManager->registerCvar("MJServerHasSetVars", "0", "", true, true, 0, true, 1, false);
+
 	cvarManager->registerNotifier("MJGetMatchVars", [this](std::vector<std::string> args) {
 		cvarManager->log("Event= " + cvarManager->getCvar("MJEventType").getStringValue());
 		cvarManager->log("Name= " + cvarManager->getCvar("MJServerName").getStringValue());
@@ -28,7 +30,6 @@ void MatchJoinerBakkesComponent::initGuiCvars() {
 }
 
 void MatchJoinerBakkesComponent::initServerCvars() {
-	cvarManager->registerCvar("MJServerHasSetVars", "0", "", true, true, 0, true, 1, false);
 	cvarManager->registerNotifier("MJServerEnabledNotifier", [this](std::vector<std::string> args) {
 		if (args[1] == "1") {
 			startServer();
