@@ -50,6 +50,7 @@ public:
 	void renderQWPassField();
 	void renderQWCreate();
 	void renderQWJoin();
+	bool is_enabled = true; //for overall mod
 	
 	//name arrays, could use std::map, but this is more efficient, gui requires c strings ??
 	const std::string map_codenames[35] = {
@@ -143,17 +144,17 @@ public:
 
 	//server
 	SimpleWeb::Server<SimpleWeb::HTTP>* server = nullptr;
-	bool* server_enabled = new bool();	
+	bool server_enabled = true;	
 	void initServer();
 	void startServer();
 	void stopServer();
 	std::thread server_thread;
 
 	//match info
-	std::string name, pass; 
+	std::string name = "", pass = "";
 	std::string gametags = "BotsNone";
-	Region region;
-	int event_code;
+	Region region = Region::USE;
+	int event_code = 1;
 
 
 	// Inherited via PluginWindow
