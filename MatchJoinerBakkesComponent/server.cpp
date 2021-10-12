@@ -38,14 +38,13 @@ void MatchJoinerBakkesComponent::initServer() {
 void MatchJoinerBakkesComponent::startServer() {  
     server_thread = std::thread([this](){      
         cvarManager->log("Starting server...");
-        this->server->start();
-        
+        this->server->start(); 
         return;
         });
     cvarManager->log("Joining thread...");
     server_thread.join();
     cvarManager->log("Thread closed.");
-    gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); }); //holy shit it works
+    gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); }); //holy shit it works, need to add restart server once in menu
     }
 
 void MatchJoinerBakkesComponent::stopServer() {
