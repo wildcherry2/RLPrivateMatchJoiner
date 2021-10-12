@@ -26,11 +26,13 @@ class MatchJoinerBakkesComponent: public BakkesMod::Plugin::BakkesModPlugin, pub
 public:
 	//std::shared_ptr<bool> createbtn = std::make_shared<bool>(false);
 
+	//core
 	virtual void onLoad();
 	virtual void onUnload();
 	void gotoPrivateMatch();
 	Region getRegion(int region);
 
+	//cvar init
 	void initInternalCvars();
 	void initServerCvars();
 	void initGuiCvars();
@@ -43,7 +45,6 @@ public:
 	void renderMapCombobox(std::string name);
 	void renderRegionCombobox(std::string name);
 	//void renderQuickWindowBtn();
-
 	//void renderQuickWindow();
 	void renderQWNameField();
 	void renderQWPassField();
@@ -142,8 +143,7 @@ public:
 
 	//server
 	SimpleWeb::Server<SimpleWeb::HTTP>* server = nullptr;
-	bool* server_enabled = new bool();
-	
+	bool* server_enabled = new bool();	
 	void initServer();
 	void startServer();
 	void stopServer();

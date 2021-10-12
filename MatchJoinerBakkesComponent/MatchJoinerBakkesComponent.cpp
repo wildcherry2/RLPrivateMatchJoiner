@@ -7,7 +7,6 @@
 BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a link to a localhost webserver to join a private match", plugin_version, PLUGINTYPE_THREADED) //changed to threaded
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
-//MAPS maps;
 
 
 void MatchJoinerBakkesComponent::onLoad()
