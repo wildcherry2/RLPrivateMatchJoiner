@@ -41,7 +41,7 @@ void MatchJoinerBakkesComponent::renderModEnabledCheckbox() {
 	if (!cv) return;
 	bool enabled = cv.getBoolValue();
 
-	if (ImGui::Checkbox("Enabled", &enabled), true) cv.setValue(enabled);
+	if (ImGui::Checkbox("Enabled", &enabled)) cv.setValue(enabled);
 }
 
 void MatchJoinerBakkesComponent::renderMapCombobox(std::string name) {

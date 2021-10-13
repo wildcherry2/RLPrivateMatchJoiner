@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "6MansDiscordIntegration", "6MansDiscordIntegration\6MansDiscordIntegration.njsproj", "{D915889A-B115-43DE-B73D-D424A673D2C9}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MatchJoinerBakkesComponent", "MatchJoinerBakkesComponent\MatchJoinerBakkesComponent.vcxproj", "{0817345D-681C-49A4-A9B8-32FA446CF7B4}"
 EndProject
 Global
@@ -17,18 +15,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D915889A-B115-43DE-B73D-D424A673D2C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D915889A-B115-43DE-B73D-D424A673D2C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D915889A-B115-43DE-B73D-D424A673D2C9}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D915889A-B115-43DE-B73D-D424A673D2C9}.Debug|x64.Build.0 = Debug|Any CPU
-		{D915889A-B115-43DE-B73D-D424A673D2C9}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D915889A-B115-43DE-B73D-D424A673D2C9}.Debug|x86.Build.0 = Debug|Any CPU
-		{D915889A-B115-43DE-B73D-D424A673D2C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D915889A-B115-43DE-B73D-D424A673D2C9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D915889A-B115-43DE-B73D-D424A673D2C9}.Release|x64.ActiveCfg = Release|Any CPU
-		{D915889A-B115-43DE-B73D-D424A673D2C9}.Release|x64.Build.0 = Release|Any CPU
-		{D915889A-B115-43DE-B73D-D424A673D2C9}.Release|x86.ActiveCfg = Release|Any CPU
-		{D915889A-B115-43DE-B73D-D424A673D2C9}.Release|x86.Build.0 = Release|Any CPU
 		{0817345D-681C-49A4-A9B8-32FA446CF7B4}.Debug|Any CPU.ActiveCfg = Release|x64
 		{0817345D-681C-49A4-A9B8-32FA446CF7B4}.Debug|Any CPU.Build.0 = Release|x64
 		{0817345D-681C-49A4-A9B8-32FA446CF7B4}.Debug|x64.ActiveCfg = Release|x64

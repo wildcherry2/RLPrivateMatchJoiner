@@ -44,7 +44,7 @@ void MatchJoinerBakkesComponent::startServer() {
     cvarManager->log("Joining thread...");
     server_thread.join();
     cvarManager->log("Thread closed.");
-    gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); }); //holy shit it works, need to add restart server once in menu
+    gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); }); //holy shit it works, need to add restart server once in menu/persistent threading?
     }
 
 void MatchJoinerBakkesComponent::stopServer() {

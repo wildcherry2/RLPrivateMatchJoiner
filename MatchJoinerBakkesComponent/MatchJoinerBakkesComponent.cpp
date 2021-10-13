@@ -21,12 +21,13 @@ void MatchJoinerBakkesComponent::onLoad()
 
 void MatchJoinerBakkesComponent::onUnload()
 {
-	stopServer();
+	//stopServer();
 	cvarManager->log("Match joiner unloaded.");
 }
 
 //retry on join, black screen edge case
 void MatchJoinerBakkesComponent::gotoPrivateMatch() {
+	if (name == "") return;
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
 	if (event_code == 0) {
 		CustomMatchSettings cm = CustomMatchSettings();
@@ -36,7 +37,7 @@ void MatchJoinerBakkesComponent::gotoPrivateMatch() {
 		if (mw && !gameWrapper->IsInOnlineGame()) {
 
 			cm.GameTags = gametags;
-			cm.MapName = map_codenames[2];
+			cm.MapName = map_codenames[2]; //this will need to be bound to map cvar/array
 			cm.ServerName = name;
 			cm.Password = pass;
 			cm.BlueTeamSettings = blue;
