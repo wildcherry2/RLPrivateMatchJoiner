@@ -361,4 +361,13 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/bdbuilder
+/Other
+/BDPluginLibrary
+/vcpkg
+/regex
+/MatchJoinerBakkesComponent/Match.cpp
+/MatchJoinerBakkesComponent/Match.h
+/Images
+package-lock.json
 /plugins

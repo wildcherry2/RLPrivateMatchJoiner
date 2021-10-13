@@ -119,8 +119,6 @@
     <ClCompile Include="MatchJoinerBakkesComponent.cpp" />
     <ClCompile Include="MatchJoinerBakkesComponentGUI.cpp" />
     <ClCompile Include="server.cpp" />
-    <ClCompile Include="Simple-Web-Server\https_examples.cpp" />
-    <ClCompile Include="Simple-Web-Server\http_examples.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h" />
