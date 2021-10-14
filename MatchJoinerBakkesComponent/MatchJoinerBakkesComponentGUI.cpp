@@ -16,12 +16,10 @@ void MatchJoinerBakkesComponent::SetImGuiContext(uintptr_t ctx) {
 
 void MatchJoinerBakkesComponent::RenderSettings() {
 	renderModEnabledCheckbox();
-	renderMapCombobox("Default map when creating private matches");
-	renderRegionCombobox("Default region when creating private matches");
+	renderMapCombobox("Default map");
+	renderRegionCombobox("Default region");
 	//renderQuickWindow();
 	
-	renderMapCombobox("Map");
-	renderRegionCombobox("Region");
 	renderQWNameField();
 	renderQWPassField();
 	renderQWCreate();
@@ -46,7 +44,7 @@ void MatchJoinerBakkesComponent::renderModEnabledCheckbox() {
 
 void MatchJoinerBakkesComponent::renderMapCombobox(std::string name) {
 	
-	CVarWrapper cv = cvarManager->getCvar("MJExtMapNameSelection");
+	CVarWrapper cv = cvarManager->getCvar("MJMapNameSelection");
 	if (!cv) return;
 	int current = cv.getIntValue();
 	if(ImGui::Combo(name.c_str(),&current,map_normalnames,IM_ARRAYSIZE(map_normalnames))) cv.setValue(current);
@@ -61,12 +59,13 @@ void MatchJoinerBakkesComponent::renderRegionCombobox(std::string name){
 	if (ImGui::Combo(name.c_str(), &current, region_names, IM_ARRAYSIZE(region_names))) cv.setValue(current);
 }
 
+//doesnt work atm
 void MatchJoinerBakkesComponent::renderQWCreate() {
-	CVarWrapper cv = cvarManager->getCvar("MJCreateBtnClicked");
+	//CVarWrapper cv = cvarManager->getCvar("MJCreateBtnClicked");
 	
 	ImGui::Button("Create");
 	if(ImGui::IsItemActive())
-		cv.setValue(1);
+		gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); }); 
 	//ImGui::set
 };
 void MatchJoinerBakkesComponent::renderQWJoin() {
