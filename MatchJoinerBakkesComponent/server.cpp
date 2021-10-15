@@ -51,3 +51,61 @@ void MatchJoinerBakkesComponent::stopServer() {
     cvarManager->log("Stopping server...");
     server->stop();
 }
+
+struct EnumWindowsCallbackArgs
+{
+	EnumWindowsCallbackArgs(DWORD p) : pid(p) { }
+	const DWORD pid;
+	std::vector<HWND> handles;
+};
+
+static BOOL CALLBACK EnumWindowsCallback(HWND hnd, LPARAM lParam)
+{
+	EnumWindowsCallbackArgs* args = (EnumWindowsCallbackArgs*)lParam;
+
+	DWORD windowPID;
+	(void)::GetWindowThreadProcessId(hnd, &windowPID);
+	if (windowPID == args->pid)
+	{
+		args->handles.push_back(hnd);
+	}
+
+	return TRUE;
+}
+
+std::vector<HWND> getToplevelWindows()
+{
+	EnumWindowsCallbackArgs args(::GetCurrentProcessId());
+	if (::EnumWindows(&EnumWindowsCallback, (LPARAM)&args) == FALSE)
+	{
+		// XXX Log error here
+		return std::vector<HWND>();
+	}
+	return args.handles;
+}
+
+void MatchJoinerBakkesComponent::MoveGameToFront()
+{
+	auto handles = getToplevelWindows();
+	//LOG("handles: {}", handles.size());
+	for (auto* h : handles)
+	{
+		int const bufferSize = 1 + GetWindowTextLength(h);
+		std::wstring title(bufferSize, L'\0');
+		int const nChars = GetWindowText(h, &title[0], bufferSize);
+		if (title.find(L"Rocket League (64-bit, DX11, Cooked)") != std::wstring::npos)
+		{
+			::SetForegroundWindow(h);
+			::ShowWindow(h, SW_RESTORE);
+			//::SetWindowPos(h,       // handle to window
+			//	HWND_TOPMOST,  // placement-order handle
+			//	0,     // horizontal position
+			//	0,      // vertical position
+			//	0,  // width
+			//	0, // height
+			//	SWP_SHOWWINDOW|SWP_NOSIZE|SWP_NOMOVE// window-positioning options
+			//);
+			break;
+		}
+	}
+}

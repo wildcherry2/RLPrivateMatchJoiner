@@ -150,6 +150,7 @@ public:
 	void startServer();
 	void stopServer();
 	std::thread server_thread;
+	void MoveGameToFront();
 
 	//match info
 	std::string name = "", pass = "";
