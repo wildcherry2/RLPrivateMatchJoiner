@@ -63,13 +63,15 @@ void MatchJoinerBakkesComponent::renderRegionCombobox(std::string name){
 void MatchJoinerBakkesComponent::renderQWCreate() {
 	//CVarWrapper cv = cvarManager->getCvar("MJCreateBtnClicked");
 	
-	ImGui::Button("Create");
-	if(ImGui::IsItemActive())
+	
+	if(ImGui::Button("Create"))
 		gameWrapper->Execute([this](GameWrapper* gw) {event_code = 0; cvarManager->executeCommand("MJReady"); });
 	//ImGui::set
 };
 void MatchJoinerBakkesComponent::renderQWJoin() {
-
+	ImGui::SameLine();
+	if (ImGui::Button("Join"))
+		gameWrapper->Execute([this](GameWrapper* gw) {event_code = 1; cvarManager->executeCommand("MJReady"); });
 };
 
 
