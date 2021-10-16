@@ -23,7 +23,7 @@
       <UniqueIdentifier>{d46c4711-0bdc-484c-bb4c-5526d80f7f5e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Simple-Web-Server">
-      <UniqueIdentifier>{f6d93d61-e301-4c48-9168-8a578552a6e0}</UniqueIdentifier>
+      <UniqueIdentifier>{f73e501b-0bf8-4eb7-8bca-dbb29173a33a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +131,9 @@
     <ClInclude Include="version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Simple-Web-Server\asio_compatibility.hpp">
       <Filter>Simple-Web-Server</Filter>
     </ClInclude>
@@ -157,9 +160,6 @@
     </ClInclude>
     <ClInclude Include="Simple-Web-Server\utility.hpp">
       <Filter>Simple-Web-Server</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

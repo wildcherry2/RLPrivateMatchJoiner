@@ -16,12 +16,10 @@ void MatchJoinerBakkesComponent::SetImGuiContext(uintptr_t ctx) {
 
 void MatchJoinerBakkesComponent::RenderSettings() {
 	renderModEnabledCheckbox();
-	renderMapCombobox("Default map when creating private matches");
-	renderRegionCombobox("Default region when creating private matches");
+	renderMapCombobox("Default map");
+	renderRegionCombobox("Default region");
 	//renderQuickWindow();
 	
-	renderMapCombobox("Map");
-	renderRegionCombobox("Region");
 	renderQWNameField();
 	renderQWPassField();
 	renderQWCreate();
@@ -36,6 +34,7 @@ void MatchJoinerBakkesComponent::RenderSettings() {
 	
 }
 
+//broken
 void MatchJoinerBakkesComponent::renderModEnabledCheckbox() {
 	CVarWrapper cv = cvarManager->getCvar("MJModEnabled");
 	if (!cv) return;
@@ -46,11 +45,10 @@ void MatchJoinerBakkesComponent::renderModEnabledCheckbox() {
 
 void MatchJoinerBakkesComponent::renderMapCombobox(std::string name) {
 	
-	CVarWrapper cv = cvarManager->getCvar("MJExtMapNameSelection");
+	CVarWrapper cv = cvarManager->getCvar("MJMapNameSelection");
 	if (!cv) return;
 	int current = cv.getIntValue();
 	if(ImGui::Combo(name.c_str(),&current,map_normalnames,IM_ARRAYSIZE(map_normalnames))) cv.setValue(current);
-	//cvarManager->log(std::string(map_normalnames[current]) + " is " + map_codenames[current]);
 	//tooltip saying this is default
 }
 
@@ -61,12 +59,13 @@ void MatchJoinerBakkesComponent::renderRegionCombobox(std::string name){
 	if (ImGui::Combo(name.c_str(), &current, region_names, IM_ARRAYSIZE(region_names))) cv.setValue(current);
 }
 
+//doesnt work atm
 void MatchJoinerBakkesComponent::renderQWCreate() {
-	CVarWrapper cv = cvarManager->getCvar("MJCreateBtnClicked");
+	//CVarWrapper cv = cvarManager->getCvar("MJCreateBtnClicked");
 	
 	ImGui::Button("Create");
 	if(ImGui::IsItemActive())
-		cv.setValue(1);
+		gameWrapper->Execute([this](GameWrapper* gw) {event_code = 0; cvarManager->executeCommand("MJReady"); });
 	//ImGui::set
 };
 void MatchJoinerBakkesComponent::renderQWJoin() {
@@ -74,19 +73,23 @@ void MatchJoinerBakkesComponent::renderQWJoin() {
 };
 
 
-void MatchJoinerBakkesComponent::renderQWNameField() {
-	char in[100] = "";
-	ImGui::InputText("Name: ", in, IM_ARRAYSIZE(in));
-	if (!ImGui::IsItemActive())
+
+void MatchJoinerBakkesComponent::renderQWNameField() { //put a flag for auto selecting all when clicked
+	char in[100] = ""; 
+	std::strcpy(in,name_field_storage);
+	if (ImGui::InputText("Name: ", in, IM_ARRAYSIZE(in)/*,ImGuiInputTextFlags_CallbackAlways,setVars*/)) {
+		std::strcpy(name_field_storage,in);
 		cvarManager->getCvar("MJServerName").setValue(std::string(in));
+	}
 }
 
 void MatchJoinerBakkesComponent::renderQWPassField() {
 	char in[100] = "";
-	ImGui::InputText("Pass: ", in, IM_ARRAYSIZE(in));
-	if (!ImGui::IsItemActive())
+	std::strcpy(in, pass_field_storage);
+	if (ImGui::InputText("Pass: ", in, IM_ARRAYSIZE(in))) {
+		std::strcpy(pass_field_storage, in);
 		cvarManager->getCvar("MJServerPass").setValue(std::string(in));
-	//cvarManager->getCvar("MJServerPass").setValue(std::string(in1));
+	}
 }
 
 //void MatchJoinerBakkesComponent::getMapArray(char** maps) {

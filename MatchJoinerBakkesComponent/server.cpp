@@ -16,16 +16,16 @@ void MatchJoinerBakkesComponent::initServer() {
 
         auto it = fields.begin();
         this->cvarManager->getCvar("MJEventType").setValue(it->second);
-        event_code = std::stoi(it->second);
+        //event_code = std::stoi(it->second); should be set automatically now TEST
         it++;
         this->cvarManager->getCvar("MJServerName").setValue(it->second);
-        name = it->second;
+        //name = it->second;
         it++;
         this->cvarManager->getCvar("MJServerPass").setValue(it->second);
-        pass = it->second;
+       // pass = it->second;
         it++;
         this->cvarManager->getCvar("MJRegion").setValue(it->second);
-        region = getRegion(std::stoi(it->second));
+        //region = getRegion(std::stoi(it->second));
 
         response->close_connection_after_response = true;
         response->write(SimpleWeb::StatusCode::success_accepted, "alright");
@@ -50,4 +50,55 @@ void MatchJoinerBakkesComponent::startServer() {
 void MatchJoinerBakkesComponent::stopServer() {
     cvarManager->log("Stopping server...");
     server->stop();
+}
+
+//from Martinii, https://github.com/Martinii89/BallchasingReplayPlayer
+struct EnumWindowsCallbackArgs
+{
+	EnumWindowsCallbackArgs(DWORD p) : pid(p) { }
+	const DWORD pid;
+	std::vector<HWND> handles;
+};
+
+static BOOL CALLBACK EnumWindowsCallback(HWND hnd, LPARAM lParam)
+{
+	EnumWindowsCallbackArgs* args = (EnumWindowsCallbackArgs*)lParam;
+
+	DWORD windowPID;
+	(void)::GetWindowThreadProcessId(hnd, &windowPID);
+	if (windowPID == args->pid)
+	{
+		args->handles.push_back(hnd);
+	}
+
+	return TRUE;
+}
+
+std::vector<HWND> getToplevelWindows()
+{
+	EnumWindowsCallbackArgs args(::GetCurrentProcessId());
+	if (::EnumWindows(&EnumWindowsCallback, (LPARAM)&args) == FALSE)
+	{
+
+		return std::vector<HWND>();
+	}
+	return args.handles;
+}
+
+void MatchJoinerBakkesComponent::MoveGameToFront()
+{
+	auto handles = getToplevelWindows();
+
+	for (auto* h : handles)
+	{
+		int const bufferSize = 1 + GetWindowTextLength(h);
+		std::wstring title(bufferSize, L'\0');
+		int const nChars = GetWindowText(h, &title[0], bufferSize);
+		if (title.find(L"Rocket League (64-bit, DX11, Cooked)") != std::wstring::npos)
+		{
+			::SetForegroundWindow(h);
+			::ShowWindow(h, SW_RESTORE);
+			break;
+		}
+	}
 }

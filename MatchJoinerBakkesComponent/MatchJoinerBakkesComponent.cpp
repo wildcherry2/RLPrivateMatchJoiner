@@ -14,7 +14,6 @@ void MatchJoinerBakkesComponent::onLoad()
 	_globalCvarManager = cvarManager;
 	initInternalCvars();
 	initGuiCvars();
-	initServerCvars();
 	initServer();
 	startServer();
 }
@@ -37,7 +36,7 @@ void MatchJoinerBakkesComponent::gotoPrivateMatch() {
 		if (mw && !gameWrapper->IsInOnlineGame()) {
 
 			cm.GameTags = gametags;
-			cm.MapName = map_codenames[2]; //this will need to be bound to map cvar/array
+			cm.MapName = selected_map; //this will need to be bound to map cvar/array
 			cm.ServerName = name;
 			cm.Password = pass;
 			cm.BlueTeamSettings = blue;

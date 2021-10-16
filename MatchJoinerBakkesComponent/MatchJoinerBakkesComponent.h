@@ -11,6 +11,7 @@
 #include "version.h"
 #include "Simple-Web-Server/server_http.hpp">;
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include <fstream>
 #include <vector>
 #include <thread>
@@ -34,7 +35,6 @@ public:
 
 	//cvar init
 	void initInternalCvars();
-	void initServerCvars();
 	void initGuiCvars();
 
 	//f2 gui
@@ -46,11 +46,15 @@ public:
 	void renderRegionCombobox(std::string name);
 	//void renderQuickWindowBtn();
 	//void renderQuickWindow();
-	void renderQWNameField();
+	void renderQWNameField();	
+	//static std::string setVars(ImGuiInputTextCallbackData* data);
 	void renderQWPassField();
 	void renderQWCreate();
 	void renderQWJoin();
 	bool is_enabled = true; //for overall mod
+	char name_field_storage[100] = "";
+	char pass_field_storage[100] = "";
+
 	
 	//name arrays, could use std::map, but this is more efficient, gui requires c strings ??
 	const std::string map_codenames[35] = {
@@ -149,6 +153,7 @@ public:
 	void startServer();
 	void stopServer();
 	std::thread server_thread;
+	void MoveGameToFront();
 
 	//match info
 	std::string name = "", pass = "";
@@ -156,6 +161,7 @@ public:
 	Region region = Region::USE;
 	int event_code = 1;
 
+	std::string selected_map = map_codenames[17];
 
 	// Inherited via PluginWindow
 	/*
