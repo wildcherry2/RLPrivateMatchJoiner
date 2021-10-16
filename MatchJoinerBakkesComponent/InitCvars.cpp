@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "MatchJoinerBakkesComponent.h"
+#include "MJ.h"
 
-void MatchJoinerBakkesComponent::initInternalCvars() {
+void MJ::initInternalCvars() {
 	cvarManager->registerCvar("MJEventType", "1", "Set to 0 for create mode, 1 for join mode", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		event_code = cw.getIntValue();
 		});
@@ -41,10 +41,10 @@ void MatchJoinerBakkesComponent::initInternalCvars() {
 
 }
 
-void MatchJoinerBakkesComponent::initGuiCvars() {
+void MJ::initGuiCvars() {
 	cvarManager->registerCvar("MJModEnabled", "1", "Is mod enabled?", false, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_enabled = cw.getBoolValue(); //just need to sleep the server thread, unload windows and options
-		//is_enabled ? gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("plugin unload matchjoinerbakkescomponent"); }) : gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("plugin load matchjoinerbakkescomponent"); });
+		//is_enabled ? gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("plugin unload MJ"); }) : gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("plugin load MJ"); });
 		});
 	cvarManager->registerCvar("MJMapNameSelection", "18", "Enter map name", true, false, false, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		cvarManager->getCvar("MJMap").setValue(map_codenames[cw.getIntValue()]);

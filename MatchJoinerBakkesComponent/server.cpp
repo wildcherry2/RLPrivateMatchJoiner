@@ -1,9 +1,9 @@
 #include "pch.h"
-#include "MatchJoinerBakkesComponent.h"
+#include "MJ.h"
 
 using namespace std;
 
-void MatchJoinerBakkesComponent::initServer() {
+void MJ::initServer() {
     cvarManager->log("Initializing server...");
 	server = new SimpleWeb::Server<SimpleWeb::HTTP>;
 	server->config.port = 6969;
@@ -31,7 +31,7 @@ void MatchJoinerBakkesComponent::initServer() {
     };
 }
 
-void MatchJoinerBakkesComponent::startServer() {
+void MJ::startServer() {
     server_thread = std::thread([this](){      
         cvarManager->log("Starting server...");
         this->server->start(); 
@@ -43,7 +43,7 @@ void MatchJoinerBakkesComponent::startServer() {
 	gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); }); //holy shit it works, need to add restart server once in menu/persistent threading?
     }
 
-void MatchJoinerBakkesComponent::stopServer() {
+void MJ::stopServer() {
     cvarManager->log("Stopping server...");
     server->stop();
 }
@@ -81,7 +81,7 @@ std::vector<HWND> getToplevelWindows()
 	return args.handles;
 }
 
-void MatchJoinerBakkesComponent::MoveGameToFront()
+void MJ::MoveGameToFront()
 {
 	auto handles = getToplevelWindows();
 

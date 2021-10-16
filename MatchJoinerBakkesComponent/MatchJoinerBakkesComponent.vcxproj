@@ -13,6 +13,7 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <TargetFrameworkVersion>
     </TargetFrameworkVersion>
+    <ProjectName>MJ</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -116,8 +117,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="MatchJoinerBakkesComponent.cpp" />
-    <ClCompile Include="MatchJoinerBakkesComponentGUI.cpp" />
+    <ClCompile Include="MJ.cpp" />
+    <ClCompile Include="MJGUI.cpp" />
     <ClCompile Include="server.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -135,7 +136,7 @@
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="MatchJoinerBakkesComponent.h" />
+    <ClInclude Include="MJ.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Simple-Web-Server\asio_compatibility.hpp" />
     <ClInclude Include="Simple-Web-Server\client_http.hpp" />
@@ -149,7 +150,7 @@
     <ClInclude Include="version.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="MatchJoinerBakkesComponent.rc" />
+    <ResourceCompile Include="MJ.rc" />
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

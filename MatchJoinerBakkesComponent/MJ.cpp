@@ -1,15 +1,15 @@
 //https://bakkesmodwiki.github.io/bakkesmod_api/
 #include "pch.h"
-#include "MatchJoinerBakkesComponent.h"
+#include "MJ.h"
 
 //https://bakkesmodwiki.github.io/bakkesmod_api/Classes/Wrappers/Modals/ModalWrapper/ for dealing with annoying popup
 
-BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a link to a localhost webserver to join a private match", plugin_version, PLUGINTYPE_THREADED) //changed to threaded, change back to default for gui testing
+BAKKESMOD_PLUGIN(MJ, "Takes match data from a link to a localhost webserver to join a private match", plugin_version, PLUGINTYPE_THREADED) //changed to threaded, change back to default for gui testing
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
 
-void MatchJoinerBakkesComponent::onLoad()
+void MJ::onLoad()
 {
 	_globalCvarManager = cvarManager;
 	initInternalCvars();
@@ -19,7 +19,7 @@ void MatchJoinerBakkesComponent::onLoad()
 	//cvarManager->executeCommand("MJDisableServer");
 }
 
-void MatchJoinerBakkesComponent::onUnload()
+void MJ::onUnload()
 {
 	/*cvarManager->executeCommand("MJDisableServer");
 	server_thread.join();*/
@@ -27,7 +27,7 @@ void MatchJoinerBakkesComponent::onUnload()
 }
 
 //retry on join, black screen edge case
-void MatchJoinerBakkesComponent::gotoPrivateMatch() {
+void MJ::gotoPrivateMatch() {
 	//cvarManager->log("gpm called");
 	if (name == "") return;
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
@@ -63,7 +63,7 @@ void MatchJoinerBakkesComponent::gotoPrivateMatch() {
 }
 
 
-Region MatchJoinerBakkesComponent::getRegion(int region) {
+Region MJ::getRegion(int region) {
 	switch (region) {
 		case 0: return Region::USE;
 		case 1: return Region::EU;
