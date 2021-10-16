@@ -16,16 +16,16 @@ void MatchJoinerBakkesComponent::initServer() {
 
         auto it = fields.begin();
         this->cvarManager->getCvar("MJEventType").setValue(it->second);
-        event_code = std::stoi(it->second);
+        //event_code = std::stoi(it->second); should be set automatically now TEST
         it++;
         this->cvarManager->getCvar("MJServerName").setValue(it->second);
-        name = it->second;
+        //name = it->second;
         it++;
         this->cvarManager->getCvar("MJServerPass").setValue(it->second);
-        pass = it->second;
+       // pass = it->second;
         it++;
         this->cvarManager->getCvar("MJRegion").setValue(it->second);
-        region = getRegion(std::stoi(it->second));
+        //region = getRegion(std::stoi(it->second));
 
         response->close_connection_after_response = true;
         response->write(SimpleWeb::StatusCode::success_accepted, "alright");
@@ -52,6 +52,7 @@ void MatchJoinerBakkesComponent::stopServer() {
     server->stop();
 }
 
+//from Martinii, https://github.com/Martinii89/BallchasingReplayPlayer
 struct EnumWindowsCallbackArgs
 {
 	EnumWindowsCallbackArgs(DWORD p) : pid(p) { }
@@ -78,7 +79,7 @@ std::vector<HWND> getToplevelWindows()
 	EnumWindowsCallbackArgs args(::GetCurrentProcessId());
 	if (::EnumWindows(&EnumWindowsCallback, (LPARAM)&args) == FALSE)
 	{
-		// XXX Log error here
+
 		return std::vector<HWND>();
 	}
 	return args.handles;
@@ -87,7 +88,7 @@ std::vector<HWND> getToplevelWindows()
 void MatchJoinerBakkesComponent::MoveGameToFront()
 {
 	auto handles = getToplevelWindows();
-	//LOG("handles: {}", handles.size());
+
 	for (auto* h : handles)
 	{
 		int const bufferSize = 1 + GetWindowTextLength(h);
@@ -97,14 +98,6 @@ void MatchJoinerBakkesComponent::MoveGameToFront()
 		{
 			::SetForegroundWindow(h);
 			::ShowWindow(h, SW_RESTORE);
-			//::SetWindowPos(h,       // handle to window
-			//	HWND_TOPMOST,  // placement-order handle
-			//	0,     // horizontal position
-			//	0,      // vertical position
-			//	0,  // width
-			//	0, // height
-			//	SWP_SHOWWINDOW|SWP_NOSIZE|SWP_NOMOVE// window-positioning options
-			//);
 			break;
 		}
 	}

@@ -34,7 +34,6 @@ public:
 
 	//cvar init
 	void initInternalCvars();
-	void initServerCvars();
 	void initGuiCvars();
 
 	//f2 gui

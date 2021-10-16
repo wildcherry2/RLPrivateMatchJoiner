@@ -14,7 +14,6 @@ void MatchJoinerBakkesComponent::onLoad()
 	_globalCvarManager = cvarManager;
 	initInternalCvars();
 	initGuiCvars();
-	initServerCvars();
 	initServer();
 	startServer();
 }
