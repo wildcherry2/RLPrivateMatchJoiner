@@ -30,6 +30,15 @@ void MatchJoinerBakkesComponent::initInternalCvars() {
 		gotoPrivateMatch();
 		}, "", PERMISSION_ALL);
 
+	//works, but activates mjready, could cause issues, need to fix
+	cvarManager->registerNotifier("MJDisableServer", [this](std::vector<std::string> args) {
+		//this->server_disabled_activated_flag = true;
+		server->stop();
+		//this->server_disabled_activated_flag = false;
+		}, "", PERMISSION_ALL);
+
+	cvarManager->setBind("F3","togglemenu mj");
+
 }
 
 void MatchJoinerBakkesComponent::initGuiCvars() {

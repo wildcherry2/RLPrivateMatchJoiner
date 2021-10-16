@@ -16,16 +16,12 @@ void MatchJoinerBakkesComponent::initServer() {
 
         auto it = fields.begin();
         this->cvarManager->getCvar("MJEventType").setValue(it->second);
-        //event_code = std::stoi(it->second); should be set automatically now TEST
         it++;
         this->cvarManager->getCvar("MJServerName").setValue(it->second);
-        //name = it->second;
         it++;
         this->cvarManager->getCvar("MJServerPass").setValue(it->second);
-       // pass = it->second;
         it++;
         this->cvarManager->getCvar("MJRegion").setValue(it->second);
-        //region = getRegion(std::stoi(it->second));
 
         response->close_connection_after_response = true;
         response->write(SimpleWeb::StatusCode::success_accepted, "alright");
@@ -35,7 +31,7 @@ void MatchJoinerBakkesComponent::initServer() {
     };
 }
 
-void MatchJoinerBakkesComponent::startServer() {  
+void MatchJoinerBakkesComponent::startServer() {
     server_thread = std::thread([this](){      
         cvarManager->log("Starting server...");
         this->server->start(); 
@@ -44,7 +40,7 @@ void MatchJoinerBakkesComponent::startServer() {
     cvarManager->log("Joining thread...");
     server_thread.join();
     cvarManager->log("Thread closed.");
-    gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); }); //holy shit it works, need to add restart server once in menu/persistent threading?
+	gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); }); //holy shit it works, need to add restart server once in menu/persistent threading?
     }
 
 void MatchJoinerBakkesComponent::stopServer() {

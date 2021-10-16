@@ -4,7 +4,7 @@
 
 //https://bakkesmodwiki.github.io/bakkesmod_api/Classes/Wrappers/Modals/ModalWrapper/ for dealing with annoying popup
 
-BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a link to a localhost webserver to join a private match", plugin_version, PLUGINTYPE_THREADED) //changed to threaded
+BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a link to a localhost webserver to join a private match", plugin_version, PLUGINTYPE_THREADED) //changed to threaded, change back to default for gui testing
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
@@ -16,16 +16,19 @@ void MatchJoinerBakkesComponent::onLoad()
 	initGuiCvars();
 	initServer();
 	startServer();
+	//cvarManager->executeCommand("MJDisableServer");
 }
 
 void MatchJoinerBakkesComponent::onUnload()
 {
-	//stopServer();
+	/*cvarManager->executeCommand("MJDisableServer");
+	server_thread.join();*/
 	cvarManager->log("Match joiner unloaded.");
 }
 
 //retry on join, black screen edge case
 void MatchJoinerBakkesComponent::gotoPrivateMatch() {
+	//cvarManager->log("gpm called");
 	if (name == "") return;
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
 	if (event_code == 0) {

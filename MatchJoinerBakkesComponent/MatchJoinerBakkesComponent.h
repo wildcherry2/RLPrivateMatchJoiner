@@ -22,7 +22,7 @@ constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_M
 
 
 
-class MatchJoinerBakkesComponent: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow/*, public BakkesMod::Plugin::PluginWindow*/
+class MatchJoinerBakkesComponent: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow, public BakkesMod::Plugin::PluginWindow
 {
 public:
 	//std::shared_ptr<bool> createbtn = std::make_shared<bool>(false);
@@ -148,7 +148,7 @@ public:
 
 	//server
 	SimpleWeb::Server<SimpleWeb::HTTP>* server = nullptr;
-	bool server_enabled = true;	
+	//bool server_disabled_activated_flag = false;	
 	void initServer();
 	void startServer();
 	void stopServer();
@@ -164,20 +164,20 @@ public:
 	std::string selected_map = map_codenames[17];
 
 	// Inherited via PluginWindow
-	/*
+	
 
 	bool isWindowOpen_ = false;
 	bool isMinimized_ = false;
-	std::string menuTitle_ = "MatchJoinerBakkesComponent";
+	std::string menuTitle_ = "mj";
 
 	virtual void Render() override;
 	virtual std::string GetMenuName() override;
 	virtual std::string GetMenuTitle() override;
-	virtual void SetImGuiContext(uintptr_t ctx) override;
+	//virtual void SetImGuiContext(uintptr_t ctx) override;
 	virtual bool ShouldBlockInput() override;
 	virtual bool IsActiveOverlay() override;
 	virtual void OnOpen() override;
 	virtual void OnClose() override;
 	
-	*/
+	
 };
