@@ -11,6 +11,7 @@
 #include "version.h"
 #include "Simple-Web-Server/server_http.hpp">;
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include <fstream>
 #include <vector>
 #include <thread>
@@ -45,11 +46,14 @@ public:
 	void renderRegionCombobox(std::string name);
 	//void renderQuickWindowBtn();
 	//void renderQuickWindow();
-	void renderQWNameField();
+	void renderQWNameField();	
+	//static std::string setVars(ImGuiInputTextCallbackData* data);
 	void renderQWPassField();
 	void renderQWCreate();
 	void renderQWJoin();
 	bool is_enabled = true; //for overall mod
+	char name_field_storage[100] = "";
+	char pass_field_storage[100] = "";
 
 	
 	//name arrays, could use std::map, but this is more efficient, gui requires c strings ??

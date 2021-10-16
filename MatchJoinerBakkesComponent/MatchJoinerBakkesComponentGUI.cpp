@@ -34,6 +34,7 @@ void MatchJoinerBakkesComponent::RenderSettings() {
 	
 }
 
+//broken
 void MatchJoinerBakkesComponent::renderModEnabledCheckbox() {
 	CVarWrapper cv = cvarManager->getCvar("MJModEnabled");
 	if (!cv) return;
@@ -48,7 +49,6 @@ void MatchJoinerBakkesComponent::renderMapCombobox(std::string name) {
 	if (!cv) return;
 	int current = cv.getIntValue();
 	if(ImGui::Combo(name.c_str(),&current,map_normalnames,IM_ARRAYSIZE(map_normalnames))) cv.setValue(current);
-	//cvarManager->log(std::string(map_normalnames[current]) + " is " + map_codenames[current]);
 	//tooltip saying this is default
 }
 
@@ -65,7 +65,7 @@ void MatchJoinerBakkesComponent::renderQWCreate() {
 	
 	ImGui::Button("Create");
 	if(ImGui::IsItemActive())
-		gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); }); 
+		gameWrapper->Execute([this](GameWrapper* gw) {event_code = 0; cvarManager->executeCommand("MJReady"); });
 	//ImGui::set
 };
 void MatchJoinerBakkesComponent::renderQWJoin() {
@@ -73,19 +73,23 @@ void MatchJoinerBakkesComponent::renderQWJoin() {
 };
 
 
-void MatchJoinerBakkesComponent::renderQWNameField() {
-	char in[100] = "";
-	ImGui::InputText("Name: ", in, IM_ARRAYSIZE(in));
-	if (!ImGui::IsItemActive())
+
+void MatchJoinerBakkesComponent::renderQWNameField() { //put a flag for auto selecting all when clicked
+	char in[100] = ""; 
+	std::strcpy(in,name_field_storage);
+	if (ImGui::InputText("Name: ", in, IM_ARRAYSIZE(in)/*,ImGuiInputTextFlags_CallbackAlways,setVars*/)) {
+		std::strcpy(name_field_storage,in);
 		cvarManager->getCvar("MJServerName").setValue(std::string(in));
+	}
 }
 
 void MatchJoinerBakkesComponent::renderQWPassField() {
 	char in[100] = "";
-	ImGui::InputText("Pass: ", in, IM_ARRAYSIZE(in));
-	if (!ImGui::IsItemActive())
+	std::strcpy(in, pass_field_storage);
+	if (ImGui::InputText("Pass: ", in, IM_ARRAYSIZE(in))) {
+		std::strcpy(pass_field_storage, in);
 		cvarManager->getCvar("MJServerPass").setValue(std::string(in));
-	//cvarManager->getCvar("MJServerPass").setValue(std::string(in1));
+	}
 }
 
 //void MatchJoinerBakkesComponent::getMapArray(char** maps) {
