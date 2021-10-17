@@ -14,19 +14,20 @@ void MJ::SetImGuiContext(uintptr_t ctx) {
 	ImGui::SetCurrentContext(reinterpret_cast<ImGuiContext*>(ctx));
 }
 
-void MJ::RenderSettings() { //put name/pass first
+void MJ::RenderSettings() {
 	renderModEnabledCheckbox();
-	//add toggle menu button here
 }
 
 //broken
-void MJ::renderModEnabledCheckbox() {
+void MJ::renderModEnabledCheckbox() { //tie things to cvars, unregister cvars for options
 	CVarWrapper cv = cvarManager->getCvar("MJModEnabled");
 	if (!cv) return;
 	bool enabled = cv.getBoolValue();
 
 	if (ImGui::Checkbox("Enabled", &enabled)) cv.setValue(enabled);
 }
+
+
 void MJ::renderMapCombobox(std::string name) {
 	CVarWrapper cv = cvarManager->getCvar("MJMapNameSelection");
 	if (!cv) return;
@@ -44,18 +45,25 @@ void MJ::renderRegionCombobox(std::string name){
 
 
 void MJ::renderQWCreate() {
-	if(ImGui::Button("Create"))
-		gameWrapper->Execute([this](GameWrapper* gw) {event_code = 0; cvarManager->executeCommand("MJReady"); });
+	if (ImGui::Button("Create")) {
+		event_code = 0;
+		gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("MJReady"); });
+	}
+		
 }
 void MJ::renderQWJoin() {
 	ImGui::SameLine();
-	if (ImGui::Button("Join"))
-		gameWrapper->Execute([this](GameWrapper* gw) {event_code = 1; cvarManager->executeCommand("MJReady"); });
+	if (ImGui::Button("Join")) {
+		event_code = 1;
+		gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("MJReady"); });
+	}
 }
+//needs testing
 void MJ::renderQWNameField() {
 	char in[100] = ""; 
 	std::strcpy(in,name_field_storage);
-	if (ImGui::InputText("Server Name", in, IM_ARRAYSIZE(in),ImGuiInputTextFlags_AutoSelectAll)) {
+	ImGui::InputText("Server Name", in, IM_ARRAYSIZE(in), ImGuiInputTextFlags_AutoSelectAll);
+	if (ImGui::IsItemEdited()) { //setting name? use isitemedited if thats the issue
 		std::strcpy(name_field_storage,in);
 		cvarManager->getCvar("MJServerName").setValue(std::string(in));
 	}
@@ -63,11 +71,22 @@ void MJ::renderQWNameField() {
 void MJ::renderQWPassField() {
 	char in[100] = "";
 	std::strcpy(in, pass_field_storage);
-	if (ImGui::InputText("Password", in, IM_ARRAYSIZE(in), ImGuiInputTextFlags_AutoSelectAll)) {
+	ImGui::InputText("Password", in, IM_ARRAYSIZE(in), ImGuiInputTextFlags_AutoSelectAll);
+	if (ImGui::IsItemEdited()) {
 		std::strcpy(pass_field_storage, in);
 		cvarManager->getCvar("MJServerPass").setValue(std::string(in));
 	}
 }
+void MJ::renderQWLinkGen() {
+	if (ImGui::Button("Generate Link")) {
+		link = "http://localhost:6969/match?event=" + std::to_string(event_code) + "&name=" + name + "&pass=" + pass + "&region=" + std::to_string((int)region);
+		cvarManager->getCvar("MJGeneratedLink").setValue(link);
+		ImGui::LogToClipboard();
+		ImGui::LogText(link.c_str());
+		ImGui::LogFinish();
+	}
+}
+
 
 
 // Do ImGui rendering here
@@ -87,7 +106,7 @@ void MJ::Render()
 	//renderQuickWindow();
 	renderQWCreate();
 	renderQWJoin();
-
+	renderQWLinkGen();
 
 
 	ImGui::End();
@@ -134,4 +153,3 @@ void MJ::OnClose()
 {
 	isWindowOpen_ = false;
 }
-

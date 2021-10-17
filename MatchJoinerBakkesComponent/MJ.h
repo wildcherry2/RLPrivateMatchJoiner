@@ -51,9 +51,11 @@ public:
 	void renderQWPassField();
 	void renderQWCreate();
 	void renderQWJoin();
+	void renderQWLinkGen();
 	bool is_enabled = true; //for overall mod
 	char name_field_storage[100] = "";
 	char pass_field_storage[100] = "";
+	std::string link = "";
 
 	
 	//name arrays, could use std::map, but this is more efficient, gui requires c strings ??

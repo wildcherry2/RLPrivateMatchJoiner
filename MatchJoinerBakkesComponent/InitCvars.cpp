@@ -55,4 +55,5 @@ void MJ::initGuiCvars() {
 		},"",PERMISSION_ALL);*/
 	//cvarManager->registerCvar("MJCreateBtnClicked", "0", "", false, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {gotoPrivateMatch();}); //needs testing
 	cvarManager->registerCvar("MJIsQuickMatchWindowEnabled", "0", "Toggles quick private match join/create window", true, true, 0, true, 1, false); //change to notifier
+	cvarManager->registerCvar("MJGeneratedLink", "", "Generated link", true, false, false, false);
 }

@@ -29,7 +29,7 @@ void MJ::onUnload()
 //retry on join, black screen edge case
 void MJ::gotoPrivateMatch() {
 	//cvarManager->log("gpm called");
-	if (name == "") return;
+	if (name == "") { cvarManager->log("Name is empty, returning"); return; }
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
 	if (event_code == 0) {
 		CustomMatchSettings cm = CustomMatchSettings();
@@ -39,22 +39,24 @@ void MJ::gotoPrivateMatch() {
 		if (mw && !gameWrapper->IsInOnlineGame()) {
 
 			cm.GameTags = gametags;
-			cm.MapName = selected_map; //this will need to be bound to map cvar/array
+			cm.MapName = selected_map;
 			cm.ServerName = name;
 			cm.Password = pass;
 			cm.BlueTeamSettings = blue;
 			cm.OrangeTeamSettings = red;
 			cm.bClubServer = false;
 
+			cvarManager->log("Creating with\n" + cm.ServerName + "\n" + cm.Password);
+
 			mw.CreatePrivateMatch(region, cm);
-			//add reset vars function
 		}
-		else cvarManager->log("Error creating lobby, you are in a game or mmw is invalid"); //add retry function
+		else cvarManager->log("Error creating lobby, you are in a game or mmw is invalid"); 
 	}
 	else if (event_code == 1) {
 		if (mw && !gameWrapper->IsInOnlineGame()) {
+			cvarManager->log("Joining with\n" + name + "\n" + pass);
 			mw.JoinPrivateMatch(name, pass);
-			//add reset vars function
+
 		}
 		else cvarManager->log("Error joining lobby, you are in a game or mmw is invalid");
 
