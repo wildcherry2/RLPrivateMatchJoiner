@@ -33,9 +33,12 @@ public:
 	void gotoPrivateMatch();
 	Region getRegion(int region);
 
-	//cvar init
+	//cvar
+	void initCvars();
 	void initInternalCvars();
 	void initGuiCvars();
+	void unregisterCvars();
+	bool mod_enabled_cvar = false;
 
 	//f2 gui
 	void RenderSettings() override;

@@ -12,8 +12,7 @@ std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 void MJ::onLoad()
 {
 	_globalCvarManager = cvarManager;
-	initInternalCvars();
-	initGuiCvars();
+	initCvars();
 	initServer();
 	startServer();
 	//cvarManager->executeCommand("MJDisableServer");
@@ -39,7 +38,7 @@ void MJ::gotoPrivateMatch() {
 		if (mw && !gameWrapper->IsInOnlineGame()) {
 
 			cm.GameTags = gametags;
-			cm.MapName = selected_map;
+			cm.MapName = selected_map; //this will need to be bound to map cvar/array
 			cm.ServerName = name;
 			cm.Password = pass;
 			cm.BlueTeamSettings = blue;
@@ -50,13 +49,15 @@ void MJ::gotoPrivateMatch() {
 
 			mw.CreatePrivateMatch(region, cm);
 		}
-		else cvarManager->log("Error creating lobby, you are in a game or mmw is invalid"); 
+		else cvarManager->log("Error creating lobby, you are in a game or mmw is invalid"); //add retry function
 	}
 	else if (event_code == 1) {
 		if (mw && !gameWrapper->IsInOnlineGame()) {
-			cvarManager->log("Joining with\n" + name + "\n" + pass);
-			mw.JoinPrivateMatch(name, pass);
-
+			std::string lname = name;
+			std::string lpass = pass;
+			cvarManager->log("Joining with\n" + lname + "\n" + lpass);
+			mw.JoinPrivateMatch(lname, lpass);
+			//add reset vars function
 		}
 		else cvarManager->log("Error joining lobby, you are in a game or mmw is invalid");
 

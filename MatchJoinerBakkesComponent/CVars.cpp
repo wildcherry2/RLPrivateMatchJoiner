@@ -1,6 +1,11 @@
 #include "pch.h"
 #include "MJ.h"
 
+void MJ::initCvars() {
+	initInternalCvars();
+	initGuiCvars();
+}
+
 void MJ::initInternalCvars() {
 	cvarManager->registerCvar("MJEventType", "1", "Set to 0 for create mode, 1 for join mode", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		event_code = cw.getIntValue();
@@ -42,18 +47,46 @@ void MJ::initInternalCvars() {
 }
 
 void MJ::initGuiCvars() {
-	cvarManager->registerCvar("MJModEnabled", "1", "Is mod enabled?", false, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
-		is_enabled = cw.getBoolValue(); //just need to sleep the server thread, unload windows and options
-		//is_enabled ? gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("plugin unload MJ"); }) : gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("plugin load MJ"); });
+	//extremely broken
+	if(!mod_enabled_cvar) cvarManager->registerCvar("MJModEnabled", "1", "Is mod enabled?", false, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+		if (!cw.getBoolValue()) {
+			server->stop(); //race condition?
+			if (server_thread.joinable()) server_thread.join();
+			//delete server;
+			//unregisterCvars();
+			mod_enabled_cvar = true;
+		}
+		else {
+			initCvars(); //might cause issues seeing how this is init'd already
+			initServer();
+			startServer();
+		}
+		
 		});
 	cvarManager->registerCvar("MJMapNameSelection", "18", "Enter map name", true, false, false, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		cvarManager->getCvar("MJMap").setValue(map_codenames[cw.getIntValue()]);
 		selected_map = map_codenames[cw.getIntValue()];
 		});
-	/*cvarManager->registerNotifier("MJCreateBtnClicked", [this](std::vector<std::string> args) {
-		gotoPrivateMatch();
-		},"",PERMISSION_ALL);*/
-	//cvarManager->registerCvar("MJCreateBtnClicked", "0", "", false, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {gotoPrivateMatch();}); //needs testing
 	cvarManager->registerCvar("MJIsQuickMatchWindowEnabled", "0", "Toggles quick private match join/create window", true, true, 0, true, 1, false); //change to notifier
 	cvarManager->registerCvar("MJGeneratedLink", "", "Generated link", true, false, false, false);
+	cvarManager->registerNotifier("MJAutoTabInToggle", [this](std::vector<std::string> args) {
+		
+		}, "", PERMISSION_ALL);
+}
+
+void MJ::unregisterCvars() {
+	
+	cvarManager->removeCvar("MJEventType");
+	cvarManager->removeCvar("MJServerName");
+	cvarManager->removeCvar("MJServerPass");
+	cvarManager->removeCvar("MJMap");
+	cvarManager->removeCvar("MJRegion");
+	cvarManager->removeCvar("MJIsQuickMatchWindowEnabled");
+	cvarManager->removeCvar("MJMapNameSelection");
+	cvarManager->removeCvar("MJGeneratedLink");
+	cvarManager->removeNotifier("MJGetMatchVars");
+	cvarManager->removeNotifier("MJReady");
+	cvarManager->removeNotifier("MJDisableServer");
+	cvarManager->removeBind("F3"); //need to store what this is set to initially
+	cvarManager->log("cvars unregistered!");
 }

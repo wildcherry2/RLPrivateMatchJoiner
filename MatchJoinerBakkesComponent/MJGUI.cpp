@@ -51,6 +51,7 @@ void MJ::renderQWCreate() {
 	}
 		
 }
+//joining is broken
 void MJ::renderQWJoin() {
 	ImGui::SameLine();
 	if (ImGui::Button("Join")) {
@@ -58,12 +59,12 @@ void MJ::renderQWJoin() {
 		gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("MJReady"); });
 	}
 }
-//needs testing
+
 void MJ::renderQWNameField() {
 	char in[100] = ""; 
 	std::strcpy(in,name_field_storage);
 	ImGui::InputText("Server Name", in, IM_ARRAYSIZE(in), ImGuiInputTextFlags_AutoSelectAll);
-	if (ImGui::IsItemEdited()) { //setting name? use isitemedited if thats the issue
+	if (ImGui::IsItemEdited()) {
 		std::strcpy(name_field_storage,in);
 		cvarManager->getCvar("MJServerName").setValue(std::string(in));
 	}
