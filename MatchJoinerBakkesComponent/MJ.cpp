@@ -23,7 +23,7 @@ void MJ::onUnload()
 	cvarManager->log("Match joiner unloaded.");
 }
 
-//retry on join, black screen edge case
+//need to poll isinonlinegame more
 void MJ::gotoPrivateMatch() {
 	cvarManager->log("[gotoPrivateMatch] called.");
 	
@@ -55,7 +55,7 @@ void MJ::gotoPrivateMatch() {
 			}
 			else cvarManager->log("[gotoPrivateMatch] Invalid event code!");		
 		}
-
+		//gameWrapper->
 		gameWrapper->SetTimeout([this](GameWrapper* gw) {
 			if (!gameWrapper->IsInOnlineGame() && !cvarManager->getCvar("MJEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
 			else { cvarManager->log("[gotoPrivateMatch] Success."); cvarManager->getCvar("MJEndRecursiveJoin").setValue("0"); return; }

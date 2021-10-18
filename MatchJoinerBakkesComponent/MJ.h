@@ -6,6 +6,8 @@
 #include "bakkesmod/plugin/PluginSettingsWindow.h"
 #include "bakkesmod/wrappers/gamewrapper.h"
 #include "bakkesmod/wrappers/MatchmakingWrapper.h"
+#include "bakkesmod/wrappers/arraywrapper.h"
+#include "bakkesmod/wrappers/kismet/SequenceObjectWrapper.h"
 #include <regex>
 #include <algorithm>
 #include "version.h"
