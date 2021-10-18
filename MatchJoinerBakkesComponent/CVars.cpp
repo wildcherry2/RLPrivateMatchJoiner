@@ -4,11 +4,13 @@
 #include "bakkesmod/wrappers/Engine/UnrealStringWrapper.h"
 
 void MJ::initCvars() {
-	initInternalCvars();
+	initMatchCvars();
 	initGuiCvars();
+	initServerCvars();
+	initUtilityCvars();
 }
 
-void MJ::initInternalCvars() {
+void MJ::initMatchCvars() {
 	cvarManager->registerCvar("MJEventType", "1", "Set to 0 for create mode, 1 for join mode", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		event_code = cw.getIntValue();
 		});
@@ -24,8 +26,6 @@ void MJ::initInternalCvars() {
 	cvarManager->registerCvar("MJRegion", "0", "Enter the region code (0-9)", true, true, 0, true, 9, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		region = getRegion(cw.getIntValue());
 		});
-	cvarManager->registerCvar("MJEndRecursiveJoin", "0", "", true, true, 0, true, 9, false);
-
 	cvarManager->registerNotifier("MJGetMatchVars", [this](std::vector<std::string> args) {
 		cvarManager->log("Event= " + cvarManager->getCvar("MJEventType").getStringValue());
 		cvarManager->log("Name= " + cvarManager->getCvar("MJServerName").getStringValue());
@@ -33,37 +33,6 @@ void MJ::initInternalCvars() {
 		cvarManager->log("Region= " + cvarManager->getCvar("MJRegion").getStringValue());
 		cvarManager->log("Map= " + cvarManager->getCvar("MJMap").getStringValue());
 		}, "", PERMISSION_ALL);
-
-	cvarManager->registerNotifier("MJReady", [this](std::vector<std::string> args) {
-		gotoPrivateMatch();
-		}, "", PERMISSION_ALL);
-
-	cvarManager->registerNotifier("MJDisableServer", [this](std::vector<std::string> args) {
-		CurlRequest req;
-		req.url = "http://localhost:6969/halt";
-		req.body = "";
-		HttpWrapper::SendCurlRequest(req, [this](int code, std::string result) {
-			cvarManager->log(result);
-			});
-		}, "", PERMISSION_ALL);
-
-	cvarManager->registerNotifier("MJEnableServer", [this](std::vector<std::string> args) {
-		startServer();
-		}, "", PERMISSION_ALL);
-
-	cvarManager->registerNotifier("MJDisableMod", [this](std::vector<std::string> args) {
-		unregisterCvars();
-
-		}, "", PERMISSION_ALL);
-
-	cvarManager->registerNotifier("MJEnableMod", [this](std::vector<std::string> args) {
-		cvarManager->executeCommand("MJEnableServer");
-		initCvars();
-
-		}, "", PERMISSION_ALL);
-
-	cvarManager->setBind("F3","togglemenu mj");
-
 }
 
 void MJ::initGuiCvars() {
@@ -77,6 +46,35 @@ void MJ::initGuiCvars() {
 	cvarManager->registerCvar("MJAutotabInToggle", "1", "Toggles autotab back in on server request", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_autotab_enabled = cw.getBoolValue();
 		});;
+}
+
+void MJ::initServerCvars() {
+	cvarManager->registerNotifier("MJEnableServer", [this](std::vector<std::string> args) {
+		startServer();
+		}, "", PERMISSION_ALL);
+	cvarManager->registerNotifier("MJDisableServer", [this](std::vector<std::string> args) {
+		CurlRequest req;
+		req.url = "http://localhost:6969/halt";
+		req.body = "";
+		HttpWrapper::SendCurlRequest(req, [this](int code, std::string result) {
+			cvarManager->log(result);
+			});
+		}, "", PERMISSION_ALL);
+}
+
+void MJ::initUtilityCvars() {
+	cvarManager->registerNotifier("MJReady", [this](std::vector<std::string> args) {
+		gotoPrivateMatch();
+		}, "", PERMISSION_ALL);
+	cvarManager->registerCvar("MJEndRecursiveJoin", "0", "", true, true, 0, true, 9, false);
+	cvarManager->registerNotifier("MJDisableMod", [this](std::vector<std::string> args) {
+		unregisterCvars();
+		}, "", PERMISSION_ALL);
+	cvarManager->registerNotifier("MJEnableMod", [this](std::vector<std::string> args) {
+		cvarManager->executeCommand("MJEnableServer");
+		initCvars();
+		}, "", PERMISSION_ALL);
+	cvarManager->setBind("F3", "togglemenu mj");
 }
 
 void MJ::unregisterCvars() {
