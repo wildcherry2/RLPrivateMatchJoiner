@@ -37,9 +37,16 @@ void MJ::initInternalCvars() {
 
 	//works, but activates mjready, could cause issues, need to fix
 	cvarManager->registerNotifier("MJDisableServer", [this](std::vector<std::string> args) {
-		//this->server_disabled_activated_flag = true;
-		server->stop();
-		//this->server_disabled_activated_flag = false;
+		CurlRequest req;
+		req.url = "http://localhost:6969/halt";
+		req.body = "";
+		HttpWrapper::SendCurlRequest(req, [this](int code, std::string result) {
+			cvarManager->log(result);
+			});
+		}, "", PERMISSION_ALL);
+
+	cvarManager->registerNotifier("MJEnableServer", [this](std::vector<std::string> args) {
+		startServer();
 		}, "", PERMISSION_ALL);
 
 	cvarManager->setBind("F3","togglemenu mj");
@@ -48,21 +55,21 @@ void MJ::initInternalCvars() {
 
 void MJ::initGuiCvars() {
 	//extremely broken
-	if(!mod_enabled_cvar) cvarManager->registerCvar("MJModEnabled", "1", "Is mod enabled?", false, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
-		if (!cw.getBoolValue()) {
-			server->stop(); //race condition?
-			if (server_thread.joinable()) server_thread.join();
-			//delete server;
-			//unregisterCvars();
-			mod_enabled_cvar = true;
-		}
-		else {
-			initCvars(); //might cause issues seeing how this is init'd already
-			initServer();
-			startServer();
-		}
-		
-		});
+	//if(!mod_enabled_cvar) cvarManager->registerCvar("MJModEnabled", "1", "Is mod enabled?", false, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	//	if (!cw.getBoolValue()) {
+	//		server->stop(); //race condition?
+	//		if (server_thread.joinable()) server_thread.join();
+	//		//delete server;
+	//		//unregisterCvars();
+	//		mod_enabled_cvar = true;
+	//	}
+	//	else {
+	//		initCvars(); //might cause issues seeing how this is init'd already
+	//		initServer();
+	//		startServer();
+	//	}
+	//	
+	//	});
 	cvarManager->registerCvar("MJMapNameSelection", "18", "Enter map name", true, false, false, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		cvarManager->getCvar("MJMap").setValue(map_codenames[cw.getIntValue()]);
 		selected_map = map_codenames[cw.getIntValue()];
