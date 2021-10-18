@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "MJ.h"
-#include "bakkesmod/wrappers/kismet/SequenceWrapper.h"
-#include "bakkesmod/wrappers/Engine/UnrealStringWrapper.h"
 
 void MJ::initCvars() {
 	initMatchCvars();
@@ -57,16 +55,18 @@ void MJ::initServerCvars() {
 		req.url = "http://localhost:6969/halt";
 		req.body = "";
 		HttpWrapper::SendCurlRequest(req, [this](int code, std::string result) {
-			cvarManager->log(result);
+			cvarManager->log("[cvarManager] sent request to shut down...");
 			});
 		}, "", PERMISSION_ALL);
 }
 
 void MJ::initUtilityCvars() {
 	cvarManager->registerNotifier("MJReady", [this](std::vector<std::string> args) {
+		monitorOnlineState();
 		gotoPrivateMatch();
 		}, "", PERMISSION_ALL);
 	cvarManager->registerCvar("MJEndRecursiveJoin", "0", "", true, true, 0, true, 9, false);
+	cvarManager->registerCvar("MJEndMonitor", "0", "", true, true, 0, true, 9, false);
 	cvarManager->registerNotifier("MJDisableMod", [this](std::vector<std::string> args) {
 		unregisterCvars();
 		}, "", PERMISSION_ALL);

@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "MJ.h"
 
-using namespace std;
-
 void MJ::startServer() {
 	server_thread = std::thread([this]() {
 		SimpleWeb::Server<SimpleWeb::HTTP> server = SimpleWeb::Server<SimpleWeb::HTTP>();
@@ -12,7 +10,6 @@ void MJ::startServer() {
 		server.on_error = [this](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request, const SimpleWeb::error_code& ec) {
 			cvarManager->log("[Server] Server error occurred! Probably a request to stop the server.");
 		};
-
 
 		//URL syntax: localhost:[port]/match?event=[eventcode]?name=[servername]?pass=[serverpass]?region=[serverregion]
 		//Example: http://localhost:6969/match?event=0&name=b1234&pass=h1jk&region=0
@@ -37,6 +34,7 @@ void MJ::startServer() {
 			if(is_autotab_enabled) MoveGameToFront();
 			gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); });
 		};
+
 		//URL syntax: localhost:[port]/halt
 		//stops server, closing the thread
 		server.resource["^/halt$"]["GET"] = [this,&server](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response, std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request) {

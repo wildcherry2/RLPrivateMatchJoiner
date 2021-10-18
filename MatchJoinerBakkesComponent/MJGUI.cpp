@@ -2,8 +2,6 @@
 //https://pthom.github.io/imgui_manual_online/manual/imgui_manual.html
 #include "pch.h"
 #include "MJ.h"
-#include <cstring>
-#include <string>
 
 
 std::string MJ::GetPluginName() {

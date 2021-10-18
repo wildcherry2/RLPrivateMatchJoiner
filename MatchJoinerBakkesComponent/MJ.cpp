@@ -19,6 +19,7 @@ void MJ::onLoad()
 void MJ::onUnload()
 {
 	cvarManager->executeCommand("MJDisableServer");
+	cvarManager->getCvar("MJEndMonitor").setValue("1");
 	cvarManager->log("Match joiner unloaded.");
 }
 
@@ -26,7 +27,7 @@ void MJ::onUnload()
 void MJ::gotoPrivateMatch() {
 	cvarManager->log("[gotoPrivateMatch] called.");
 	
-		if(!gameWrapper->IsInOnlineGame() && mw) { 
+		if(!in_game && mw) { 
 
 			if (event_code == 0) {
 				CustomMatchSettings cm;
@@ -34,32 +35,29 @@ void MJ::gotoPrivateMatch() {
 				CustomMatchTeamSettings red;
 
 				cm.GameTags = gametags;
-				cm.MapName = selected_map; //this will need to be bound to map cvar/array
+				cm.MapName = cvarManager->getCvar("MJMap").getStringValue(); //this will need to be bound to map cvar/array
 				cm.ServerName = name;
 				cm.Password = pass;
 				cm.BlueTeamSettings = blue;
 				cm.OrangeTeamSettings = red;
 				cm.bClubServer = false;
 
-				cvarManager->log("[gotoPrivateMatch] Creating with\n" + cm.ServerName + "\n" + cm.Password);
+				cvarManager->log("[gotoPrivateMatch] Creating with name: " + cm.ServerName + "and pass: " + cm.Password);
 				mw.CreatePrivateMatch(region, cm);
 			}			
 			else if (event_code == 1) {
-				std::string lname = name;
-				std::string lpass = pass;
-				cvarManager->log("Joining with\n" + lname + "\n" + lpass);
-				mw.JoinPrivateMatch(lname, lpass);
+				cvarManager->log("[gotoPrivateMatch] Joining with name: " + name + "and pass: " + pass);
+				mw.JoinPrivateMatch(name, pass);
 			}
 			else cvarManager->log("[gotoPrivateMatch] Invalid event code!");		
 		}
 		gameWrapper->SetTimeout([this](GameWrapper* gw) {
 			if (!gameWrapper->IsInOnlineGame() && !cvarManager->getCvar("MJEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
-			else { cvarManager->log("[gotoPrivateMatch] Success."); cvarManager->getCvar("MJEndRecursiveJoin").setValue("0"); return; }
+			else { cvarManager->log("[gotoPrivateMatch] Success."); cvarManager->getCvar("MJEndRecursiveJoin").setValue("0"); cvarManager->getCvar("MJEndMonitor").setValue("1"); return; }
 			
 			},10.0);
 
 }
-
 
 Region MJ::getRegion(int region) {
 	switch (region) {
@@ -75,4 +73,26 @@ Region MJ::getRegion(int region) {
 		case 9: return Region::SAM;
 		default: return Region::USE;
 	}
+}
+
+void MJ::monitorOnlineState() {
+	monitor = std::thread([this]() {
+		while (mon_running && !cvarManager->getCvar("MJEndMonitor").getBoolValue()) {
+			if (!gameWrapper->IsInOnlineGame()) {
+				cvarManager->log("[Monitor] not in online game...");
+				in_game = false;
+			}
+			else {
+				cvarManager->log("[Monitor] detected online game!");
+				cvarManager->log("[Monitor] terminating monitor...");
+				cvarManager->getCvar("MJEndMonitor").setValue("0");
+				in_game = true;
+				return;
+			}
+			std::this_thread::sleep_for(std::chrono::seconds(2));
+		}
+		cvarManager->getCvar("MJEndMonitor").setValue("0");
+		return;
+		});
+	monitor.detach();
 }

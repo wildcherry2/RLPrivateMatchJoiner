@@ -6,8 +6,6 @@
 #include "bakkesmod/plugin/PluginSettingsWindow.h"
 #include "bakkesmod/wrappers/gamewrapper.h"
 #include "bakkesmod/wrappers/MatchmakingWrapper.h"
-#include "bakkesmod/wrappers/arraywrapper.h"
-#include "bakkesmod/wrappers/kismet/SequenceObjectWrapper.h"
 #include <regex>
 #include <algorithm>
 #include "version.h"
@@ -20,6 +18,8 @@
 #include <functional>
 #include <iostream>
 #include <utility>
+#include <string>
+#include <cstring>
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
 
@@ -33,8 +33,12 @@ public:
 	virtual void onLoad();
 	virtual void onUnload();
 	void gotoPrivateMatch();
+	void monitorOnlineState();
 	Region getRegion(int region);
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
+	std::thread monitor;
+	bool in_game = false;
+	bool mon_running = true;
 
 	//cvar
 	void initCvars();
