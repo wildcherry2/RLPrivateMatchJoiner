@@ -19,7 +19,6 @@ void MJ::onLoad()
 void MJ::onUnload()
 {
 	cvarManager->executeCommand("MJDisableServer");
-	//server_thread.join();*/
 	cvarManager->log("Match joiner unloaded.");
 }
 
@@ -30,9 +29,9 @@ void MJ::gotoPrivateMatch() {
 		if(!gameWrapper->IsInOnlineGame() && mw) { 
 
 			if (event_code == 0) {
-				CustomMatchSettings cm = CustomMatchSettings();
-				CustomMatchTeamSettings blue = CustomMatchTeamSettings();
-				CustomMatchTeamSettings red = CustomMatchTeamSettings();
+				CustomMatchSettings cm;
+				CustomMatchTeamSettings blue;
+				CustomMatchTeamSettings red;
 
 				cm.GameTags = gametags;
 				cm.MapName = selected_map; //this will need to be bound to map cvar/array
@@ -41,6 +40,8 @@ void MJ::gotoPrivateMatch() {
 				cm.BlueTeamSettings = blue;
 				cm.OrangeTeamSettings = red;
 				cm.bClubServer = false;
+
+				
 
 				cvarManager->log("[gotoPrivateMatch] Creating with\n" + cm.ServerName + "\n" + cm.Password);
 
@@ -51,11 +52,9 @@ void MJ::gotoPrivateMatch() {
 				std::string lpass = pass;
 				cvarManager->log("Joining with\n" + lname + "\n" + lpass);
 				mw.JoinPrivateMatch(lname, lpass);
-					//add reset vars function
 			}
 			else cvarManager->log("[gotoPrivateMatch] Invalid event code!");		
 		}
-		//gameWrapper->
 		gameWrapper->SetTimeout([this](GameWrapper* gw) {
 			if (!gameWrapper->IsInOnlineGame() && !cvarManager->getCvar("MJEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
 			else { cvarManager->log("[gotoPrivateMatch] Success."); cvarManager->getCvar("MJEndRecursiveJoin").setValue("0"); return; }
