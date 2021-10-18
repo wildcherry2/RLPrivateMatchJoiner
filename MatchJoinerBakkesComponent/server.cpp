@@ -1,55 +1,60 @@
 #include "pch.h"
-#include "MatchJoinerBakkesComponent.h"
+#include "MJ.h"
 
 using namespace std;
 
-void MatchJoinerBakkesComponent::initServer() {
-    cvarManager->log("Initializing server...");
-	server = new SimpleWeb::Server<SimpleWeb::HTTP>;
-	server->config.port = 6969;
+void MJ::startServer() {
+	server_thread = std::thread([this]() {
+		SimpleWeb::Server<SimpleWeb::HTTP> server = SimpleWeb::Server<SimpleWeb::HTTP>();
+		server.config.port = 6969;
+		cvarManager->log("[Server] Server loaded");
 
-    //URL syntax: localhost:[port]/match?event=[eventcode]?name=[servername]?pass=[serverpass]?region=[serverregion]
-    //Example: http://localhost:6969/match?event=0&name=b1234&pass=h1jk&region=0
-    server->resource["^/match$"]["GET"] = [this](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response, std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request) {
-        this->cvarManager->log("Request received...");
-        auto fields = request->parse_query_string();
+		server.on_error = [this](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request, const SimpleWeb::error_code& ec) {
+			cvarManager->log("[Server] Server error occurred! Probably a request to stop the server.");
+		};
 
-        auto it = fields.begin();
-        this->cvarManager->getCvar("MJEventType").setValue(it->second);
-        //event_code = std::stoi(it->second); should be set automatically now TEST
-        it++;
-        this->cvarManager->getCvar("MJServerName").setValue(it->second);
-        //name = it->second;
-        it++;
-        this->cvarManager->getCvar("MJServerPass").setValue(it->second);
-       // pass = it->second;
-        it++;
-        this->cvarManager->getCvar("MJRegion").setValue(it->second);
-        //region = getRegion(std::stoi(it->second));
 
-        response->close_connection_after_response = true;
-        response->write(SimpleWeb::StatusCode::success_accepted, "alright");
-        response->send();
+		//URL syntax: localhost:[port]/match?event=[eventcode]?name=[servername]?pass=[serverpass]?region=[serverregion]
+		//Example: http://localhost:6969/match?event=0&name=b1234&pass=h1jk&region=0
+		server.resource["^/match$"]["GET"] = [this](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response, std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request) {
+			this->cvarManager->log("[Server] Request received...");
+			auto fields = request->parse_query_string();
 
-        stopServer();
-    };
-}
+			auto it = fields.begin();
+			this->cvarManager->getCvar("MJEventType").setValue(it->second);
+			it++;
+			this->cvarManager->getCvar("MJServerName").setValue(it->second);
+			it++;
+			this->cvarManager->getCvar("MJServerPass").setValue(it->second);
+			it++;
+			this->cvarManager->getCvar("MJRegion").setValue(it->second);
+			cvarManager->log("[Server] Vars sent!");
 
-void MatchJoinerBakkesComponent::startServer() {  
-    server_thread = std::thread([this](){      
-        cvarManager->log("Starting server...");
-        this->server->start(); 
-        return;
-        });
-    cvarManager->log("Joining thread...");
-    server_thread.join();
-    cvarManager->log("Thread closed.");
-    gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); }); //holy shit it works, need to add restart server once in menu/persistent threading?
-    }
+			response->close_connection_after_response = true;
+			response->write(SimpleWeb::StatusCode::success_accepted, "alright");
+			response->send();
 
-void MatchJoinerBakkesComponent::stopServer() {
-    cvarManager->log("Stopping server...");
-    server->stop();
+			if(is_autotab_enabled) MoveGameToFront();
+			gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); });
+		};
+		//URL syntax: localhost:[port]/halt
+		//stops server, closing the thread
+		server.resource["^/halt$"]["GET"] = [this,&server](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response, std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request) {
+			this->cvarManager->log("[Server] Request received...");
+
+			response->close_connection_after_response = true;
+			response->write(SimpleWeb::StatusCode::success_accepted, "[Server] Stopping server!");
+			response->send();
+			this->cvarManager->log("[Server] Stopping server...");
+			
+			server.stop();
+		};
+
+		server.start();
+		this->cvarManager->log("[Server] Thread closing!");
+		return;
+	});
+	server_thread.detach();
 }
 
 //from Martinii, https://github.com/Martinii89/BallchasingReplayPlayer
@@ -85,7 +90,7 @@ std::vector<HWND> getToplevelWindows()
 	return args.handles;
 }
 
-void MatchJoinerBakkesComponent::MoveGameToFront()
+void MJ::MoveGameToFront()
 {
 	auto handles = getToplevelWindows();
 

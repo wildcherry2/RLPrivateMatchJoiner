@@ -27,7 +27,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MatchJoinerBakkesComponent.cpp">
+    <ClCompile Include="MJ.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
@@ -66,7 +66,7 @@
     <ClCompile Include="imgui\imguivariouscontrols.cpp">
       <Filter>imgui\implementation</Filter>
     </ClCompile>
-    <ClCompile Include="MatchJoinerBakkesComponentGUI.cpp">
+    <ClCompile Include="MJGUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="fmt\src\format.cc">
@@ -75,7 +75,7 @@
     <ClCompile Include="fmt\src\os.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InitCvars.cpp">
+    <ClCompile Include="CVars.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="server.cpp">
@@ -83,7 +83,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MatchJoinerBakkesComponent.h">
+    <ClInclude Include="MJ.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
@@ -163,7 +163,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="MatchJoinerBakkesComponent.rc">
+    <ResourceCompile Include="MJ.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
     <ResourceCompile Include="Resource.rc">

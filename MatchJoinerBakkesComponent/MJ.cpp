@@ -1,32 +1,32 @@
 //https://bakkesmodwiki.github.io/bakkesmod_api/
 #include "pch.h"
-#include "MatchJoinerBakkesComponent.h"
+#include "MJ.h"
 
 //https://bakkesmodwiki.github.io/bakkesmod_api/Classes/Wrappers/Modals/ModalWrapper/ for dealing with annoying popup
 
-BAKKESMOD_PLUGIN(MatchJoinerBakkesComponent, "Takes match data from a link to a localhost webserver to join a private match", plugin_version, PLUGINTYPE_THREADED) //changed to threaded
+BAKKESMOD_PLUGIN(MJ, "Takes match data from a link to a localhost webserver to join a private match", plugin_version, PLUGINTYPE_FREEPLAY) //changed to threaded, change back to default for gui testing
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
 
-void MatchJoinerBakkesComponent::onLoad()
+void MJ::onLoad()
 {
 	_globalCvarManager = cvarManager;
-	initInternalCvars();
-	initGuiCvars();
-	initServer();
+	initCvars();
 	startServer();
 }
 
-void MatchJoinerBakkesComponent::onUnload()
+void MJ::onUnload()
 {
-	//stopServer();
+	/*cvarManager->executeCommand("MJDisableServer");
+	server_thread.join();*/
 	cvarManager->log("Match joiner unloaded.");
 }
 
 //retry on join, black screen edge case
-void MatchJoinerBakkesComponent::gotoPrivateMatch() {
-	if (name == "") return;
+void MJ::gotoPrivateMatch() {
+	//cvarManager->log("gpm called");
+	if (name == "") { cvarManager->log("Name is empty, returning"); return; }
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
 	if (event_code == 0) {
 		CustomMatchSettings cm = CustomMatchSettings();
@@ -43,14 +43,18 @@ void MatchJoinerBakkesComponent::gotoPrivateMatch() {
 			cm.OrangeTeamSettings = red;
 			cm.bClubServer = false;
 
+			cvarManager->log("Creating with\n" + cm.ServerName + "\n" + cm.Password);
+
 			mw.CreatePrivateMatch(region, cm);
-			//add reset vars function
 		}
 		else cvarManager->log("Error creating lobby, you are in a game or mmw is invalid"); //add retry function
 	}
 	else if (event_code == 1) {
 		if (mw && !gameWrapper->IsInOnlineGame()) {
-			mw.JoinPrivateMatch(name, pass);
+			std::string lname = name;
+			std::string lpass = pass;
+			cvarManager->log("Joining with\n" + lname + "\n" + lpass);
+			mw.JoinPrivateMatch(lname, lpass);
 			//add reset vars function
 		}
 		else cvarManager->log("Error joining lobby, you are in a game or mmw is invalid");
@@ -60,7 +64,7 @@ void MatchJoinerBakkesComponent::gotoPrivateMatch() {
 }
 
 
-Region MatchJoinerBakkesComponent::getRegion(int region) {
+Region MJ::getRegion(int region) {
 	switch (region) {
 		case 0: return Region::USE;
 		case 1: return Region::EU;

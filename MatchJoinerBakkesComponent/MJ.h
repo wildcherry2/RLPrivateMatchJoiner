@@ -22,7 +22,7 @@ constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_M
 
 
 
-class MatchJoinerBakkesComponent: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow/*, public BakkesMod::Plugin::PluginWindow*/
+class MJ: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow, public BakkesMod::Plugin::PluginWindow
 {
 public:
 	//std::shared_ptr<bool> createbtn = std::make_shared<bool>(false);
@@ -33,15 +33,19 @@ public:
 	void gotoPrivateMatch();
 	Region getRegion(int region);
 
-	//cvar init
+	//cvar
+	void initCvars();
 	void initInternalCvars();
 	void initGuiCvars();
+	void unregisterCvars();
+	//bool mod_enabled_cvar = false;
 
 	//f2 gui
 	void RenderSettings() override;
 	std::string GetPluginName() override;
 	void SetImGuiContext(uintptr_t ctx) override;
 	void renderModEnabledCheckbox();
+	void renderAutotabEnabled();
 	void renderMapCombobox(std::string name);
 	void renderRegionCombobox(std::string name);
 	//void renderQuickWindowBtn();
@@ -51,9 +55,12 @@ public:
 	void renderQWPassField();
 	void renderQWCreate();
 	void renderQWJoin();
+	void renderQWLinkGen();
 	bool is_enabled = true; //for overall mod
+	bool is_autotab_enabled = true;
 	char name_field_storage[100] = "";
 	char pass_field_storage[100] = "";
+	std::string link = "";
 
 	
 	//name arrays, could use std::map, but this is more efficient, gui requires c strings ??
@@ -147,11 +154,11 @@ public:
 	};
 
 	//server
-	SimpleWeb::Server<SimpleWeb::HTTP>* server = nullptr;
-	bool server_enabled = true;	
-	void initServer();
+	//SimpleWeb::Server<SimpleWeb::HTTP> server = SimpleWeb::Server<SimpleWeb::HTTP>();
+	//bool server_disabled_activated_flag = false;	
+	//*void initServer();
 	void startServer();
-	void stopServer();
+	//void stopServer();
 	std::thread server_thread;
 	void MoveGameToFront();
 
@@ -164,20 +171,20 @@ public:
 	std::string selected_map = map_codenames[17];
 
 	// Inherited via PluginWindow
-	/*
+	
 
 	bool isWindowOpen_ = false;
 	bool isMinimized_ = false;
-	std::string menuTitle_ = "MatchJoinerBakkesComponent";
+	std::string menuTitle_ = "mj";
 
 	virtual void Render() override;
 	virtual std::string GetMenuName() override;
 	virtual std::string GetMenuTitle() override;
-	virtual void SetImGuiContext(uintptr_t ctx) override;
+	//virtual void SetImGuiContext(uintptr_t ctx) override;
 	virtual bool ShouldBlockInput() override;
 	virtual bool IsActiveOverlay() override;
 	virtual void OnOpen() override;
 	virtual void OnClose() override;
 	
-	*/
+	
 };
