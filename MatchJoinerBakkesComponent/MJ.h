@@ -33,12 +33,16 @@ public:
 	virtual void onLoad();
 	virtual void onUnload();
 	void gotoPrivateMatch();
-	void monitorOnlineState();
 	Region getRegion(int region);
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
+	
+
+	//autojoin
 	std::thread monitor;
 	bool in_game = false;
 	bool mon_running = true;
+	size_t time_to_wait = 15;
+	void monitorOnlineState();
 
 	//cvar
 	void initCvars();

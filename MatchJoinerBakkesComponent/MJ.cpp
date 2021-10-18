@@ -55,7 +55,7 @@ void MJ::gotoPrivateMatch() {
 			if (!gameWrapper->IsInOnlineGame() && !cvarManager->getCvar("MJEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
 			else { cvarManager->log("[gotoPrivateMatch] Success."); cvarManager->getCvar("MJEndRecursiveJoin").setValue("0"); cvarManager->getCvar("MJEndMonitor").setValue("1"); return; }
 			
-			},10.0);
+			}, cvarManager->getCvar("MJTimeBeforeRetrying").getIntValue());
 
 }
 

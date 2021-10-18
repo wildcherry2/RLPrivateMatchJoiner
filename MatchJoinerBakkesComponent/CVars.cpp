@@ -65,8 +65,9 @@ void MJ::initUtilityCvars() {
 		monitorOnlineState();
 		gotoPrivateMatch();
 		}, "", PERMISSION_ALL);
-	cvarManager->registerCvar("MJEndRecursiveJoin", "0", "", true, true, 0, true, 9, false);
-	cvarManager->registerCvar("MJEndMonitor", "0", "", true, true, 0, true, 9, false);
+	cvarManager->registerCvar("MJEndRecursiveJoin", "0", "", true, true, 0, true, 1, false);
+	cvarManager->registerCvar("MJEndMonitor", "0", "", true, true, 0, true, 1, false);
+	cvarManager->registerCvar("MJTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 10, true, 60, false);
 	cvarManager->registerNotifier("MJDisableMod", [this](std::vector<std::string> args) {
 		unregisterCvars();
 		}, "", PERMISSION_ALL);
