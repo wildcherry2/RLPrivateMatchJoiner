@@ -3,52 +3,58 @@
 
 using namespace std;
 
-void MJ::initServer() {
-    cvarManager->log("Initializing server...");
-	server = new SimpleWeb::Server<SimpleWeb::HTTP>;
-	server->config.port = 6969;
-
-    //URL syntax: localhost:[port]/match?event=[eventcode]?name=[servername]?pass=[serverpass]?region=[serverregion]
-    //Example: http://localhost:6969/match?event=0&name=b1234&pass=h1jk&region=0
-    server->resource["^/match$"]["GET"] = [this](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response, std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request) {
-        this->cvarManager->log("Request received...");
-        auto fields = request->parse_query_string();
-
-        auto it = fields.begin();
-        this->cvarManager->getCvar("MJEventType").setValue(it->second);
-        it++;
-        this->cvarManager->getCvar("MJServerName").setValue(it->second);
-        it++;
-        this->cvarManager->getCvar("MJServerPass").setValue(it->second);
-        it++;
-        this->cvarManager->getCvar("MJRegion").setValue(it->second);
-
-        response->close_connection_after_response = true;
-        response->write(SimpleWeb::StatusCode::success_accepted, "alright");
-        response->send();
-
-		MoveGameToFront();
-        stopServer();
-    };
-}
-
 void MJ::startServer() {
-    server_thread = std::thread([this](){      
-        cvarManager->log("Starting server...");
-        this->server->start(); 
-        return;
-        });
-    cvarManager->log("Joining thread...");
-    if(server_thread.joinable()) server_thread.join();
-    cvarManager->log("Thread closed.");
-	gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); }); //holy shit it works, need to add restart server once in menu/persistent threading?
+	server_thread = std::thread([this]() {
+		SimpleWeb::Server<SimpleWeb::HTTP> server = SimpleWeb::Server<SimpleWeb::HTTP>();
+		server.config.port = 6969;
+		cvarManager->log("[Server] Server loaded");
 
-	
-    }
+		server.on_error = [this](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request, const SimpleWeb::error_code& ec) {
+			cvarManager->log("[Server] Server error occurred! Probably a request to stop the server.");
+		};
 
-void MJ::stopServer() {
-    cvarManager->log("Stopping server...");
-    server->stop();
+
+		//URL syntax: localhost:[port]/match?event=[eventcode]?name=[servername]?pass=[serverpass]?region=[serverregion]
+		//Example: http://localhost:6969/match?event=0&name=b1234&pass=h1jk&region=0
+		server.resource["^/match$"]["GET"] = [this](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response, std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request) {
+			this->cvarManager->log("[Server] Request received...");
+			auto fields = request->parse_query_string();
+
+			auto it = fields.begin();
+			this->cvarManager->getCvar("MJEventType").setValue(it->second);
+			it++;
+			this->cvarManager->getCvar("MJServerName").setValue(it->second);
+			it++;
+			this->cvarManager->getCvar("MJServerPass").setValue(it->second);
+			it++;
+			this->cvarManager->getCvar("MJRegion").setValue(it->second);
+			cvarManager->log("[Server] Vars sent!");
+
+			response->close_connection_after_response = true;
+			response->write(SimpleWeb::StatusCode::success_accepted, "alright");
+			response->send();
+
+			MoveGameToFront();
+			gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); });
+		};
+		//URL syntax: localhost:[port]/halt
+		//stops server, closing the thread
+		server.resource["^/halt$"]["GET"] = [this,&server](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response, std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request) {
+			this->cvarManager->log("[Server] Request received...");
+
+			response->close_connection_after_response = true;
+			response->write(SimpleWeb::StatusCode::success_accepted, "[Server] Stopping server!");
+			response->send();
+			this->cvarManager->log("[Server] Stopping server...");
+			
+			server.stop();
+		};
+
+		server.start();
+		this->cvarManager->log("[Server] Thread closing!");
+		return;
+	});
+	server_thread.detach();
 }
 
 //from Martinii, https://github.com/Martinii89/BallchasingReplayPlayer

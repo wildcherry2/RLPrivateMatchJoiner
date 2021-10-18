@@ -38,7 +38,7 @@ public:
 	void initInternalCvars();
 	void initGuiCvars();
 	void unregisterCvars();
-	bool mod_enabled_cvar = false;
+	//bool mod_enabled_cvar = false;
 
 	//f2 gui
 	void RenderSettings() override;
@@ -152,11 +152,11 @@ public:
 	};
 
 	//server
-	SimpleWeb::Server<SimpleWeb::HTTP>* server = nullptr;
+	//SimpleWeb::Server<SimpleWeb::HTTP> server = SimpleWeb::Server<SimpleWeb::HTTP>();
 	//bool server_disabled_activated_flag = false;	
-	void initServer();
+	//*void initServer();
 	void startServer();
-	void stopServer();
+	//void stopServer();
 	std::thread server_thread;
 	void MoveGameToFront();
 

@@ -4,7 +4,7 @@
 
 //https://bakkesmodwiki.github.io/bakkesmod_api/Classes/Wrappers/Modals/ModalWrapper/ for dealing with annoying popup
 
-BAKKESMOD_PLUGIN(MJ, "Takes match data from a link to a localhost webserver to join a private match", plugin_version, PLUGINTYPE_THREADED) //changed to threaded, change back to default for gui testing
+BAKKESMOD_PLUGIN(MJ, "Takes match data from a link to a localhost webserver to join a private match", plugin_version, PLUGINTYPE_FREEPLAY) //changed to threaded, change back to default for gui testing
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
@@ -13,8 +13,9 @@ void MJ::onLoad()
 {
 	_globalCvarManager = cvarManager;
 	initCvars();
-	initServer();
 	startServer();
+	/*initServer();
+	startServer();*/
 	//cvarManager->executeCommand("MJDisableServer");
 }
 
