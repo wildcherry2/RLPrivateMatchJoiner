@@ -22,6 +22,7 @@ void MJ::initInternalCvars() {
 	cvarManager->registerCvar("MJRegion", "0", "Enter the region code (0-9)", true, true, 0, true, 9, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		region = getRegion(cw.getIntValue());
 		});
+	cvarManager->registerCvar("MJEndRecursiveJoin", "0", "", true, true, 0, true, 9, false);
 
 	cvarManager->registerNotifier("MJGetMatchVars", [this](std::vector<std::string> args) {
 		cvarManager->log("Event= " + cvarManager->getCvar("MJEventType").getStringValue());
@@ -48,6 +49,8 @@ void MJ::initInternalCvars() {
 	cvarManager->registerNotifier("MJEnableServer", [this](std::vector<std::string> args) {
 		startServer();
 		}, "", PERMISSION_ALL);
+
+
 
 	cvarManager->setBind("F3","togglemenu mj");
 

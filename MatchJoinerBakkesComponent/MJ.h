@@ -32,6 +32,8 @@ public:
 	virtual void onUnload();
 	void gotoPrivateMatch();
 	Region getRegion(int region);
+	std::thread joiner_thread;
+	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
 
 	//cvar
 	void initCvars();
