@@ -2,11 +2,13 @@
 #include "MJ.h"
 
 void MJ::initCvars() {
-	initInternalCvars();
+	initMatchCvars();
 	initGuiCvars();
+	initServerCvars();
+	initUtilityCvars();
 }
 
-void MJ::initInternalCvars() {
+void MJ::initMatchCvars() {
 	cvarManager->registerCvar("MJEventType", "1", "Set to 0 for create mode, 1 for join mode", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		event_code = cw.getIntValue();
 		});
@@ -22,7 +24,6 @@ void MJ::initInternalCvars() {
 	cvarManager->registerCvar("MJRegion", "0", "Enter the region code (0-9)", true, true, 0, true, 9, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		region = getRegion(cw.getIntValue());
 		});
-
 	cvarManager->registerNotifier("MJGetMatchVars", [this](std::vector<std::string> args) {
 		cvarManager->log("Event= " + cvarManager->getCvar("MJEventType").getStringValue());
 		cvarManager->log("Name= " + cvarManager->getCvar("MJServerName").getStringValue());
@@ -30,46 +31,10 @@ void MJ::initInternalCvars() {
 		cvarManager->log("Region= " + cvarManager->getCvar("MJRegion").getStringValue());
 		cvarManager->log("Map= " + cvarManager->getCvar("MJMap").getStringValue());
 		}, "", PERMISSION_ALL);
-
-	cvarManager->registerNotifier("MJReady", [this](std::vector<std::string> args) {
-		gotoPrivateMatch();
-		}, "", PERMISSION_ALL);
-
-	//works, but activates mjready, could cause issues, need to fix
-	cvarManager->registerNotifier("MJDisableServer", [this](std::vector<std::string> args) {
-		CurlRequest req;
-		req.url = "http://localhost:6969/halt";
-		req.body = "";
-		HttpWrapper::SendCurlRequest(req, [this](int code, std::string result) {
-			cvarManager->log(result);
-			});
-		}, "", PERMISSION_ALL);
-
-	cvarManager->registerNotifier("MJEnableServer", [this](std::vector<std::string> args) {
-		startServer();
-		}, "", PERMISSION_ALL);
-
-	cvarManager->setBind("F3","togglemenu mj");
-
 }
 
 void MJ::initGuiCvars() {
-	//extremely broken
-	//if(!mod_enabled_cvar) cvarManager->registerCvar("MJModEnabled", "1", "Is mod enabled?", false, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
-	//	if (!cw.getBoolValue()) {
-	//		server->stop(); //race condition?
-	//		if (server_thread.joinable()) server_thread.join();
-	//		//delete server;
-	//		//unregisterCvars();
-	//		mod_enabled_cvar = true;
-	//	}
-	//	else {
-	//		initCvars(); //might cause issues seeing how this is init'd already
-	//		initServer();
-	//		startServer();
-	//	}
-	//	
-	//	});
+
 	cvarManager->registerCvar("MJMapNameSelection", "18", "Enter map name", true, false, false, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		cvarManager->getCvar("MJMap").setValue(map_codenames[cw.getIntValue()]);
 		selected_map = map_codenames[cw.getIntValue()];
@@ -81,8 +46,40 @@ void MJ::initGuiCvars() {
 		});;
 }
 
+void MJ::initServerCvars() {
+	cvarManager->registerNotifier("MJEnableServer", [this](std::vector<std::string> args) {
+		startServer();
+		}, "", PERMISSION_ALL);
+	cvarManager->registerNotifier("MJDisableServer", [this](std::vector<std::string> args) {
+		CurlRequest req;
+		req.url = "http://localhost:6969/halt";
+		req.body = "";
+		HttpWrapper::SendCurlRequest(req, [this](int code, std::string result) {
+			cvarManager->log("[cvarManager] sent request to shut down...");
+			});
+		}, "", PERMISSION_ALL);
+}
+
+void MJ::initUtilityCvars() {
+	cvarManager->registerNotifier("MJReady", [this](std::vector<std::string> args) {
+		monitorOnlineState();
+		gotoPrivateMatch();
+		}, "", PERMISSION_ALL);
+	cvarManager->registerCvar("MJEndRecursiveJoin", "0", "", true, true, 0, true, 1, false);
+	cvarManager->registerCvar("MJEndMonitor", "0", "", true, true, 0, true, 1, false);
+	cvarManager->registerCvar("MJTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 10, true, 60, false);
+	cvarManager->registerNotifier("MJDisableMod", [this](std::vector<std::string> args) {
+		unregisterCvars();
+		}, "", PERMISSION_ALL);
+	cvarManager->registerNotifier("MJEnableMod", [this](std::vector<std::string> args) {
+		cvarManager->executeCommand("MJEnableServer");
+		initCvars();
+		}, "", PERMISSION_ALL);
+	cvarManager->setBind("F3", "togglemenu mj");
+}
+
 void MJ::unregisterCvars() {
-	
+	cvarManager->executeCommand("MJDisableServer");
 	cvarManager->removeCvar("MJEventType");
 	cvarManager->removeCvar("MJServerName");
 	cvarManager->removeCvar("MJServerPass");
@@ -91,9 +88,12 @@ void MJ::unregisterCvars() {
 	cvarManager->removeCvar("MJIsQuickMatchWindowEnabled");
 	cvarManager->removeCvar("MJMapNameSelection");
 	cvarManager->removeCvar("MJGeneratedLink");
+	cvarManager->removeCvar("MJEndRecursiveJoin");
+	cvarManager->removeCvar("MJAutotabInToggle");
 	cvarManager->removeNotifier("MJGetMatchVars");
 	cvarManager->removeNotifier("MJReady");
 	cvarManager->removeNotifier("MJDisableServer");
+	cvarManager->removeNotifier("MJEnableServer");
 	cvarManager->removeBind("F3"); //need to store what this is set to initially
 	cvarManager->log("cvars unregistered!");
 }

@@ -4,7 +4,7 @@
 
 //https://bakkesmodwiki.github.io/bakkesmod_api/Classes/Wrappers/Modals/ModalWrapper/ for dealing with annoying popup
 
-BAKKESMOD_PLUGIN(MJ, "Takes match data from a link to a localhost webserver to join a private match", plugin_version, PLUGINTYPE_FREEPLAY) //changed to threaded, change back to default for gui testing
+BAKKESMOD_PLUGIN(MJ, "Match Joiner", plugin_version, PLUGINTYPE_FREEPLAY)
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
@@ -18,51 +18,46 @@ void MJ::onLoad()
 
 void MJ::onUnload()
 {
-	/*cvarManager->executeCommand("MJDisableServer");
-	server_thread.join();*/
+	cvarManager->executeCommand("MJDisableServer");
+	cvarManager->getCvar("MJEndMonitor").setValue("1");
 	cvarManager->log("Match joiner unloaded.");
 }
 
-//retry on join, black screen edge case
+//need to poll isinonlinegame more
 void MJ::gotoPrivateMatch() {
-	//cvarManager->log("gpm called");
-	if (name == "") { cvarManager->log("Name is empty, returning"); return; }
-	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
-	if (event_code == 0) {
-		CustomMatchSettings cm = CustomMatchSettings();
-		CustomMatchTeamSettings blue = CustomMatchTeamSettings();
-		CustomMatchTeamSettings red = CustomMatchTeamSettings();
+	cvarManager->log("[gotoPrivateMatch] called.");
+	
+		if(!in_game && mw) { 
 
-		if (mw && !gameWrapper->IsInOnlineGame()) {
+			if (event_code == 0) {
+				CustomMatchSettings cm;
+				CustomMatchTeamSettings blue;
+				CustomMatchTeamSettings red;
 
-			cm.GameTags = gametags;
-			cm.MapName = selected_map; //this will need to be bound to map cvar/array
-			cm.ServerName = name;
-			cm.Password = pass;
-			cm.BlueTeamSettings = blue;
-			cm.OrangeTeamSettings = red;
-			cm.bClubServer = false;
+				cm.GameTags = gametags;
+				cm.MapName = cvarManager->getCvar("MJMap").getStringValue();
+				cm.ServerName = cvarManager->getCvar("MJServerName").getStringValue();
+				cm.Password = cvarManager->getCvar("MJServerPass").getStringValue();
+				cm.BlueTeamSettings = blue;
+				cm.OrangeTeamSettings = red;
+				cm.bClubServer = false;
 
-			cvarManager->log("Creating with\n" + cm.ServerName + "\n" + cm.Password);
-
-			mw.CreatePrivateMatch(region, cm);
+				cvarManager->log("[gotoPrivateMatch] Creating with name: " + cm.ServerName + "and pass: " + cm.Password);
+				mw.CreatePrivateMatch(region, cm);
+			}			
+			else if (event_code == 1) {
+				cvarManager->log("[gotoPrivateMatch] Joining with name: " + name + "and pass: " + pass);
+				mw.JoinPrivateMatch(cvarManager->getCvar("MJServerName").getStringValue(), cvarManager->getCvar("MJServerPass").getStringValue());
+			}
+			else cvarManager->log("[gotoPrivateMatch] Invalid event code!");		
 		}
-		else cvarManager->log("Error creating lobby, you are in a game or mmw is invalid"); //add retry function
-	}
-	else if (event_code == 1) {
-		if (mw && !gameWrapper->IsInOnlineGame()) {
-			std::string lname = name;
-			std::string lpass = pass;
-			cvarManager->log("Joining with\n" + lname + "\n" + lpass);
-			mw.JoinPrivateMatch(lname, lpass);
-			//add reset vars function
-		}
-		else cvarManager->log("Error joining lobby, you are in a game or mmw is invalid");
+		gameWrapper->SetTimeout([this](GameWrapper* gw) {
+			if (!gameWrapper->IsInOnlineGame() && !cvarManager->getCvar("MJEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
+			else { cvarManager->log("[gotoPrivateMatch] Success."); cvarManager->getCvar("MJEndRecursiveJoin").setValue("0"); cvarManager->getCvar("MJEndMonitor").setValue("1"); return; }
+			
+			}, cvarManager->getCvar("MJTimeBeforeRetrying").getIntValue());
 
-	}
-	else cvarManager->log("Invalid event code!");
 }
-
 
 Region MJ::getRegion(int region) {
 	switch (region) {
@@ -78,4 +73,26 @@ Region MJ::getRegion(int region) {
 		case 9: return Region::SAM;
 		default: return Region::USE;
 	}
+}
+
+void MJ::monitorOnlineState() {
+	monitor = std::thread([this]() {
+		while (mon_running && !cvarManager->getCvar("MJEndMonitor").getBoolValue()) {
+			if (!gameWrapper->IsInOnlineGame()) {
+				cvarManager->log("[Monitor] not in online game...");
+				in_game = false;
+			}
+			else {
+				cvarManager->log("[Monitor] detected online game!");
+				cvarManager->log("[Monitor] terminating monitor...");
+				cvarManager->getCvar("MJEndMonitor").setValue("0");
+				in_game = true;
+				return;
+			}
+			std::this_thread::sleep_for(std::chrono::seconds(2));
+		}
+		cvarManager->getCvar("MJEndMonitor").setValue("0");
+		return;
+		});
+	monitor.detach();
 }

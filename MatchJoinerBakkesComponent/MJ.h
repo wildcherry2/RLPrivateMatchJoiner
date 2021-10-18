@@ -18,6 +18,8 @@
 #include <functional>
 #include <iostream>
 #include <utility>
+#include <string>
+#include <cstring>
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
 
@@ -32,13 +34,23 @@ public:
 	virtual void onUnload();
 	void gotoPrivateMatch();
 	Region getRegion(int region);
+	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
+	
+
+	//autojoin
+	std::thread monitor;
+	bool in_game = false;
+	bool mon_running = true;
+	size_t time_to_wait = 15;
+	void monitorOnlineState();
 
 	//cvar
 	void initCvars();
-	void initInternalCvars();
+	void initMatchCvars();
 	void initGuiCvars();
+	void initServerCvars();
+	void initUtilityCvars();
 	void unregisterCvars();
-	//bool mod_enabled_cvar = false;
 
 	//f2 gui
 	void RenderSettings() override;
@@ -48,21 +60,41 @@ public:
 	void renderAutotabEnabled();
 	void renderMapCombobox(std::string name);
 	void renderRegionCombobox(std::string name);
-	//void renderQuickWindowBtn();
-	//void renderQuickWindow();
-	void renderQWNameField();	
-	//static std::string setVars(ImGuiInputTextCallbackData* data);
-	void renderQWPassField();
-	void renderQWCreate();
-	void renderQWJoin();
-	void renderQWLinkGen();
 	bool is_enabled = true; //for overall mod
 	bool is_autotab_enabled = true;
 	char name_field_storage[100] = "";
 	char pass_field_storage[100] = "";
 	std::string link = "";
 
+	//server
+	void startServer();
+	std::thread server_thread;
+	void MoveGameToFront();
+
+	//match info
+	std::string name = "", pass = "";
+	std::string gametags = "BotsNone";
+	Region region = Region::USE;
+	int event_code = 1;
+	std::string selected_map = map_codenames[17];
 	
+	//plugin window
+	bool isWindowOpen_ = false;
+	bool isMinimized_ = false;
+	std::string menuTitle_ = "mj";
+	virtual void Render() override;
+	virtual std::string GetMenuName() override;
+	virtual std::string GetMenuTitle() override;
+	virtual bool ShouldBlockInput() override;
+	virtual bool IsActiveOverlay() override;
+	virtual void OnOpen() override;
+	virtual void OnClose() override;
+	void renderQWNameField();
+	void renderQWPassField();
+	void renderQWCreate();
+	void renderQWJoin();
+	void renderQWLinkGen();
+
 	//name arrays, could use std::map, but this is more efficient, gui requires c strings ??
 	const std::string map_codenames[35] = {
 		"Underwater_P",
@@ -152,39 +184,4 @@ public:
 		"South Africa (SAF)",
 		"South America (SAM)"
 	};
-
-	//server
-	//SimpleWeb::Server<SimpleWeb::HTTP> server = SimpleWeb::Server<SimpleWeb::HTTP>();
-	//bool server_disabled_activated_flag = false;	
-	//*void initServer();
-	void startServer();
-	//void stopServer();
-	std::thread server_thread;
-	void MoveGameToFront();
-
-	//match info
-	std::string name = "", pass = "";
-	std::string gametags = "BotsNone";
-	Region region = Region::USE;
-	int event_code = 1;
-
-	std::string selected_map = map_codenames[17];
-
-	// Inherited via PluginWindow
-	
-
-	bool isWindowOpen_ = false;
-	bool isMinimized_ = false;
-	std::string menuTitle_ = "mj";
-
-	virtual void Render() override;
-	virtual std::string GetMenuName() override;
-	virtual std::string GetMenuTitle() override;
-	//virtual void SetImGuiContext(uintptr_t ctx) override;
-	virtual bool ShouldBlockInput() override;
-	virtual bool IsActiveOverlay() override;
-	virtual void OnOpen() override;
-	virtual void OnClose() override;
-	
-	
 };
