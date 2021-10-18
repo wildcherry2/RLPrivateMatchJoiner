@@ -16,6 +16,7 @@ void MJ::SetImGuiContext(uintptr_t ctx) {
 
 void MJ::RenderSettings() {
 	renderModEnabledCheckbox();
+	renderAutotabEnabled();
 }
 
 //broken
@@ -26,6 +27,14 @@ void MJ::renderModEnabledCheckbox() { //tie things to cvars, unregister cvars fo
 
 	if (ImGui::Checkbox("Enabled", &enabled)) cv.setValue(enabled);
 }
+void MJ::renderAutotabEnabled() { //tie things to cvars, unregister cvars for options
+	CVarWrapper cv = cvarManager->getCvar("MJAutotabInToggle");
+	if (!cv) return;
+	bool enabled = cv.getBoolValue();
+
+	if (ImGui::Checkbox("Autotab", &enabled)) cv.setValue(enabled);
+}
+
 
 
 void MJ::renderMapCombobox(std::string name) {

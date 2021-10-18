@@ -76,9 +76,9 @@ void MJ::initGuiCvars() {
 		});
 	cvarManager->registerCvar("MJIsQuickMatchWindowEnabled", "0", "Toggles quick private match join/create window", true, true, 0, true, 1, false); //change to notifier
 	cvarManager->registerCvar("MJGeneratedLink", "", "Generated link", true, false, false, false);
-	cvarManager->registerNotifier("MJAutoTabInToggle", [this](std::vector<std::string> args) {
-		
-		}, "", PERMISSION_ALL);
+	cvarManager->registerCvar("MJAutotabInToggle", "1", "Toggles autotab back in on server request", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+		is_autotab_enabled = cw.getBoolValue();
+		});;
 }
 
 void MJ::unregisterCvars() {

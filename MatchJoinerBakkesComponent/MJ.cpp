@@ -14,9 +14,6 @@ void MJ::onLoad()
 	_globalCvarManager = cvarManager;
 	initCvars();
 	startServer();
-	/*initServer();
-	startServer();*/
-	//cvarManager->executeCommand("MJDisableServer");
 }
 
 void MJ::onUnload()

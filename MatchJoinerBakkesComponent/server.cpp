@@ -34,7 +34,7 @@ void MJ::startServer() {
 			response->write(SimpleWeb::StatusCode::success_accepted, "alright");
 			response->send();
 
-			MoveGameToFront();
+			if(is_autotab_enabled) MoveGameToFront();
 			gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); });
 		};
 		//URL syntax: localhost:[port]/halt

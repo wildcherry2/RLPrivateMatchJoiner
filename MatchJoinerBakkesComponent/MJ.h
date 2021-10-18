@@ -45,6 +45,7 @@ public:
 	std::string GetPluginName() override;
 	void SetImGuiContext(uintptr_t ctx) override;
 	void renderModEnabledCheckbox();
+	void renderAutotabEnabled();
 	void renderMapCombobox(std::string name);
 	void renderRegionCombobox(std::string name);
 	//void renderQuickWindowBtn();
@@ -56,6 +57,7 @@ public:
 	void renderQWJoin();
 	void renderQWLinkGen();
 	bool is_enabled = true; //for overall mod
+	bool is_autotab_enabled = true;
 	char name_field_storage[100] = "";
 	char pass_field_storage[100] = "";
 	std::string link = "";
