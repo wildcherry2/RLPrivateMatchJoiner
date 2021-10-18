@@ -52,11 +52,6 @@ public:
 	void renderAutotabEnabled();
 	void renderMapCombobox(std::string name);
 	void renderRegionCombobox(std::string name);
-	void renderQWNameField();	
-	void renderQWPassField();
-	void renderQWCreate();
-	void renderQWJoin();
-	void renderQWLinkGen();
 	bool is_enabled = true; //for overall mod
 	bool is_autotab_enabled = true;
 	char name_field_storage[100] = "";
@@ -86,6 +81,11 @@ public:
 	virtual bool IsActiveOverlay() override;
 	virtual void OnOpen() override;
 	virtual void OnClose() override;
+	void renderQWNameField();
+	void renderQWPassField();
+	void renderQWCreate();
+	void renderQWJoin();
+	void renderQWLinkGen();
 
 	//name arrays, could use std::map, but this is more efficient, gui requires c strings ??
 	const std::string map_codenames[35] = {

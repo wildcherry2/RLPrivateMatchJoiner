@@ -41,10 +41,7 @@ void MJ::gotoPrivateMatch() {
 				cm.OrangeTeamSettings = red;
 				cm.bClubServer = false;
 
-				
-
 				cvarManager->log("[gotoPrivateMatch] Creating with\n" + cm.ServerName + "\n" + cm.Password);
-
 				mw.CreatePrivateMatch(region, cm);
 			}			
 			else if (event_code == 1) {
