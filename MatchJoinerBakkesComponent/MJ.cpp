@@ -35,9 +35,9 @@ void MJ::gotoPrivateMatch() {
 				CustomMatchTeamSettings red;
 
 				cm.GameTags = gametags;
-				cm.MapName = cvarManager->getCvar("MJMap").getStringValue(); //this will need to be bound to map cvar/array
-				cm.ServerName = name;
-				cm.Password = pass;
+				cm.MapName = cvarManager->getCvar("MJMap").getStringValue();
+				cm.ServerName = cvarManager->getCvar("MJServerName").getStringValue();
+				cm.Password = cvarManager->getCvar("MJServerPass").getStringValue();
 				cm.BlueTeamSettings = blue;
 				cm.OrangeTeamSettings = red;
 				cm.bClubServer = false;
@@ -47,7 +47,7 @@ void MJ::gotoPrivateMatch() {
 			}			
 			else if (event_code == 1) {
 				cvarManager->log("[gotoPrivateMatch] Joining with name: " + name + "and pass: " + pass);
-				mw.JoinPrivateMatch(name, pass);
+				mw.JoinPrivateMatch(cvarManager->getCvar("MJServerName").getStringValue(), cvarManager->getCvar("MJServerPass").getStringValue());
 			}
 			else cvarManager->log("[gotoPrivateMatch] Invalid event code!");		
 		}
