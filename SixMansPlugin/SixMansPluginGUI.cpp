@@ -14,10 +14,11 @@ void SixMansPlugin::SetImGuiContext(uintptr_t ctx) {
 
 void SixMansPlugin::RenderSettings() {
 	renderModEnabledCheckbox();
+	renderMapCombobox("Default Map");
 	renderAutotabEnabled();
 	renderAutoretryEnabled();
-	renderMapCombobox("Default Map");
-	renderRegionCombobox("Default Region");
+
+	//renderRegionCombobox("Default Region");
 }
 
 void SixMansPlugin::renderModEnabledCheckbox() { 
@@ -62,12 +63,12 @@ void SixMansPlugin::renderMapCombobox(std::string name) {
 	if (ImGui::Combo(name.c_str(), &current, map_normalnames, IM_ARRAYSIZE(map_normalnames))) { cv.setValue(current); }
 	//tooltip saying this is default
 }
-void SixMansPlugin::renderRegionCombobox(std::string name){	
-	CVarWrapper cv = cvarManager->getCvar("6mRegion");
-	if (!cv) return;
-	int current = cv.getIntValue();
-	if (ImGui::Combo(name.c_str(), &current, region_names, IM_ARRAYSIZE(region_names))) { cv.setValue(current); }
-}
+//void SixMansPlugin::renderRegionCombobox(std::string name){	
+//	CVarWrapper cv = cvarManager->getCvar("6mRegion");
+//	if (!cv) return;
+//	int current = cv.getIntValue();
+//	if (ImGui::Combo(name.c_str(), &current, region_names, IM_ARRAYSIZE(region_names))) { cv.setValue(current); }
+//}
 
 
 

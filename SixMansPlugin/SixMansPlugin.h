@@ -63,7 +63,7 @@ public:
 	void renderModEnabledCheckbox();
 	void renderAutotabEnabled();
 	void renderMapCombobox(std::string name);
-	void renderRegionCombobox(std::string name);
+	//void renderRegionCombobox(std::string name); //region determined by 6mans bot
 	void renderAutoretryEnabled();
 	void renderTimeRetry();
 	bool is_enabled = true; //for overall mod
