@@ -26,7 +26,7 @@ constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_M
 
 
 
-class MJ: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow, public BakkesMod::Plugin::PluginWindow
+class SixMansPlugin: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow, public BakkesMod::Plugin::PluginWindow
 {
 public:
 	//std::shared_ptr<bool> createbtn = std::make_shared<bool>(false);
@@ -86,7 +86,7 @@ public:
 	//plugin window
 	bool isWindowOpen_ = false;
 	bool isMinimized_ = false;
-	std::string menuTitle_ = "mj";
+	std::string menuTitle_ = "6m";
 	virtual void Render() override;
 	virtual std::string GetMenuName() override;
 	virtual std::string GetMenuTitle() override;

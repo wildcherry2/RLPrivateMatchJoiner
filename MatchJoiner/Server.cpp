@@ -1,10 +1,10 @@
 #include "pch.h"
-#include "MJ.h"
+#include "MatchJoiner.h"
 
-void MJ::startServer() {
+void MatchJoiner::startServer() {
 	server_thread = std::thread([this]() {
 		SimpleWeb::Server<SimpleWeb::HTTP> server = SimpleWeb::Server<SimpleWeb::HTTP>();
-		server.config.port = 6969;
+		server.config.port = 9696;
 		cvarManager->log("[Server] Server loaded");
 
 		server.on_error = [this](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request, const SimpleWeb::error_code& ec) {
@@ -18,40 +18,40 @@ void MJ::startServer() {
 			auto fields = request->parse_query_string();
 
 			auto it = fields.begin();
-			this->cvarManager->getCvar("MJEventType").setValue(it->second);
+			this->cvarManager->getCvar("6mEventType").setValue(it->second);
 			it++;
-			this->cvarManager->getCvar("MJServerName").setValue(it->second);
+			this->cvarManager->getCvar("6mServerName").setValue(it->second);
 			it++;
-			this->cvarManager->getCvar("MJServerPass").setValue(it->second);
+			this->cvarManager->getCvar("6mServerPass").setValue(it->second);
 			it++;
-			this->cvarManager->getCvar("MJRegion").setValue(it->second);
+			this->cvarManager->getCvar("6mRegion").setValue(it->second);
 			cvarManager->log("[Server] Vars sent!");
 
 			response->close_connection_after_response = true;
 			response->write(SimpleWeb::StatusCode::success_accepted, "alright");
 			response->send();
 
-			if(is_autotab_enabled) MoveGameToFront();
-			gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); });
+			if (is_autotab_enabled) MoveGameToFront();
+			gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("6mReady"); });
 		};
 
 		//URL syntax: localhost:[port]/halt
 		//stops server, closing the thread
-		server.resource["^/halt$"]["GET"] = [this,&server](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response, std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request) {
+		server.resource["^/halt$"]["GET"] = [this, &server](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response, std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request) {
 			this->cvarManager->log("[Server] Request received...");
 
 			response->close_connection_after_response = true;
 			response->write(SimpleWeb::StatusCode::success_accepted, "[Server] Stopping server!");
 			response->send();
 			this->cvarManager->log("[Server] Stopping server...");
-			
+
 			server.stop();
 		};
 
 		server.start();
 		this->cvarManager->log("[Server] Thread closing!");
 		return;
-	});
+		});
 	server_thread.detach();
 }
 
@@ -88,7 +88,7 @@ std::vector<HWND> getToplevelWindows()
 	return args.handles;
 }
 
-void MJ::MoveGameToFront()
+void MatchJoiner::MoveGameToFront()
 {
 	auto handles = getToplevelWindows();
 

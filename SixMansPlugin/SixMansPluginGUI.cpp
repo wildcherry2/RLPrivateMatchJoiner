@@ -1,18 +1,18 @@
 //https://bakkesmodwiki.github.io/bakkesmod_api/
 //https://pthom.github.io/imgui_manual_online/manual/imgui_manual.html
 #include "pch.h"
-#include "MJ.h"
+#include "SixMansPlugin.h"
 
 
-std::string MJ::GetPluginName() {
+std::string SixMansPlugin::GetPluginName() {
 	return "Match Joiner Settings";
 }
 
-void MJ::SetImGuiContext(uintptr_t ctx) {
+void SixMansPlugin::SetImGuiContext(uintptr_t ctx) {
 	ImGui::SetCurrentContext(reinterpret_cast<ImGuiContext*>(ctx));
 }
 
-void MJ::RenderSettings() {
+void SixMansPlugin::RenderSettings() {
 	renderModEnabledCheckbox();
 	renderAutotabEnabled();
 	renderAutoretryEnabled();
@@ -20,22 +20,22 @@ void MJ::RenderSettings() {
 	renderRegionCombobox("Default Region");
 }
 
-void MJ::renderModEnabledCheckbox() { 
-	CVarWrapper cv = cvarManager->getCvar("MJModEnabled");
+void SixMansPlugin::renderModEnabledCheckbox() { 
+	CVarWrapper cv = cvarManager->getCvar("6mModEnabled");
 	if (!cv) return;
 	bool enabled = cv.getBoolValue();
 
 	if (ImGui::Checkbox("Enabled", &enabled)) cv.setValue(enabled);
 }
-void MJ::renderAutotabEnabled() { 
-	CVarWrapper cv = cvarManager->getCvar("MJAutotabInToggle");
+void SixMansPlugin::renderAutotabEnabled() { 
+	CVarWrapper cv = cvarManager->getCvar("6mAutotabInToggle");
 	if (!cv) return;
 	bool enabled = cv.getBoolValue();
 
 	if (ImGui::Checkbox("Autotab", &enabled)) cv.setValue(enabled);
 }
-void MJ::renderAutoretryEnabled() { 
-	CVarWrapper cv = cvarManager->getCvar("MJAutoRetryToggle");
+void SixMansPlugin::renderAutoretryEnabled() { 
+	CVarWrapper cv = cvarManager->getCvar("6mAutoRetryToggle");
 	if (!cv) return;
 	bool enabled = cv.getBoolValue();
 
@@ -45,8 +45,8 @@ void MJ::renderAutoretryEnabled() {
 	}
 	if (enabled) renderTimeRetry();
 }
-void MJ::renderTimeRetry() {
-	CVarWrapper cv = cvarManager->getCvar("MJTimeBeforeRetrying");
+void SixMansPlugin::renderTimeRetry() {
+	CVarWrapper cv = cvarManager->getCvar("6mTimeBeforeRetrying");
 	if (!cv) return;
 	int val = cv.getIntValue();
 
@@ -55,15 +55,15 @@ void MJ::renderTimeRetry() {
 
 
 
-void MJ::renderMapCombobox(std::string name) {
-	CVarWrapper cv = cvarManager->getCvar("MJMapNameSelection");
+void SixMansPlugin::renderMapCombobox(std::string name) {
+	CVarWrapper cv = cvarManager->getCvar("6mMapNameSelection");
 	if (!cv) return;
 	int current = cv.getIntValue();
 	if (ImGui::Combo(name.c_str(), &current, map_normalnames, IM_ARRAYSIZE(map_normalnames))) { cv.setValue(current); }
 	//tooltip saying this is default
 }
-void MJ::renderRegionCombobox(std::string name){	
-	CVarWrapper cv = cvarManager->getCvar("MJRegion");
+void SixMansPlugin::renderRegionCombobox(std::string name){	
+	CVarWrapper cv = cvarManager->getCvar("6mRegion");
 	if (!cv) return;
 	int current = cv.getIntValue();
 	if (ImGui::Combo(name.c_str(), &current, region_names, IM_ARRAYSIZE(region_names))) { cv.setValue(current); }
@@ -71,44 +71,44 @@ void MJ::renderRegionCombobox(std::string name){
 
 
 
-void MJ::renderQWCreate() {
+void SixMansPlugin::renderQWCreate() {
 	if (ImGui::Button("Create")) {
 		event_code = 0;
-		gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("MJReady"); });
+		gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("6mReady"); });
 	}
 		
 }
 //joining is broken
-void MJ::renderQWJoin() {
+void SixMansPlugin::renderQWJoin() {
 	ImGui::SameLine();
 	if (ImGui::Button("Join")) {
 		event_code = 1;
-		gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("MJReady"); });
+		gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("6mReady"); });
 	}
 }
 
-void MJ::renderQWNameField() {
+void SixMansPlugin::renderQWNameField() {
 	char in[100] = ""; 
 	std::strcpy(in,name_field_storage);
 	ImGui::InputText("Server Name", in, IM_ARRAYSIZE(in), ImGuiInputTextFlags_AutoSelectAll);
 	if (ImGui::IsItemEdited()) {
 		std::strcpy(name_field_storage,in);
-		cvarManager->getCvar("MJServerName").setValue(std::string(in));
+		cvarManager->getCvar("6mServerName").setValue(std::string(in));
 	}
 }
-void MJ::renderQWPassField() {
+void SixMansPlugin::renderQWPassField() {
 	char in[100] = "";
 	std::strcpy(in, pass_field_storage);
 	ImGui::InputText("Password", in, IM_ARRAYSIZE(in), ImGuiInputTextFlags_AutoSelectAll);
 	if (ImGui::IsItemEdited()) {
 		std::strcpy(pass_field_storage, in);
-		cvarManager->getCvar("MJServerPass").setValue(std::string(in));
+		cvarManager->getCvar("6mServerPass").setValue(std::string(in));
 	}
 }
-void MJ::renderQWLinkGen() {
+void SixMansPlugin::renderQWLinkGen() {
 	if (ImGui::Button("Generate Link")) {
 		link = "http://localhost:6969/match?event=" + std::to_string(event_code) + "&name=" + name + "&pass=" + pass + "&region=" + std::to_string((int)region);
-		cvarManager->getCvar("MJGeneratedLink").setValue(link);
+		cvarManager->getCvar("6mGeneratedLink").setValue(link);
 		ImGui::LogToClipboard();
 		ImGui::LogText(link.c_str());
 		ImGui::LogFinish();
@@ -118,7 +118,7 @@ void MJ::renderQWLinkGen() {
 
 
 // Do ImGui rendering here
-void MJ::Render()
+void SixMansPlugin::Render()
 {
 	if (!ImGui::Begin(menuTitle_.c_str(), &isWindowOpen_, ImGuiWindowFlags_None))
 	{
@@ -148,36 +148,36 @@ void MJ::Render()
 	
 }
 
-std::string MJ::GetMenuName()
+std::string SixMansPlugin::GetMenuName()
 {
-	return "mj";
+	return "6m";
 }
 
-std::string MJ::GetMenuTitle()
+std::string SixMansPlugin::GetMenuTitle()
 {
 	return menuTitle_;
 }
 
 // Should events such as mouse clicks/key inputs be blocked so they won't reach the game
-bool MJ::ShouldBlockInput()
+bool SixMansPlugin::ShouldBlockInput()
 {
 	return ImGui::GetIO().WantCaptureMouse || ImGui::GetIO().WantCaptureKeyboard;
 }
 
 // Return true if window should be interactive
-bool MJ::IsActiveOverlay()
+bool SixMansPlugin::IsActiveOverlay()
 {
 	return true;
 }
 
 // Called when window is opened
-void MJ::OnOpen()
+void SixMansPlugin::OnOpen()
 {
 	isWindowOpen_ = true;
 }
 
 // Called when window is closed
-void MJ::OnClose()
+void SixMansPlugin::OnClose()
 {
 	isWindowOpen_ = false;
 }

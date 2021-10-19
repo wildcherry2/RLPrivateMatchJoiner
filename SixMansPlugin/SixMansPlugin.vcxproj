@@ -9,11 +9,11 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{0817345d-681c-49a4-a9b8-32fa446cf7b4}</ProjectGuid>
-    <RootNamespace>MatchJoinerBakkesComponent</RootNamespace>
+    <RootNamespace>SixMansPlugin</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <TargetFrameworkVersion>
     </TargetFrameworkVersion>
-    <ProjectName>MJ</ProjectName>
+    <ProjectName>SixMansPlugin</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -117,8 +117,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="MJ.cpp" />
-    <ClCompile Include="MJGUI.cpp" />
+    <ClCompile Include="SixMansPlugin.cpp" />
+    <ClCompile Include="SixMansPluginGUI.cpp" />
     <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -136,7 +136,7 @@
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="MJ.h" />
+    <ClInclude Include="SixMansPlugin.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Simple-Web-Server\asio_compatibility.hpp" />
     <ClInclude Include="Simple-Web-Server\client_http.hpp" />
@@ -150,7 +150,7 @@
     <ClInclude Include="version.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="MJ.rc" />
+    <ResourceCompile Include="SixMansPlugin.rc" />
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
