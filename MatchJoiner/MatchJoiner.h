@@ -3,6 +3,24 @@
 #include "bakkesmod/plugin/bakkesmodplugin.h"
 #include "bakkesmod/plugin/pluginwindow.h"
 #include "bakkesmod/plugin/PluginSettingsWindow.h"
+#include "bakkesmod/wrappers/gamewrapper.h"
+#include "bakkesmod/wrappers/MatchmakingWrapper.h"
+#include "bakkesmod/wrappers/PlayerControllerWrapper.h"
+#include "bakkesmod/wrappers/GameEvent/GameEventWrapper.h"
+#include <regex>
+#include <algorithm>
+#include "version.h"
+#include "Simple-Web-Server/server_http.hpp">;
+#include <boost/filesystem.hpp>
+#include <boost/algorithm/string/trim.hpp>
+#include <fstream>
+#include <vector>
+#include <thread>
+#include <functional>
+#include <iostream>
+#include <utility>
+#include <string>
+#include <cstring>
 
 #include "version.h"
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
@@ -13,9 +31,6 @@ class MatchJoiner: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::
 
 	//std::shared_ptr<bool> enabled;
 
-	//Boilerplate
-	virtual void onLoad();
-	virtual void onUnload();
 	//core
 	virtual void onLoad();
 	virtual void onUnload();
@@ -50,7 +65,7 @@ class MatchJoiner: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::
 	//plugin window
 	bool isWindowOpen_ = false;
 	bool isMinimized_ = false;
-	std::string menuTitle_ = "6m";
+	std::string menuTitle_ = "MJ";
 	virtual void Render() override;
 	virtual std::string GetMenuName() override;
 	virtual std::string GetMenuTitle() override;
@@ -75,6 +90,15 @@ class MatchJoiner: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::
 	Region region = Region::USE;
 	int event_code = 1;
 	std::string selected_map = map_codenames[17];
+
+	//cvar
+	void initCvars();
+	void initMatchCvars();
+	void initGuiCvars();
+	void initServerCvars();
+	void initUtilityCvars();
+	void initAutojoinCvars();
+	void unregisterCvars();
 
 	const std::string map_codenames[35] = {
 		"Underwater_P",

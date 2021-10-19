@@ -18,13 +18,13 @@ void MatchJoiner::startServer() {
 			auto fields = request->parse_query_string();
 
 			auto it = fields.begin();
-			this->cvarManager->getCvar("6mEventType").setValue(it->second);
+			this->cvarManager->getCvar("MJEventType").setValue(it->second);
 			it++;
-			this->cvarManager->getCvar("6mServerName").setValue(it->second);
+			this->cvarManager->getCvar("MJServerName").setValue(it->second);
 			it++;
-			this->cvarManager->getCvar("6mServerPass").setValue(it->second);
+			this->cvarManager->getCvar("MJServerPass").setValue(it->second);
 			it++;
-			this->cvarManager->getCvar("6mRegion").setValue(it->second);
+			this->cvarManager->getCvar("MJRegion").setValue(it->second);
 			cvarManager->log("[Server] Vars sent!");
 
 			response->close_connection_after_response = true;
@@ -32,7 +32,7 @@ void MatchJoiner::startServer() {
 			response->send();
 
 			if (is_autotab_enabled) MoveGameToFront();
-			gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("6mReady"); });
+			gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("MJReady"); });
 		};
 
 		//URL syntax: localhost:[port]/halt

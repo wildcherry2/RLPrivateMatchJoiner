@@ -18,21 +18,21 @@ void MatchJoiner::RenderSettings() {
 }
 
 void MatchJoiner::renderModEnabledCheckbox() {
-	CVarWrapper cv = cvarManager->getCvar("6mModEnabled");
+	CVarWrapper cv = cvarManager->getCvar("MJModEnabled");
 	if (!cv) return;
 	bool enabled = cv.getBoolValue();
 
 	if (ImGui::Checkbox("Enabled", &enabled)) cv.setValue(enabled);
 }
 void MatchJoiner::renderAutotabEnabled() {
-	CVarWrapper cv = cvarManager->getCvar("6mAutotabInToggle");
+	CVarWrapper cv = cvarManager->getCvar("MJAutotabInToggle");
 	if (!cv) return;
 	bool enabled = cv.getBoolValue();
 
 	if (ImGui::Checkbox("Autotab", &enabled)) cv.setValue(enabled);
 }
 void MatchJoiner::renderAutoretryEnabled() {
-	CVarWrapper cv = cvarManager->getCvar("6mAutoRetryToggle");
+	CVarWrapper cv = cvarManager->getCvar("MJAutoRetryToggle");
 	if (!cv) return;
 	bool enabled = cv.getBoolValue();
 
@@ -43,7 +43,7 @@ void MatchJoiner::renderAutoretryEnabled() {
 	if (enabled) renderTimeRetry();
 }
 void MatchJoiner::renderTimeRetry() {
-	CVarWrapper cv = cvarManager->getCvar("6mTimeBeforeRetrying");
+	CVarWrapper cv = cvarManager->getCvar("MJTimeBeforeRetrying");
 	if (!cv) return;
 	int val = cv.getIntValue();
 
@@ -53,14 +53,14 @@ void MatchJoiner::renderTimeRetry() {
 
 
 void MatchJoiner::renderMapCombobox(std::string name) {
-	CVarWrapper cv = cvarManager->getCvar("6mMapNameSelection");
+	CVarWrapper cv = cvarManager->getCvar("MJMapNameSelection");
 	if (!cv) return;
 	int current = cv.getIntValue();
 	if (ImGui::Combo(name.c_str(), &current, map_normalnames, IM_ARRAYSIZE(map_normalnames))) { cv.setValue(current); }
 	//tooltip saying this is default
 }
 void MatchJoiner::renderRegionCombobox(std::string name) {
-	CVarWrapper cv = cvarManager->getCvar("6mRegion");
+	CVarWrapper cv = cvarManager->getCvar("MJRegion");
 	if (!cv) return;
 	int current = cv.getIntValue();
 	if (ImGui::Combo(name.c_str(), &current, region_names, IM_ARRAYSIZE(region_names))) { cv.setValue(current); }
@@ -71,7 +71,7 @@ void MatchJoiner::renderRegionCombobox(std::string name) {
 void MatchJoiner::renderQWCreate() {
 	if (ImGui::Button("Create")) {
 		event_code = 0;
-		gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("6mReady"); });
+		gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("MJReady"); });
 	}
 
 }
@@ -80,7 +80,7 @@ void MatchJoiner::renderQWJoin() {
 	ImGui::SameLine();
 	if (ImGui::Button("Join")) {
 		event_code = 1;
-		gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("6mReady"); });
+		gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("MJReady"); });
 	}
 }
 
@@ -90,7 +90,7 @@ void MatchJoiner::renderQWNameField() {
 	ImGui::InputText("Server Name", in, IM_ARRAYSIZE(in), ImGuiInputTextFlags_AutoSelectAll);
 	if (ImGui::IsItemEdited()) {
 		std::strcpy(name_field_storage, in);
-		cvarManager->getCvar("6mServerName").setValue(std::string(in));
+		cvarManager->getCvar("MJServerName").setValue(std::string(in));
 	}
 }
 void MatchJoiner::renderQWPassField() {
@@ -99,13 +99,13 @@ void MatchJoiner::renderQWPassField() {
 	ImGui::InputText("Password", in, IM_ARRAYSIZE(in), ImGuiInputTextFlags_AutoSelectAll);
 	if (ImGui::IsItemEdited()) {
 		std::strcpy(pass_field_storage, in);
-		cvarManager->getCvar("6mServerPass").setValue(std::string(in));
+		cvarManager->getCvar("MJServerPass").setValue(std::string(in));
 	}
 }
 void MatchJoiner::renderQWLinkGen() {
 	if (ImGui::Button("Generate Link")) {
 		link = "http://localhost:6969/match?event=" + std::to_string(event_code) + "&name=" + name + "&pass=" + pass + "&region=" + std::to_string((int)region);
-		cvarManager->getCvar("6mGeneratedLink").setValue(link);
+		cvarManager->getCvar("MJGeneratedLink").setValue(link);
 		ImGui::LogToClipboard();
 		ImGui::LogText(link.c_str());
 		ImGui::LogFinish();
@@ -147,7 +147,7 @@ void MatchJoiner::Render()
 
 std::string MatchJoiner::GetMenuName()
 {
-	return "6m";
+	return "MJ";
 }
 
 std::string MatchJoiner::GetMenuTitle()

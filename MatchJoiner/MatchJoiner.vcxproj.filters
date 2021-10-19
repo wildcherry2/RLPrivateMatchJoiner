@@ -22,6 +22,9 @@
     <Filter Include="imgui\implementation">
       <UniqueIdentifier>{d46c4711-0bdc-484c-bb4c-5526d80f7f5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Simple-Web-Server">
+      <UniqueIdentifier>{0b6e4bf3-6181-43ea-8988-7d410aaca30c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MatchJoiner.cpp">
@@ -75,6 +78,9 @@
     <ClCompile Include="Server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CVar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MatchJoiner.h">
@@ -124,6 +130,33 @@
     </ClInclude>
     <ClInclude Include="version.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Simple-Web-Server\client_http.hpp">
+      <Filter>Simple-Web-Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Simple-Web-Server\client_https.hpp">
+      <Filter>Simple-Web-Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Simple-Web-Server\crypto.hpp">
+      <Filter>Simple-Web-Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Simple-Web-Server\mutex.hpp">
+      <Filter>Simple-Web-Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Simple-Web-Server\server_http.hpp">
+      <Filter>Simple-Web-Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Simple-Web-Server\server_https.hpp">
+      <Filter>Simple-Web-Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Simple-Web-Server\status_code.hpp">
+      <Filter>Simple-Web-Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Simple-Web-Server\utility.hpp">
+      <Filter>Simple-Web-Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Simple-Web-Server\asio_compatibility.hpp">
+      <Filter>Simple-Web-Server</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

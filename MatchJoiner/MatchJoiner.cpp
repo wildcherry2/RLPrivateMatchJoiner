@@ -9,40 +9,86 @@ std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 void MatchJoiner::onLoad()
 {
 	_globalCvarManager = cvarManager;
-	//cvarManager->log("Plugin loaded!");
-
-	//cvarManager->registerNotifier("my_aweseome_notifier", [&](std::vector<std::string> args) {
-	//	cvarManager->log("Hello notifier!");
-	//}, "", 0);
-
-	//auto cvar = cvarManager->registerCvar("template_cvar", "hello-cvar", "just a example of a cvar");
-	//auto cvar2 = cvarManager->registerCvar("template_cvar2", "0", "just a example of a cvar with more settings", true, true, -10, true, 10 );
-
-	//cvar.addOnValueChanged([this](std::string cvarName, CVarWrapper newCvar) {
-	//	cvarManager->log("the cvar with name: " + cvarName + " changed");
-	//	cvarManager->log("the new value is:" + newCvar.getStringValue());
-	//});
-
-	//cvar2.addOnValueChanged(std::bind(&MatchJoiner::YourPluginMethod, this, _1, _2));
-
-	// enabled decleared in the header
-	//enabled = std::make_shared<bool>(false);
-	//cvarManager->registerCvar("TEMPLATE_Enabled", "0", "Enable the TEMPLATE plugin", true, true, 0, true, 1).bindTo(enabled);
-
-	//cvarManager->registerNotifier("NOTIFIER", [this](std::vector<std::string> params){FUNCTION();}, "DESCRIPTION", PERMISSION_ALL);
-	//cvarManager->registerCvar("CVAR", "DEFAULTVALUE", "DESCRIPTION", true, true, MINVAL, true, MAXVAL);//.bindTo(CVARVARIABLE);
-	//gameWrapper->HookEvent("FUNCTIONNAME", std::bind(&TEMPLATE::FUNCTION, this));
-	//gameWrapper->HookEventWithCallerPost<ActorWrapper>("FUNCTIONNAME", std::bind(&MatchJoiner::FUNCTION, this, _1, _2, _3));
-	//gameWrapper->RegisterDrawable(bind(&TEMPLATE::Render, this, std::placeholders::_1));
-
-
-	//gameWrapper->HookEvent("Function TAGame.Ball_TA.Explode", [this](std::string eventName) {
-	//	cvarManager->log("Your hook got called and the ball went POOF");
-	//});
-	// You could also use std::bind here
-	//gameWrapper->HookEvent("Function TAGame.Ball_TA.Explode", std::bind(&MatchJoiner::YourPluginMethod, this);
+	initCvars();
+	startServer();
 }
 
 void MatchJoiner::onUnload()
 {
+	cvarManager->executeCommand("MJDisableServer");
+	cvarManager->getCvar("MJEndMonitor").setValue("1");
+	cvarManager->log("Match joiner unloaded.");
+}
+
+void MatchJoiner::gotoPrivateMatch() {
+	cvarManager->log("[gotoPrivateMatch] called.");
+	if (!in_game && mw) {
+		if (event_code == 0) {
+			CustomMatchSettings cm;
+			CustomMatchTeamSettings blue;
+			CustomMatchTeamSettings red;
+
+			cm.GameTags = gametags;
+			cm.MapName = cvarManager->getCvar("MJMap").getStringValue();
+			cm.ServerName = cvarManager->getCvar("MJServerName").getStringValue();
+			cm.Password = cvarManager->getCvar("MJServerPass").getStringValue();
+			cm.BlueTeamSettings = blue;
+			cm.OrangeTeamSettings = red;
+			cm.bClubServer = false;
+
+			cvarManager->log("[gotoPrivateMatch] Creating with name: " + cm.ServerName + "and pass: " + cm.Password);
+			mw.CreatePrivateMatch(region, cm);
+		}
+		else if (event_code == 1) {
+			cvarManager->log("[gotoPrivateMatch] Joining with name: " + name + "and pass: " + pass);
+			mw.JoinPrivateMatch(cvarManager->getCvar("MJServerName").getStringValue(), cvarManager->getCvar("MJServerPass").getStringValue());
+		}
+		else cvarManager->log("[gotoPrivateMatch] Invalid event code!");
+	}
+	if (is_enabled_autoretry) {
+		gameWrapper->SetTimeout([this](GameWrapper* gw) {
+			if (!gameWrapper->IsInOnlineGame() && !cvarManager->getCvar("MJEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
+			else { cvarManager->log("[gotoPrivateMatch] Success."); cvarManager->getCvar("MJEndRecursiveJoin").setValue("0"); cvarManager->getCvar("MJEndMonitor").setValue("1"); return; }
+
+			}, cvarManager->getCvar("MJTimeBeforeRetrying").getIntValue());
+	}
+
+}
+
+Region MatchJoiner::getRegion(int region) {
+	switch (region) {
+	case 0: return Region::USE;
+	case 1: return Region::EU;
+	case 2: return Region::USW;
+	case 3: return Region::ASC;
+	case 4: return Region::ASM;
+	case 5: return Region::JPN;
+	case 6: return Region::ME;
+	case 7: return Region::OCE;
+	case 8: return Region::SAF;
+	case 9: return Region::SAM;
+	default: return Region::USE;
+	}
+}
+
+void MatchJoiner::monitorOnlineState() {
+	monitor = std::thread([this]() {
+		while (mon_running && !cvarManager->getCvar("MJEndMonitor").getBoolValue()) {
+			if (!gameWrapper->IsInOnlineGame()) {
+				cvarManager->log("[Monitor] not in online game...");
+				in_game = false;
+			}
+			else {
+				cvarManager->log("[Monitor] detected online game!");
+				cvarManager->log("[Monitor] terminating monitor...");
+				cvarManager->getCvar("MJEndMonitor").setValue("0");
+				in_game = true;
+				return;
+			}
+			std::this_thread::sleep_for(std::chrono::seconds(2));
+		}
+		cvarManager->getCvar("MJEndMonitor").setValue("0");
+		return;
+		});
+	monitor.detach();
 }
