@@ -26,7 +26,7 @@ constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_M
 
 
 
-class SixMansPlugin: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow, public BakkesMod::Plugin::PluginWindow
+class SixMansPlugin: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow/*, public BakkesMod::Plugin::PluginWindow*/
 {
 public:
 	//std::shared_ptr<bool> createbtn = std::make_shared<bool>(false);
@@ -36,13 +36,14 @@ public:
 	virtual void onUnload();
 	void gotoPrivateMatch();
 	Region getRegion(int region);
-	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();	
+	//MatchmakingWrapper mw;
+	//bool mw = true;
 
 	//autojoin
 	std::thread monitor;
 	bool in_game = false;
 	bool mon_running = true;
-	size_t time_to_wait = 15;
+	size_t time_to_wait = 45;
 	bool is_enabled_autoretry = true;
 	void monitorOnlineState();
 
@@ -84,7 +85,7 @@ public:
 	std::string selected_map = map_codenames[17];
 	
 	//plugin window
-	bool isWindowOpen_ = false;
+	/*bool isWindowOpen_ = false;
 	bool isMinimized_ = false;
 	std::string menuTitle_ = "6m";
 	virtual void Render() override;
@@ -98,7 +99,7 @@ public:
 	void renderQWPassField();
 	void renderQWCreate();
 	void renderQWJoin();
-	void renderQWLinkGen();
+	void renderQWLinkGen();*/
 
 	//name arrays, could use std::map, but this is more efficient, gui requires c strings ??
 	const std::string map_codenames[35] = {

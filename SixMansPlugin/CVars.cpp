@@ -68,9 +68,10 @@ void SixMansPlugin::initServerCvars() {
 
 void SixMansPlugin::initUtilityCvars() {
 	cvarManager->registerNotifier("6mReady", [this](std::vector<std::string> args) {
-		//cvarManager->getCvar("6mEndMonitor").setValue("0");
-		if(is_enabled_autoretry) monitorOnlineState();
+		in_game = false; //insurance
+		if (is_enabled_autoretry) { monitorOnlineState(); }
 		gotoPrivateMatch();
+		in_game = false;
 		}, "", PERMISSION_ALL);
 
 	cvarManager->registerNotifier("6mDisableMod", [this](std::vector<std::string> args) {
@@ -80,7 +81,7 @@ void SixMansPlugin::initUtilityCvars() {
 		initCvars();
 		cvarManager->executeCommand("6mEnableServer");
 		}, "", PERMISSION_ALL);
-	cvarManager->setBind("F3", "togglemenu 6m");
+	/*cvarManager->setBind("F3", "togglemenu 6m");*/
 }
 
 void SixMansPlugin::unregisterCvars() {
@@ -105,14 +106,14 @@ void SixMansPlugin::unregisterCvars() {
 	cvarManager->removeNotifier("6mReady");
 	cvarManager->removeNotifier("6mDisableServer");
 	cvarManager->removeNotifier("6mEnableServer");
-	cvarManager->removeBind("F3"); //need to store what this is set to initially
+	//cvarManager->removeBind("F3"); //need to store what this is set to initially
 	cvarManager->log("cvars unregistered,mod disabled!");
 }
 
 void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mEndRecursiveJoin", "0", "", true, true, 0, true, 1, false);
 	cvarManager->registerCvar("6mEndMonitor", "0", "", true, true, 0, true, 1, false);
-	cvarManager->registerCvar("6mTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 10, true, 60, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	cvarManager->registerCvar("6mTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 30, true, 120, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		time_to_wait = cw.getIntValue();
 		});;
 	cvarManager->registerCvar("6mAutoRetryToggle", "1", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {

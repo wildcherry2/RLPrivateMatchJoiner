@@ -22,11 +22,12 @@ void SixMansPlugin::onUnload()
 {
 	cvarManager->executeCommand("6mDisableServer");
 	cvarManager->getCvar("6mEndMonitor").setValue("1");
-	cvarManager->log("Match joiner unloaded.");
+	cvarManager->log("6Mans Plugin unloaded.");
 }
 
 void SixMansPlugin::gotoPrivateMatch() {
-	cvarManager->log("[gotoPrivateMatch] called.");	
+	cvarManager->log("[gotoPrivateMatch] called.");
+	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
 		if(!in_game && mw) { 
 			if (event_code == 0) {
 				CustomMatchSettings cm;
@@ -52,10 +53,11 @@ void SixMansPlugin::gotoPrivateMatch() {
 		}
 		if (is_enabled_autoretry) {
 			gameWrapper->SetTimeout([this](GameWrapper* gw) {
-				if (!gameWrapper->IsInOnlineGame() && !cvarManager->getCvar("6mEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
-				else { cvarManager->log("[gotoPrivateMatch] Success."); cvarManager->getCvar("6mEndRecursiveJoin").setValue("0"); cvarManager->getCvar("6mEndMonitor").setValue("1"); return; }
+				if (!in_game && !cvarManager->getCvar("6mEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
+				else { cvarManager->log("[gotoPrivateMatch] Success."); return; }
 
 				}, cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue());
+				
 		}
 
 }
@@ -78,7 +80,7 @@ Region SixMansPlugin::getRegion(int region) {
 
 void SixMansPlugin::monitorOnlineState() {
 	monitor = std::thread([this]() {
-		while (mon_running && !cvarManager->getCvar("6mEndMonitor").getBoolValue()) {
+		while (!cvarManager->getCvar("6mEndMonitor").getBoolValue()) {
 			if (!gameWrapper->IsInOnlineGame()) {
 				cvarManager->log("[Monitor] not in online game...");
 				in_game = false;
@@ -86,13 +88,14 @@ void SixMansPlugin::monitorOnlineState() {
 			else {
 				cvarManager->log("[Monitor] detected online game!");
 				cvarManager->log("[Monitor] terminating monitor...");
-				cvarManager->getCvar("6mEndMonitor").setValue("0");
+				//cvarManager->getCvar("6mEndMonitor").setValue("0");
 				in_game = true;
 				return;
 			}
 			std::this_thread::sleep_for(std::chrono::seconds(2));
 		}
 		cvarManager->getCvar("6mEndMonitor").setValue("0");
+		cvarManager->log("[Monitor] terminating monitor...");
 		return;
 		});
 	monitor.detach();
