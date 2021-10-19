@@ -6,6 +6,8 @@
 #include "bakkesmod/plugin/PluginSettingsWindow.h"
 #include "bakkesmod/wrappers/gamewrapper.h"
 #include "bakkesmod/wrappers/MatchmakingWrapper.h"
+#include "bakkesmod/wrappers/PlayerControllerWrapper.h"
+#include "bakkesmod/wrappers/GameEvent/GameEventWrapper.h"
 #include <regex>
 #include <algorithm>
 #include "version.h"
@@ -34,14 +36,14 @@ public:
 	virtual void onUnload();
 	void gotoPrivateMatch();
 	Region getRegion(int region);
-	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
-	
+	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();	
 
 	//autojoin
 	std::thread monitor;
 	bool in_game = false;
 	bool mon_running = true;
 	size_t time_to_wait = 15;
+	bool is_enabled_autoretry = true;
 	void monitorOnlineState();
 
 	//cvar
@@ -50,6 +52,7 @@ public:
 	void initGuiCvars();
 	void initServerCvars();
 	void initUtilityCvars();
+	void initAutojoinCvars();
 	void unregisterCvars();
 
 	//f2 gui
@@ -60,6 +63,8 @@ public:
 	void renderAutotabEnabled();
 	void renderMapCombobox(std::string name);
 	void renderRegionCombobox(std::string name);
+	void renderAutoretryEnabled();
+	void renderTimeRetry();
 	bool is_enabled = true; //for overall mod
 	bool is_autotab_enabled = true;
 	char name_field_storage[100] = "";

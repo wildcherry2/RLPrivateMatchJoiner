@@ -6,6 +6,7 @@ void MJ::initCvars() {
 	initGuiCvars();
 	initServerCvars();
 	initUtilityCvars();
+	initAutojoinCvars();
 }
 
 void MJ::initMatchCvars() {
@@ -44,6 +45,11 @@ void MJ::initGuiCvars() {
 	cvarManager->registerCvar("MJAutotabInToggle", "1", "Toggles autotab back in on server request", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_autotab_enabled = cw.getBoolValue();
 		});;
+	cvarManager->registerCvar("MJModEnabled", "1", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+		is_enabled = cw.getBoolValue();
+		if (is_enabled) cvarManager->executeCommand("MJEnableMod");
+		else cvarManager->executeCommand("MJDisableMod");
+		});;
 }
 
 void MJ::initServerCvars() {
@@ -62,23 +68,24 @@ void MJ::initServerCvars() {
 
 void MJ::initUtilityCvars() {
 	cvarManager->registerNotifier("MJReady", [this](std::vector<std::string> args) {
-		monitorOnlineState();
+		//cvarManager->getCvar("MJEndMonitor").setValue("0");
+		if(is_enabled_autoretry) monitorOnlineState();
 		gotoPrivateMatch();
 		}, "", PERMISSION_ALL);
-	cvarManager->registerCvar("MJEndRecursiveJoin", "0", "", true, true, 0, true, 1, false);
-	cvarManager->registerCvar("MJEndMonitor", "0", "", true, true, 0, true, 1, false);
-	cvarManager->registerCvar("MJTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 10, true, 60, false);
+
 	cvarManager->registerNotifier("MJDisableMod", [this](std::vector<std::string> args) {
 		unregisterCvars();
 		}, "", PERMISSION_ALL);
 	cvarManager->registerNotifier("MJEnableMod", [this](std::vector<std::string> args) {
-		cvarManager->executeCommand("MJEnableServer");
 		initCvars();
+		cvarManager->executeCommand("MJEnableServer");
 		}, "", PERMISSION_ALL);
 	cvarManager->setBind("F3", "togglemenu mj");
 }
 
 void MJ::unregisterCvars() {
+	cvarManager->executeCommand("MJDisableServer");
+	cvarManager->getCvar("MJEndMonitor").setValue("1");
 	cvarManager->executeCommand("MJDisableServer");
 	cvarManager->removeCvar("MJEventType");
 	cvarManager->removeCvar("MJServerName");
@@ -90,10 +97,25 @@ void MJ::unregisterCvars() {
 	cvarManager->removeCvar("MJGeneratedLink");
 	cvarManager->removeCvar("MJEndRecursiveJoin");
 	cvarManager->removeCvar("MJAutotabInToggle");
+	cvarManager->removeCvar("MJAutoRetryToggle");
+	cvarManager->removeCvar("MJEndRecursiveJoin");
+	cvarManager->removeCvar("MJEndMonitor");
+	cvarManager->removeCvar("MJTimeBeforeRetrying");
 	cvarManager->removeNotifier("MJGetMatchVars");
 	cvarManager->removeNotifier("MJReady");
 	cvarManager->removeNotifier("MJDisableServer");
 	cvarManager->removeNotifier("MJEnableServer");
 	cvarManager->removeBind("F3"); //need to store what this is set to initially
-	cvarManager->log("cvars unregistered!");
+	cvarManager->log("cvars unregistered,mod disabled!");
+}
+
+void MJ::initAutojoinCvars() {
+	cvarManager->registerCvar("MJEndRecursiveJoin", "0", "", true, true, 0, true, 1, false);
+	cvarManager->registerCvar("MJEndMonitor", "0", "", true, true, 0, true, 1, false);
+	cvarManager->registerCvar("MJTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 10, true, 60, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+		time_to_wait = cw.getIntValue();
+		});;
+	cvarManager->registerCvar("MJAutoRetryToggle", "1", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+		is_enabled_autoretry = cw.getBoolValue();
+		});
 }

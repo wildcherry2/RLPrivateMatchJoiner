@@ -12,8 +12,10 @@ std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 void MJ::onLoad()
 {
 	_globalCvarManager = cvarManager;
+	
 	initCvars();
 	startServer();
+	
 }
 
 void MJ::onUnload()
@@ -23,12 +25,18 @@ void MJ::onUnload()
 	cvarManager->log("Match joiner unloaded.");
 }
 
-//need to poll isinonlinegame more
 void MJ::gotoPrivateMatch() {
 	cvarManager->log("[gotoPrivateMatch] called.");
-	
-		if(!in_game && mw) { 
+	//PlayerControllerWrapper pc = gameWrapper->GetPlayerController();
+	//GameEventWrapper ge = NULL;
+	//if (pc) { cvarManager->log("pc is valid");  /*ge = pc.GetGameEvent();*/ }
+	/*if(!ge) cvarManager->log("ge is not valid");*/
 
+	/*ServerWrapper pc = gameWrapper->GetCurrentGameState();
+	bool ge;
+	if (pc) { cvarManager->log("pc is valid");  ge = pc.SuppressModalDialogs(); }*/
+	/*if(!ge) cvarManager->log("ge is not valid");*/
+		if(!in_game && mw) { 
 			if (event_code == 0) {
 				CustomMatchSettings cm;
 				CustomMatchTeamSettings blue;
@@ -44,18 +52,28 @@ void MJ::gotoPrivateMatch() {
 
 				cvarManager->log("[gotoPrivateMatch] Creating with name: " + cm.ServerName + "and pass: " + cm.Password);
 				mw.CreatePrivateMatch(region, cm);
-			}			
+			}
+			/*
+			*	TAGame.GFxData_ServerBrowser_TA.SetServerName
+			*	TAGame.GFxData_ServerBrowser_TA.SetPassword
+			*	TAGame.GFxData_ServerBrowser_TA.StartSearch
+			*		TAGame.GFxData_ServerBrowser_TA.Searching.BeginState
+			*		etc...
+			*/
 			else if (event_code == 1) {
 				cvarManager->log("[gotoPrivateMatch] Joining with name: " + name + "and pass: " + pass);
 				mw.JoinPrivateMatch(cvarManager->getCvar("MJServerName").getStringValue(), cvarManager->getCvar("MJServerPass").getStringValue());
 			}
 			else cvarManager->log("[gotoPrivateMatch] Invalid event code!");		
 		}
-		gameWrapper->SetTimeout([this](GameWrapper* gw) {
-			if (!gameWrapper->IsInOnlineGame() && !cvarManager->getCvar("MJEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
-			else { cvarManager->log("[gotoPrivateMatch] Success."); cvarManager->getCvar("MJEndRecursiveJoin").setValue("0"); cvarManager->getCvar("MJEndMonitor").setValue("1"); return; }
-			
-			}, cvarManager->getCvar("MJTimeBeforeRetrying").getIntValue());
+
+		if (is_enabled_autoretry) {
+			gameWrapper->SetTimeout([this](GameWrapper* gw) {
+				if (!gameWrapper->IsInOnlineGame() && !cvarManager->getCvar("MJEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
+				else { cvarManager->log("[gotoPrivateMatch] Success."); cvarManager->getCvar("MJEndRecursiveJoin").setValue("0"); cvarManager->getCvar("MJEndMonitor").setValue("1"); return; }
+
+				}, cvarManager->getCvar("MJTimeBeforeRetrying").getIntValue());
+		}
 
 }
 

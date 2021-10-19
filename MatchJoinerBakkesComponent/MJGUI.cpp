@@ -15,22 +15,42 @@ void MJ::SetImGuiContext(uintptr_t ctx) {
 void MJ::RenderSettings() {
 	renderModEnabledCheckbox();
 	renderAutotabEnabled();
+	renderAutoretryEnabled();
+	renderMapCombobox("Default Map");
+	renderRegionCombobox("Default Region");
 }
 
-//broken
-void MJ::renderModEnabledCheckbox() { //tie things to cvars, unregister cvars for options
+void MJ::renderModEnabledCheckbox() { 
 	CVarWrapper cv = cvarManager->getCvar("MJModEnabled");
 	if (!cv) return;
 	bool enabled = cv.getBoolValue();
 
 	if (ImGui::Checkbox("Enabled", &enabled)) cv.setValue(enabled);
 }
-void MJ::renderAutotabEnabled() { //tie things to cvars, unregister cvars for options
+void MJ::renderAutotabEnabled() { 
 	CVarWrapper cv = cvarManager->getCvar("MJAutotabInToggle");
 	if (!cv) return;
 	bool enabled = cv.getBoolValue();
 
 	if (ImGui::Checkbox("Autotab", &enabled)) cv.setValue(enabled);
+}
+void MJ::renderAutoretryEnabled() { 
+	CVarWrapper cv = cvarManager->getCvar("MJAutoRetryToggle");
+	if (!cv) return;
+	bool enabled = cv.getBoolValue();
+
+	if (ImGui::Checkbox("Autoretry", &enabled)) { 
+		cv.setValue(enabled);
+		
+	}
+	if (enabled) renderTimeRetry();
+}
+void MJ::renderTimeRetry() {
+	CVarWrapper cv = cvarManager->getCvar("MJTimeBeforeRetrying");
+	if (!cv) return;
+	int val = cv.getIntValue();
+
+	if (ImGui::SliderInt("Seconds to wait before retrying", &val, 10, 60)) cv.setValue(val);
 }
 
 
