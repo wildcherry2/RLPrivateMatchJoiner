@@ -1,0 +1,7 @@
+6Mans Plugin Settings
+
+1|Enabled|6mEnableMod
+6|Default Map|6mMapNameSelection|Aquadome@Aquadome&Beckwith Park@Beckwith Park&Beckwith Park (Midnight)@Beckwith Park (Midnight)&Beckwith Park (Stormy)@Beckwith Park (Stormy)&Champions Field@Champions Field&Champions Field (Day)@Champions Field (Day)&Champions Field (NFL)@Champions Field (NFL)&Deadeye Canyon@Deadeye Canyon&DFH Stadium@DFH Stadium&DFH Stadium (Circuit)@DFH Stadium (Circuit)&DFH Stadium (Day)@DFH Stadium (Day)&DFH Stadium (Snowy)@DFH Stadium (Snowy)&DFH Stadium (Stormy)@DFH Stadium (Stormy)&Farmstead@Farmstead&Farmstead (Night)@Farmstead (Night)&Forbidden Temple@Forbidden Temple&Forbidden Temple (Day)@Forbidden Temple (Day)&Mannfield@Mannfield&Mannfield (Night)@Mannfield (Night)&Mannfield (Snowy)@Mannfield (Snowy)&Mannfield (Stormy)@Mannfield (Stormy)&Neo Tokyo@Neo Tokyo&Neon Fields@Neon Fields&Rivals Arena@Rivals Arena&Salty Shores@Salty Shores&Salty Shores (Night)@Salty Shores (Night)&Starbase ARC@Starbase ARC&Urban Central@Urban Central&Urban Central (Dawn)@Urban Central (Dawn)&Urban Central (Night)@Urban Central (Night)&Utopia Coliseum@Utopia Coliseum&Utopia Coliseum (Dusk)@Utopia Coliseum (Dusk)&Utopia Coliseum (Snowy)@Utopia Coliseum (Snowy)&Wasteland@Wasteland&Wasteland (Night)@Wasteland (Night)
+1|Autotab|6mAutotabInToggle
+1|Autoretry|6mAutoRetryToggle
+5|Seconds to wait before retrying|6mTimeBeforeRetrying|30|120
