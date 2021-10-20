@@ -27,13 +27,34 @@ void SixMansPlugin::renderModEnabledCheckbox() {
 	bool enabled = cv.getBoolValue();
 
 	if (ImGui::Checkbox("Enabled", &enabled)) cv.setValue(enabled);
+
+	ImGui::SameLine();
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted("Enable or disable the plugin");
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
 }
 void SixMansPlugin::renderAutotabEnabled() { 
 	CVarWrapper cv = cvarManager->getCvar("6mAutotabInToggle");
 	if (!cv) return;
 	bool enabled = cv.getBoolValue();
-
+	
 	if (ImGui::Checkbox("Autotab", &enabled)) cv.setValue(enabled);
+	ImGui::SameLine();
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted("Enable or disable automatically tabbing in after clicking a match link");
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
 }
 void SixMansPlugin::renderAutoretryEnabled() { 
 	CVarWrapper cv = cvarManager->getCvar("6mAutoRetryToggle");
@@ -44,6 +65,17 @@ void SixMansPlugin::renderAutoretryEnabled() {
 		cv.setValue(enabled);
 		
 	}
+	ImGui::SameLine();
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted("Enable or disable automatically retrying to join/create a match after the first attempt");
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
+
 	if (enabled) renderTimeRetry();
 }
 void SixMansPlugin::renderTimeRetry() {
@@ -52,6 +84,16 @@ void SixMansPlugin::renderTimeRetry() {
 	int val = cv.getIntValue();
 
 	if (ImGui::SliderInt("Seconds to wait before retrying", &val, 30, 120)) cv.setValue(val);
+	ImGui::SameLine();
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted("The time to wait before autoretry attempts to join the match");
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
 }
 
 
@@ -60,8 +102,17 @@ void SixMansPlugin::renderMapCombobox(std::string name) {
 	CVarWrapper cv = cvarManager->getCvar("6mMapNameSelection");
 	if (!cv) return;
 	int current = cv.getIntValue();
-	if (ImGui::Combo(name.c_str(), &current, map_normalnames, IM_ARRAYSIZE(map_normalnames))) { cv.setValue(current); }
-	//tooltip saying this is default
+	if (ImGui::Combo(name.c_str(), &current, MAP_NORMALNAMES, IM_ARRAYSIZE(MAP_NORMALNAMES))) { cv.setValue(current); }
+	ImGui::SameLine();
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted("The default map when creating matches.\nNOTE:Only standard maps are listed");
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
 }
 //void SixMansPlugin::renderRegionCombobox(std::string name){	
 //	CVarWrapper cv = cvarManager->getCvar("6mRegion");

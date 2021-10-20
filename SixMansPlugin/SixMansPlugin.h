@@ -1,4 +1,12 @@
 //https://bakkesmodwiki.github.io/bakkesmod_api/
+/*
+* TODO:
+* Toasts
+* Saving settings to cfg-last bool in cvar declaration sets this,fix crashing related issue?
+* Test join once its working, separate option for disabling auto join for create
+* Clean up unnecessary vars/functions/function calls/includes
+* Documentation
+*/
 #pragma once
 
 #include "bakkesmod/plugin/bakkesmodplugin.h"
@@ -8,6 +16,7 @@
 #include "bakkesmod/wrappers/MatchmakingWrapper.h"
 #include "bakkesmod/wrappers/PlayerControllerWrapper.h"
 #include "bakkesmod/wrappers/GameEvent/GameEventWrapper.h"
+//#include "Toast.h"
 #include <regex>
 #include <algorithm>
 #include "version.h"
@@ -36,8 +45,6 @@ public:
 	virtual void onUnload();
 	void gotoPrivateMatch();
 	Region getRegion(int region);
-	//MatchmakingWrapper mw;
-	//bool mw = true;
 
 	//autojoin
 	std::thread monitor;
@@ -63,7 +70,6 @@ public:
 	void renderModEnabledCheckbox();
 	void renderAutotabEnabled();
 	void renderMapCombobox(std::string name);
-	//void renderRegionCombobox(std::string name); //region determined by 6mans bot
 	void renderAutoretryEnabled();
 	void renderTimeRetry();
 	bool is_enabled = true; //for overall mod
@@ -82,27 +88,18 @@ public:
 	std::string gametags = "BotsNone";
 	Region region = Region::USE;
 	int event_code = 1;
-	std::string selected_map = map_codenames[17];
-	
-	//plugin window
-	/*bool isWindowOpen_ = false;
-	bool isMinimized_ = false;
-	std::string menuTitle_ = "6m";
-	virtual void Render() override;
-	virtual std::string GetMenuName() override;
-	virtual std::string GetMenuTitle() override;
-	virtual bool ShouldBlockInput() override;
-	virtual bool IsActiveOverlay() override;
-	virtual void OnOpen() override;
-	virtual void OnClose() override;
-	void renderQWNameField();
-	void renderQWPassField();
-	void renderQWCreate();
-	void renderQWJoin();
-	void renderQWLinkGen();*/
+	std::string selected_map = MAP_CODENAMES[17];
 
-	//name arrays, could use std::map, but this is more efficient, gui requires c strings ??
-	const std::string map_codenames[35] = {
+	//toasts
+	const std::string TOAST_LOGO_PATH = "default";
+	const float TOAST_TIME, TOAST_WIDTH, TOAST_HEIGHT;
+	const uint8_t TOAST_TYPE;
+	void renderJoinToast();
+	void renderCreateToast();
+	void renderErrorToast();
+
+	//name arrays
+	const std::string MAP_CODENAMES[35] = {
 		"Underwater_P",
 		"Park_P",
 		"Park_Night_P",
@@ -139,7 +136,7 @@ public:
 		"wasteland_s_p",
 		"wasteland_Night_S_P"
 	};
-	const char* map_normalnames[35] = {
+	const char* MAP_NORMALNAMES[35] = {
 		"Aquadome",
 		"Beckwith Park",
 		"Beckwith Park (Midnight)",
@@ -177,8 +174,7 @@ public:
 		"Wasteland (Night)"
 	};
 
-	//maybe remove switch function in favor of something like this and above
-	const char* region_names[10] = {
+	const char* REGION_NAMES[10] = {
 		"US-East (USE)",
 		"Europe (EU)",
 		"US-West (USW)",

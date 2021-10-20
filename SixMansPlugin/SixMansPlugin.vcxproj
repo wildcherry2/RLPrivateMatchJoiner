@@ -120,6 +120,7 @@
     <ClCompile Include="SixMansPlugin.cpp" />
     <ClCompile Include="SixMansPluginGUI.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Toasts.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h" />
@@ -152,6 +153,9 @@
   <ItemGroup>
     <ResourceCompile Include="SixMansPlugin.rc" />
     <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SixMansPlugin.set" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

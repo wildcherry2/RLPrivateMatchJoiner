@@ -81,6 +81,9 @@
     <ClCompile Include="Server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Toasts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SixMansPlugin.h">
@@ -169,5 +172,8 @@
     <ResourceCompile Include="Resource.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SixMansPlugin.set" />
   </ItemGroup>
 </Project>

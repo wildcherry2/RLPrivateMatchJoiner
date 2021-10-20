@@ -13,13 +13,13 @@ void SixMansPlugin::initMatchCvars() {
 	cvarManager->registerCvar("6mEventType", "1", "Set to 0 for create mode, 1 for join mode", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		event_code = cw.getIntValue();
 		});
-	cvarManager->registerCvar("6mServerName", "", "Enter the server name", true, false, false, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	cvarManager->registerCvar("6mServerName", "", "Enter the server name", true, false, false, false,false,false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		name = cw.getStringValue();
 		});
-	cvarManager->registerCvar("6mServerPass", "", "Enter the server password", true, false, false, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	cvarManager->registerCvar("6mServerPass", "", "Enter the server password", true, false, false, false,false,false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		pass = cw.getStringValue();
 		});
-	cvarManager->registerCvar("6mMap", map_codenames[17], "Enter internal map names (see MapsStruct.h for names)", true, false, false, true).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	cvarManager->registerCvar("6mMap", MAP_CODENAMES[17], "Enter internal map names (see MapsStruct.h for names)", true, false, false, true).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		selected_map = cw.getStringValue();
 		}); //gonna want to save this choice
 	cvarManager->registerCvar("6mRegion", "0", "Enter the region code (0-9)", true, true, 0, true, 9, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
@@ -37,15 +37,15 @@ void SixMansPlugin::initMatchCvars() {
 void SixMansPlugin::initGuiCvars() {
 
 	cvarManager->registerCvar("6mMapNameSelection", "18", "Enter map name", true, false, false, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
-		cvarManager->getCvar("6mMap").setValue(map_codenames[cw.getIntValue()]);
-		selected_map = map_codenames[cw.getIntValue()];
+		cvarManager->getCvar("6mMap").setValue(MAP_CODENAMES[cw.getIntValue()]);
+		selected_map = MAP_CODENAMES[cw.getIntValue()];
 		});
 	cvarManager->registerCvar("6mIsQuickMatchWindowEnabled", "0", "Toggles quick private match join/create window", true, true, 0, true, 1, false); //change to notifier
-	cvarManager->registerCvar("6mGeneratedLink", "", "Generated link", true, false, false, false);
-	cvarManager->registerCvar("6mAutotabInToggle", "1", "Toggles autotab back in on server request", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	cvarManager->registerCvar("6mGeneratedLink", "", "Generated link", true, false, false, false,false,false);
+	cvarManager->registerCvar("6mAutotabInToggle", "1", "Toggles autotab back in on server request", true, true, 0, true, 1, true).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_autotab_enabled = cw.getBoolValue();
 		});;
-	cvarManager->registerCvar("6mModEnabled", "1", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	cvarManager->registerCvar("6mModEnabled", "1", "", true, true, 0, true, 1, true).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_enabled = cw.getBoolValue();
 		if (is_enabled) cvarManager->executeCommand("6mEnableMod");
 		else cvarManager->executeCommand("6mDisableMod");
@@ -113,10 +113,10 @@ void SixMansPlugin::unregisterCvars() {
 void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mEndRecursiveJoin", "0", "", true, true, 0, true, 1, false);
 	cvarManager->registerCvar("6mEndMonitor", "0", "", true, true, 0, true, 1, false);
-	cvarManager->registerCvar("6mTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 30, true, 120, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	cvarManager->registerCvar("6mTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 30, true, 120, true).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		time_to_wait = cw.getIntValue();
 		});;
-	cvarManager->registerCvar("6mAutoRetryToggle", "1", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	cvarManager->registerCvar("6mAutoRetryToggle", "1", "", true, true, 0, true, 1, true).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_enabled_autoretry = cw.getBoolValue();
 		});
 }
