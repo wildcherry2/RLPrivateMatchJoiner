@@ -7,18 +7,14 @@
 std::string SixMansPlugin::GetPluginName() {
 	return "6Mans Plugin Settings";
 }
-
 void SixMansPlugin::SetImGuiContext(uintptr_t ctx) {
 	ImGui::SetCurrentContext(reinterpret_cast<ImGuiContext*>(ctx));
 }
-
 void SixMansPlugin::RenderSettings() {
 	renderModEnabledCheckbox();
 	renderMapCombobox("Default Map");
 	renderAutotabEnabled();
 	renderAutoretryEnabled();
-
-	//renderRegionCombobox("Default Region");
 }
 
 void SixMansPlugin::renderModEnabledCheckbox() { 
@@ -95,9 +91,6 @@ void SixMansPlugin::renderTimeRetry() {
 		ImGui::EndTooltip();
 	}
 }
-
-
-
 void SixMansPlugin::renderMapCombobox(std::string name) {
 	CVarWrapper cv = cvarManager->getCvar("6mMapNameSelection");
 	if (!cv) return;
@@ -114,122 +107,3 @@ void SixMansPlugin::renderMapCombobox(std::string name) {
 		ImGui::EndTooltip();
 	}
 }
-//void SixMansPlugin::renderRegionCombobox(std::string name){	
-//	CVarWrapper cv = cvarManager->getCvar("6mRegion");
-//	if (!cv) return;
-//	int current = cv.getIntValue();
-//	if (ImGui::Combo(name.c_str(), &current, region_names, IM_ARRAYSIZE(region_names))) { cv.setValue(current); }
-//}
-
-
-
-//void SixMansPlugin::renderQWCreate() {
-//	if (ImGui::Button("Create")) {
-//		event_code = 0;
-//		gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("6mReady"); });
-//	}
-//		
-//}
-////joining is broken
-//void SixMansPlugin::renderQWJoin() {
-//	ImGui::SameLine();
-//	if (ImGui::Button("Join")) {
-//		event_code = 1;
-//		gameWrapper->Execute([this](GameWrapper* gw) { cvarManager->executeCommand("6mReady"); });
-//	}
-//}
-//
-//void SixMansPlugin::renderQWNameField() {
-//	char in[100] = ""; 
-//	std::strcpy(in,name_field_storage);
-//	ImGui::InputText("Server Name", in, IM_ARRAYSIZE(in), ImGuiInputTextFlags_AutoSelectAll);
-//	if (ImGui::IsItemEdited()) {
-//		std::strcpy(name_field_storage,in);
-//		cvarManager->getCvar("6mServerName").setValue(std::string(in));
-//	}
-//}
-//void SixMansPlugin::renderQWPassField() {
-//	char in[100] = "";
-//	std::strcpy(in, pass_field_storage);
-//	ImGui::InputText("Password", in, IM_ARRAYSIZE(in), ImGuiInputTextFlags_AutoSelectAll);
-//	if (ImGui::IsItemEdited()) {
-//		std::strcpy(pass_field_storage, in);
-//		cvarManager->getCvar("6mServerPass").setValue(std::string(in));
-//	}
-//}
-//void SixMansPlugin::renderQWLinkGen() {
-//	if (ImGui::Button("Generate Link")) {
-//		link = "http://localhost:6969/match?event=" + std::to_string(event_code) + "&name=" + name + "&pass=" + pass + "&region=" + std::to_string((int)region);
-//		cvarManager->getCvar("6mGeneratedLink").setValue(link);
-//		ImGui::LogToClipboard();
-//		ImGui::LogText(link.c_str());
-//		ImGui::LogFinish();
-//	}
-//}
-//
-//
-//
-//// Do ImGui rendering here
-//void SixMansPlugin::Render()
-//{
-//	if (!ImGui::Begin(menuTitle_.c_str(), &isWindowOpen_, ImGuiWindowFlags_None))
-//	{
-//		ImGui::End();
-//		return;
-//	}
-//	//start here
-//
-//	renderQWNameField();
-//	renderQWPassField();
-//	renderMapCombobox("Map");
-//	renderRegionCombobox("Region");
-//	//renderQuickWindow();
-//	renderQWCreate();
-//	renderQWJoin();
-//	renderQWLinkGen();
-//
-//
-//	ImGui::End();
-//
-//	if (!isWindowOpen_)
-//	{
-//		cvarManager->executeCommand("togglemenu " + GetMenuName());
-//		
-//	}
-//
-//	
-//}
-//
-//std::string SixMansPlugin::GetMenuName()
-//{
-//	return "6m";
-//}
-//
-//std::string SixMansPlugin::GetMenuTitle()
-//{
-//	return menuTitle_;
-//}
-//
-//// Should events such as mouse clicks/key inputs be blocked so they won't reach the game
-//bool SixMansPlugin::ShouldBlockInput()
-//{
-//	return ImGui::GetIO().WantCaptureMouse || ImGui::GetIO().WantCaptureKeyboard;
-//}
-//
-//// Return true if window should be interactive
-//bool SixMansPlugin::IsActiveOverlay()
-//{
-//	return true;
-//}
-//
-//// Called when window is opened
-//void SixMansPlugin::OnOpen()
-//{
-//	isWindowOpen_ = true;
-//}
-//
-//// Called when window is closed
-//void SixMansPlugin::OnClose()
-//{
-//	isWindowOpen_ = false;
-//}

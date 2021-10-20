@@ -16,7 +16,6 @@
 #include "bakkesmod/wrappers/MatchmakingWrapper.h"
 #include "bakkesmod/wrappers/PlayerControllerWrapper.h"
 #include "bakkesmod/wrappers/GameEvent/GameEventWrapper.h"
-//#include "Toast.h"
 #include <regex>
 #include <algorithm>
 #include "version.h"
@@ -91,9 +90,9 @@ public:
 	std::string selected_map = MAP_CODENAMES[17];
 
 	//toasts
-	const std::string TOAST_LOGO_PATH = "default";
-	const float TOAST_TIME, TOAST_WIDTH, TOAST_HEIGHT;
-	const uint8_t TOAST_TYPE;
+	const std::string TOAST_LOGO = "sixmanlogo";
+	const float TOAST_TIME = 30, TOAST_WIDTH = 700, TOAST_HEIGHT = 450; //need to initialize with declaration
+	const uint8_t TOAST_TYPE = 0;
 	void renderJoinToast();
 	void renderCreateToast();
 	void renderErrorToast();

@@ -81,7 +81,11 @@ void SixMansPlugin::initUtilityCvars() {
 		initCvars();
 		cvarManager->executeCommand("6mEnableServer");
 		}, "", PERMISSION_ALL);
-	/*cvarManager->setBind("F3", "togglemenu 6m");*/
+
+	cvarManager->registerNotifier("toasttest",[this](std::vector<std::string> args) {
+		renderErrorToast();
+		},"",PERMISSION_ALL);
+	cvarManager->setBind("F3", "toasttest");
 }
 
 void SixMansPlugin::unregisterCvars() {
