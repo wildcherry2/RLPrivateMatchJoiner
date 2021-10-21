@@ -83,7 +83,7 @@ void SixMansPlugin::initUtilityCvars() {
 		}, "", PERMISSION_ALL);
 
 	cvarManager->registerNotifier("toasttest",[this](std::vector<std::string> args) {
-		renderErrorToast();
+		renderCreateToast();
 		},"",PERMISSION_ALL);
 	cvarManager->setBind("F3", "toasttest");
 }
