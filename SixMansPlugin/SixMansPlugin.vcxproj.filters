@@ -81,7 +81,7 @@
     <ClCompile Include="Server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Toasts.cpp">
+    <ClCompile Include="CustomToastGUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

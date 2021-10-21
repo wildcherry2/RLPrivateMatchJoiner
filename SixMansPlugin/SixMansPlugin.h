@@ -16,6 +16,7 @@
 #include "bakkesmod/wrappers/MatchmakingWrapper.h"
 #include "bakkesmod/wrappers/PlayerControllerWrapper.h"
 #include "bakkesmod/wrappers/GameEvent/GameEventWrapper.h"
+#include "bakkesmod/wrappers/SettingsWrapper.h"
 #include <regex>
 #include <algorithm>
 #include "version.h"
@@ -34,7 +35,7 @@ constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_M
 
 
 
-class SixMansPlugin: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow/*, public BakkesMod::Plugin::PluginWindow*/
+class SixMansPlugin: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow, public BakkesMod::Plugin::PluginWindow
 {
 public:
 	//std::shared_ptr<bool> createbtn = std::make_shared<bool>(false);
@@ -89,13 +90,23 @@ public:
 	int event_code = 1;
 	std::string selected_map = MAP_CODENAMES[17];
 
-	//toasts
-	const std::string TOAST_LOGO = "sixmanlogo";
-	const float TOAST_TIME = 30, TOAST_WIDTH = 700, TOAST_HEIGHT = 450; //need to initialize with declaration
-	const uint8_t TOAST_TYPE = 0;
-	void renderJoinToast();
-	void renderCreateToast();
-	void renderErrorToast();
+
+	//interface	
+	bool isWindowOpen_ = false;
+	bool isMinimized_ = false;
+	std::string menuTitle_ = "sixmansplugininterface";
+	int xres = std::stoi(gameWrapper->GetSettings().GetVideoSettings().Resolution.substr(0,4)); //1920x1080, will need to change to delimiter by "x" for triple digit resolutions
+	int yres = std::stoi(gameWrapper->GetSettings().GetVideoSettings().Resolution.substr(5,4));
+	//void setResVars();
+	virtual void Render() override;
+	virtual std::string GetMenuName() override;
+	virtual std::string GetMenuTitle() override;
+	virtual bool ShouldBlockInput() override;
+	virtual bool IsActiveOverlay() override;
+	virtual void OnOpen() override;
+	virtual void OnClose() override;
+
+	
 
 	//name arrays
 	const std::string MAP_CODENAMES[35] = {
