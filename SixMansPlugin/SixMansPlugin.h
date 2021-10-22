@@ -41,8 +41,6 @@ constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_M
 class SixMansPlugin: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow, public BakkesMod::Plugin::PluginWindow
 {
 public:
-	//std::shared_ptr<bool> createbtn = std::make_shared<bool>(false);
-
 	//core
 	virtual void onLoad();
 	virtual void onUnload();
@@ -50,7 +48,7 @@ public:
 	Region getRegion(int region);
 
 	//autojoin
-	std::thread monitor;
+	std::thread monitor; //use function hooks instead of thread, works for now though
 	bool in_game = false;
 	bool mon_running = true;
 	size_t time_to_wait = 45;
@@ -90,7 +88,7 @@ public:
 	std::string name = "", pass = "";
 	std::string gametags = "BotsNone";
 	Region region = Region::USE;
-	int event_code = 1;
+	size_t event_code = 1;
 	std::string selected_map = MAP_CODENAMES[17];
 
 
@@ -98,10 +96,10 @@ public:
 	bool isWindowOpen_ = false;
 	bool isMinimized_ = false;
 	std::string menuTitle_ = "sixmansplugininterface";
-	int xres = std::stoi(gameWrapper->GetSettings().GetVideoSettings().Resolution.substr(0,4)); //1920x1080, will need to change to delimiter by "x" for triple digit resolutions
-	int yres = std::stoi(gameWrapper->GetSettings().GetVideoSettings().Resolution.substr(5,4));
+	size_t xres = std::stoi(gameWrapper->GetSettings().GetVideoSettings().Resolution.substr(0,4)); //1920x1080, will need to change to delimiter by "x" for triple digit resolutions
+	size_t yres = std::stoi(gameWrapper->GetSettings().GetVideoSettings().Resolution.substr(5,4));
 	float res_ratio_x = 1550 / 1920.0; //multiply these by res to get scaled toast
-	float res_ratio_y = 20 / 1080.0;
+	float res_ratio_y = 20 / 1080.0; //currently bugged for any res < 1080p, because no delimiter
 	float res_ratio_w = 350 / 1920.0;
 	float res_ratio_h = 400 / 1080.0;
 	std::shared_ptr<ImageWrapper> logo;

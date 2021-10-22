@@ -16,8 +16,7 @@ void SixMansPlugin::onLoad()
 	//occasional crashing after changing shit in settings and reloading the plugin, maybe writeconfig is trying to write unregistered cvars? or loadconfig is loading into unregistered cvars?
 	init();
 	cvarManager->executeCommand("exec config.cfg"); //maybe make this its own config, if writeconfig {file} is a thing
-	
-	
+	initFonts();
 	startServer();
 	
 }

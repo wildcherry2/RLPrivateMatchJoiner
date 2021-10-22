@@ -2,11 +2,13 @@
 #include "SixMansPlugin.h"
 
 void SixMansPlugin::init() {
+	
 	initMatchCvars();
 	initGuiCvars();
 	initServerCvars();
 	initUtilityCvars();
 	initAutojoinCvars();
+	//initFonts();
 }
 
 void SixMansPlugin::initMatchCvars() {
