@@ -16,8 +16,14 @@ void SixMansPlugin::onLoad()
 	//occasional crashing after changing shit in settings and reloading the plugin, maybe writeconfig is trying to write unregistered cvars? or loadconfig is loading into unregistered cvars?
 	initCvars();
 	cvarManager->executeCommand("exec config.cfg"); //maybe make this its own config, if writeconfig {file} is a thing
+	logo = std::make_shared<ImageWrapper>(gameWrapper->GetDataFolder() / "sixmanlogo.png", false, true);
 	gameWrapper->LoadToastTexture("sixmanlogo", gameWrapper->GetDataFolder() / "sixmanlogo.png");
-	//cvarManager->log(gameWrapper->GetSettings().GetVideoSettings().Resolution);
+	ImGuiIO& io = ImGui::GetIO();
+	std::string font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Regular.ttf";
+	helvetica = io.Fonts->AddFontFromFileTTF(font_path.c_str(), 34.0f);
+	io.Fonts->Build();
+	//IMGUI_IMPL_API::ImGui_ImplDX11_InvalidateDeviceObjects();
+	
 	startServer();
 	
 }

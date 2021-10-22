@@ -55,6 +55,8 @@ static ID3D11RasterizerState* g_pRasterizerState = NULL;
 static ID3D11BlendState* g_pBlendState = NULL;
 static ID3D11DepthStencilState* g_pDepthStencilState = NULL;
 static int                      g_VertexBufferSize = 5000, g_IndexBufferSize = 10000;
+ID3D11Device** g_pd3dDevicep = &g_pd3dDevice;
+
 
 struct VERTEX_CONSTANT_BUFFER
 {

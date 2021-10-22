@@ -5,14 +5,33 @@
 // Do ImGui rendering here
 void SixMansPlugin::Render()
 {
-	if (!ImGui::Begin(menuTitle_.c_str(), &isWindowOpen_, ImGuiWindowFlags_None))
+	int flags = ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoResize + ImGuiWindowFlags_NoScrollbar + ImGuiWindowFlags_NoTitleBar;
+	if (!ImGui::Begin(menuTitle_.c_str(), &isWindowOpen_, flags))
 	{
 		// Early out if the window is collapsed, as an optimization.
 		ImGui::End();
 		return;
 	}
 
-	std::string w = "Width: " + std::to_string(ImGui::GetWindowWidth());
+	ImGui::SetWindowPos(ImVec2{res_ratio_x * xres, res_ratio_y * yres});
+	ImGui::SetWindowSize(ImVec2{res_ratio_w * xres, res_ratio_h * yres});
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.WindowRounding = 12.0f;
+	style.WindowBorderSize = 0.0f;
+
+	ImGui::PushFont(helvetica);
+	
+	//ImGui::AlignTextToFramePadding();
+
+	if (auto logoTex = logo->GetImGuiTex()) {
+		auto rect = ImVec2{70.0f,70.0f};
+		ImGui::Image(logoTex, {rect.x,rect.y});
+	}
+
+	ImGui::SameLine();
+	ImGui::Text("Create 6Mans:\nLobby #0001");
+
+	/*std::string w = "Width: " + std::to_string(ImGui::GetWindowWidth());
 	std::string l = "Height: " + std::to_string(ImGui::GetWindowHeight());
 	std::string x = "x: " + std::to_string(ImGui::GetWindowPos().x);
 	std::string y = "y: " + std::to_string(ImGui::GetWindowPos().y);
@@ -20,11 +39,11 @@ void SixMansPlugin::Render()
 	ImGui::Text(w.c_str());
 	ImGui::Text(l.c_str());
 	ImGui::Text(x.c_str());
-	ImGui::Text(y.c_str());
+	ImGui::Text(y.c_str());*/
 	/*ImGui::Text(std::to_string(xres).c_str());
 	ImGui::Text(std::to_string(yres).c_str());*/
 	//ImGui::Text(gameWrapper->GetSettings().GetVideoSettings().Resolution.substr(7, 4).c_str());
-
+	ImGui::PopFont();
 	ImGui::End();
 
 	if (!isWindowOpen_)

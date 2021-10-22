@@ -17,6 +17,9 @@
 #include "bakkesmod/wrappers/PlayerControllerWrapper.h"
 #include "bakkesmod/wrappers/GameEvent/GameEventWrapper.h"
 #include "bakkesmod/wrappers/SettingsWrapper.h"
+#include "bakkesmod/wrappers/ImageWrapper.h"
+#include "IMGUI/imgui.h"
+#include "IMGUI/imgui_impl_dx11.h"
 #include <regex>
 #include <algorithm>
 #include "version.h"
@@ -97,7 +100,12 @@ public:
 	std::string menuTitle_ = "sixmansplugininterface";
 	int xres = std::stoi(gameWrapper->GetSettings().GetVideoSettings().Resolution.substr(0,4)); //1920x1080, will need to change to delimiter by "x" for triple digit resolutions
 	int yres = std::stoi(gameWrapper->GetSettings().GetVideoSettings().Resolution.substr(5,4));
-	//void setResVars();
+	float res_ratio_x = 1550 / 1920.0; //multiply these by res to get scaled toast
+	float res_ratio_y = 20 / 1080.0;
+	float res_ratio_w = 350 / 1920.0;
+	float res_ratio_h = 400 / 1080.0;
+	std::shared_ptr<ImageWrapper> logo;
+	ImFont* helvetica;
 	virtual void Render() override;
 	virtual std::string GetMenuName() override;
 	virtual std::string GetMenuTitle() override;
