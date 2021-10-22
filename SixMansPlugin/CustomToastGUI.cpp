@@ -12,44 +12,79 @@ void SixMansPlugin::Render()
 		ImGui::End();
 		return;
 	}
-
-	ImGui::SetWindowPos(ImVec2{res_ratio_x * xres, res_ratio_y * yres});
-	ImGui::SetWindowSize(ImVec2{res_ratio_w * xres, res_ratio_h * yres});
-	ImGuiStyle& style = ImGui::GetStyle();
-	style.WindowRounding = 12.0f;
-	style.WindowBorderSize = 0.0f;
-
-	ImGui::PushFont(roboto);
-	
-	//ImGui::AlignTextToFramePadding();
-
-	if (auto logoTex = logo->GetImGuiTex()) {
-		auto rect = ImVec2{70.0f,70.0f};
-		ImGui::Image(logoTex, {rect.x,rect.y});
-	}
-
+	renderBlankNotif();
+	renderLogo();
 	ImGui::SameLine();
-	ImGui::Text("Create 6Mans:\nLobby #0001");
+	renderHeader("Create 6Mans:\nLobby #0001");
+	renderText("\nThe match info is loaded in the game!\nPress the button below to create:");
+	ImGui::NewLine();
+	renderButton("Create");
+	renderNote("NOTE: For options, press F2->Plugins->6Mans Plugin Settings");
 
-	/*std::string w = "Width: " + std::to_string(ImGui::GetWindowWidth());
-	std::string l = "Height: " + std::to_string(ImGui::GetWindowHeight());
-	std::string x = "x: " + std::to_string(ImGui::GetWindowPos().x);
-	std::string y = "y: " + std::to_string(ImGui::GetWindowPos().y);
 
-	ImGui::Text(w.c_str());
-	ImGui::Text(l.c_str());
-	ImGui::Text(x.c_str());
-	ImGui::Text(y.c_str());*/
-	/*ImGui::Text(std::to_string(xres).c_str());
-	ImGui::Text(std::to_string(yres).c_str());*/
-	//ImGui::Text(gameWrapper->GetSettings().GetVideoSettings().Resolution.substr(7, 4).c_str());
-	ImGui::PopFont();
 	ImGui::End();
 
 	if (!isWindowOpen_)
 	{
 		cvarManager->executeCommand("togglemenu " + GetMenuName());
 	}
+}
+
+
+void SixMansPlugin::renderBlankNotif() {
+	ImGui::SetWindowPos(ImVec2{ res_ratio_x * xres, res_ratio_y * yres });
+	ImGui::SetWindowSize(ImVec2{ res_ratio_w * xres, res_ratio_h * yres });
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.WindowRounding = 12.0f;
+	style.WindowBorderSize = 0.0f;
+}
+
+void SixMansPlugin::renderLogo() {
+	if (auto logoTex = logo->GetImGuiTex()) {
+		auto rect = ImVec2{ 80.0f,80.0f };
+		ImGui::Image(logoTex, { rect.x,rect.y });
+	}
+}
+
+void SixMansPlugin::renderHeader(std::string header) {
+	ImGui::PushFont(roboto_black);
+	ImGui::Text(header.c_str());
+	ImGui::PopFont();
+}
+
+void SixMansPlugin::renderText(std::string text) {
+	ImGui::PushFont(roboto_bold);
+	ImGui::Text(text.c_str());
+	ImGui::PopFont();
+}
+
+void SixMansPlugin::renderButton(std::string text) {
+	ImGui::PushFont(roboto_bold);
+	ImColor color;
+	
+	CVarWrapper cv = cvarManager->getCvar("6mDoAction");
+	if (!cv) return;
+	bool enabled = cv.getBoolValue();
+	
+	ImGui::NewLine();
+	ImGui::SameLine(10.0f);
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)color.HSV(138.0f, 255.0f, 0.0f, 255.0f)); //change to textured buttons
+	if (ImGui::Button(text.c_str(), ImVec2{330.0f,100.0f})) gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("6mReady"); });
+
+	ImGui::PopStyleColor();
+	ImGui::PopFont();
+}
+
+void SixMansPlugin::renderNote(std::string text) {
+	ImGui::PushFont(roboto_reg);
+	ImGui::NewLine(); //use padding instead, quick method for now
+	ImGui::NewLine();
+	ImGui::NewLine();
+	ImGui::NewLine();
+	ImGui::NewLine();
+
+	ImGui::Text(text.c_str());
+	ImGui::PopFont();
 }
 
 // Name of the menu that is used to toggle the window.

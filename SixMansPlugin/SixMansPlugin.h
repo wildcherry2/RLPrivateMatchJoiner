@@ -95,6 +95,7 @@ public:
 	//interface	
 	bool isWindowOpen_ = false;
 	bool isMinimized_ = false;
+	bool doAction = false;
 	std::string menuTitle_ = "sixmansplugininterface";
 	size_t xres = std::stoi(gameWrapper->GetSettings().GetVideoSettings().Resolution.substr(0,4)); //1920x1080, will need to change to delimiter by "x" for triple digit resolutions
 	size_t yres = std::stoi(gameWrapper->GetSettings().GetVideoSettings().Resolution.substr(5,4));
@@ -103,8 +104,16 @@ public:
 	float res_ratio_w = 350 / 1920.0;
 	float res_ratio_h = 400 / 1080.0;
 	std::shared_ptr<ImageWrapper> logo;
-	ImFont* roboto;
+	ImFont* roboto_reg;
+	ImFont* roboto_black;
+	ImFont* roboto_bold;
 	void initFonts();
+	void renderBlankNotif();
+	void renderLogo();
+	void renderHeader(std::string header);
+	void renderText(std::string text);
+	void renderButton(std::string text);
+	void renderNote(std::string text);
 	virtual void Render() override;
 	virtual std::string GetMenuName() override;
 	virtual std::string GetMenuTitle() override;
