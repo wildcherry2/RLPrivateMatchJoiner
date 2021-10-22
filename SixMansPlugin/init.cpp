@@ -2,11 +2,13 @@
 #include "SixMansPlugin.h"
 
 void SixMansPlugin::init() {
+	
 	initMatchCvars();
 	initGuiCvars();
 	initServerCvars();
 	initUtilityCvars();
 	initAutojoinCvars();
+	//initFonts();
 }
 
 void SixMansPlugin::initMatchCvars() {
@@ -127,8 +129,11 @@ void SixMansPlugin::initAutojoinCvars() {
 
 void SixMansPlugin::initFonts() {
 	logo = std::make_shared<ImageWrapper>(gameWrapper->GetDataFolder() / "sixmanlogo.png", false, true);
+
 	ImGuiIO& io = ImGui::GetIO();
+
 	std::string font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Regular.ttf";
 	roboto = io.Fonts->AddFontFromFileTTF(font_path.c_str(), 34.0f);
+
 	io.Fonts->Build();
 }
