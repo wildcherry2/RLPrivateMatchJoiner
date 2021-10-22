@@ -20,7 +20,7 @@ void SixMansPlugin::onLoad()
 	gameWrapper->LoadToastTexture("sixmanlogo", gameWrapper->GetDataFolder() / "sixmanlogo.png");
 	ImGuiIO& io = ImGui::GetIO();
 	std::string font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Regular.ttf";
-	helvetica = io.Fonts->AddFontFromFileTTF(font_path.c_str(), 34.0f);
+	roboto = io.Fonts->AddFontFromFileTTF(font_path.c_str(), 34.0f);
 	io.Fonts->Build();
 	//IMGUI_IMPL_API::ImGui_ImplDX11_InvalidateDeviceObjects();
 	

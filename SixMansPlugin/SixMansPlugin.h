@@ -105,7 +105,7 @@ public:
 	float res_ratio_w = 350 / 1920.0;
 	float res_ratio_h = 400 / 1080.0;
 	std::shared_ptr<ImageWrapper> logo;
-	ImFont* helvetica;
+	ImFont* roboto;
 	virtual void Render() override;
 	virtual std::string GetMenuName() override;
 	virtual std::string GetMenuTitle() override;

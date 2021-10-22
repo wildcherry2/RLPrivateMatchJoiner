@@ -19,7 +19,7 @@ void SixMansPlugin::Render()
 	style.WindowRounding = 12.0f;
 	style.WindowBorderSize = 0.0f;
 
-	ImGui::PushFont(helvetica);
+	ImGui::PushFont(roboto);
 	
 	//ImGui::AlignTextToFramePadding();
 
