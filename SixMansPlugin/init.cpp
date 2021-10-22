@@ -52,6 +52,9 @@ void SixMansPlugin::initGuiCvars() {
 		if (is_enabled) cvarManager->executeCommand("6mEnableMod");
 		else cvarManager->executeCommand("6mDisableMod");
 		});;
+	cvarManager->registerCvar("6mDoAction", "0", "Toggles autotab back in on server request", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+		doAction = cw.getBoolValue();
+		});;
 }
 
 void SixMansPlugin::initServerCvars() {
@@ -127,13 +130,23 @@ void SixMansPlugin::initAutojoinCvars() {
 		});
 }
 
+//also inits logo
 void SixMansPlugin::initFonts() {
 	logo = std::make_shared<ImageWrapper>(gameWrapper->GetDataFolder() / "sixmanlogo.png", false, true);
 
 	ImGuiIO& io = ImGui::GetIO();
+	ImFontConfig config;
+	config.OversampleH = 2;
+	config.OversampleV = 2;
 
 	std::string font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Regular.ttf";
-	roboto = io.Fonts->AddFontFromFileTTF(font_path.c_str(), 34.0f);
+	roboto_reg = io.Fonts->AddFontFromFileTTF(font_path.c_str(), 14.0f, &config);
+
+	font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Bold.ttf";
+	roboto_bold = io.Fonts->AddFontFromFileTTF(font_path.c_str(), 23.0f, &config);
+
+	font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Black.ttf";
+	roboto_black = io.Fonts->AddFontFromFileTTF(font_path.c_str(), 40.0f, &config);
 
 	io.Fonts->Build();
 }
