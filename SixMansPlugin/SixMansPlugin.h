@@ -77,7 +77,7 @@ public:
 	bool is_autotab_enabled = true;
 	char name_field_storage[100] = "";
 	char pass_field_storage[100] = "";
-	std::string link = "";
+	std::string link = ""; //probably not needed
 
 	//server
 	void startServer();
