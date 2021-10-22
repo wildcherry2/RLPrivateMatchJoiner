@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "SixMansPlugin.h"
 
-void SixMansPlugin::initCvars() {
+void SixMansPlugin::init() {
 	initMatchCvars();
 	initGuiCvars();
 	initServerCvars();
@@ -78,7 +78,7 @@ void SixMansPlugin::initUtilityCvars() {
 		unregisterCvars();
 		}, "", PERMISSION_ALL);
 	cvarManager->registerNotifier("6mEnableMod", [this](std::vector<std::string> args) {
-		initCvars();
+		init();
 		cvarManager->executeCommand("6mEnableServer");
 		}, "", PERMISSION_ALL);
 
@@ -123,4 +123,12 @@ void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mAutoRetryToggle", "1", "", true, true, 0, true, 1, true).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_enabled_autoretry = cw.getBoolValue();
 		});
+}
+
+void SixMansPlugin::initFonts() {
+	logo = std::make_shared<ImageWrapper>(gameWrapper->GetDataFolder() / "sixmanlogo.png", false, true);
+	ImGuiIO& io = ImGui::GetIO();
+	std::string font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Regular.ttf";
+	roboto = io.Fonts->AddFontFromFileTTF(font_path.c_str(), 34.0f);
+	io.Fonts->Build();
 }

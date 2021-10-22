@@ -58,7 +58,7 @@ public:
 	void monitorOnlineState();
 
 	//cvar
-	void initCvars();
+	void init();
 	void initMatchCvars();
 	void initGuiCvars();
 	void initServerCvars();
@@ -106,6 +106,7 @@ public:
 	float res_ratio_h = 400 / 1080.0;
 	std::shared_ptr<ImageWrapper> logo;
 	ImFont* roboto;
+	void initFonts();
 	virtual void Render() override;
 	virtual std::string GetMenuName() override;
 	virtual std::string GetMenuTitle() override;
