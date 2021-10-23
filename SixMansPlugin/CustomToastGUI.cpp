@@ -12,14 +12,7 @@ void SixMansPlugin::Render()
 		ImGui::End();
 		return;
 	}
-	renderBlankNotif();
-	renderLogo();
-	ImGui::SameLine();
-	renderHeader("Create 6Mans:\nLobby #0001");
-	renderText("\nThe match info is loaded in the game!\nPress the button below to create:");
-	ImGui::NewLine();
-	renderButton("Create");
-	renderNote("NOTE: For options, press F2->Plugins->6Mans Plugin Settings");
+	//renderCreateMatch();
 
 
 	ImGui::End();
@@ -30,10 +23,20 @@ void SixMansPlugin::Render()
 	}
 }
 
+void SixMansPlugin::renderCreateMatch() {
+	renderBlankNotif();
+	renderLogo();
+	ImGui::SameLine();
+	renderHeader("Create 6Mans:\nLobby #0001");
+	renderText("\nThe match info is loaded in the game!\nPress the button below to create:");
+	ImGui::NewLine();
+	renderButton("Create");
+	renderNote("NOTE: For options, press F2->Plugins->6Mans Plugin Settings");
+}
 
 void SixMansPlugin::renderBlankNotif() {
-	ImGui::SetWindowPos(ImVec2{ res_ratio_x * xres, res_ratio_y * yres });
-	ImGui::SetWindowSize(ImVec2{ res_ratio_w * xres, res_ratio_h * yres });
+	ImGui::SetWindowPos(ImVec2{ action_notif_x, action_notif_y });
+	ImGui::SetWindowSize(ImVec2{ action_notif_width, action_notif_height });
 	ImGuiStyle& style = ImGui::GetStyle(); //put in header
 	style.WindowRounding = 12.0f;
 	style.WindowBorderSize = 0.0f;
@@ -41,7 +44,7 @@ void SixMansPlugin::renderBlankNotif() {
 
 void SixMansPlugin::renderLogo() {
 	if (auto logoTex = logo->GetImGuiTex()) {
-		auto rect = ImVec2{ 80.0f,80.0f }; //put in header
+		auto rect = ImVec2{ (80.0f/1920.0f)*xres, (80.0f/1920.0f)*xres }; //put in header
 		ImGui::Image(logoTex, { rect.x,rect.y });
 	}
 }
@@ -128,3 +131,23 @@ void SixMansPlugin::OnClose()
 //	xres = std::stof(sw.GetVideoSettings().Resolution.substr(0, 4));
 //	yres = std::stof(sw.GetVideoSettings().Resolution.substr(7, 4));
 //}
+
+/*
+*	1920x1080
+*   012345678
+*	
+*	pos = 4
+*	length = 9
+*	sub 0->pos = 1920
+*	pos + 1 = begin of yres = length of xres + delimiter
+*	sub pos + 1-> length - pos + 1
+* 
+*	1280x720
+*	01234567
+* 
+*	pos = 4
+*	length = 8
+*	sub 0->pos = 1280
+*	sub pos + 1->length
+*	
+*/

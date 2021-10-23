@@ -8,7 +8,8 @@ void SixMansPlugin::init() {
 	initServerCvars();
 	initUtilityCvars();
 	initAutojoinCvars();
-	//initFonts();
+	initNotifVars();
+	//setRes(xres, yres);
 }
 
 void SixMansPlugin::initMatchCvars() {
@@ -131,8 +132,14 @@ void SixMansPlugin::initAutojoinCvars() {
 }
 
 //also inits logo
-void SixMansPlugin::initFonts() {
+void SixMansPlugin::initNotifVars() {
 	logo = std::make_shared<ImageWrapper>(gameWrapper->GetDataFolder() / "sixmanlogo.png", false, true);
+	setRes(xres, yres);
+
+	action_notif_width = res_ratio_w * xres;
+	action_notif_height = res_ratio_h * yres;
+	action_notif_x = res_ratio_x * xres;
+	action_notif_y = res_ratio_y * yres;
 
 	ImGuiIO& io = ImGui::GetIO();
 	ImFontConfig config;
@@ -140,13 +147,22 @@ void SixMansPlugin::initFonts() {
 	config.OversampleV = 2;
 
 	std::string font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Regular.ttf";
-	roboto_reg = io.Fonts->AddFontFromFileTTF(font_path.c_str(), 14.0f, &config);
+	roboto_reg = io.Fonts->AddFontFromFileTTF(font_path.c_str(), (14.0f/1080.0f)*yres, &config);
 
 	font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Bold.ttf";
-	roboto_bold = io.Fonts->AddFontFromFileTTF(font_path.c_str(), 23.0f, &config);
+	roboto_bold = io.Fonts->AddFontFromFileTTF(font_path.c_str(), (23.0f/1080.0f)*yres, &config);
 
 	font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Black.ttf";
-	roboto_black = io.Fonts->AddFontFromFileTTF(font_path.c_str(), 40.0f, &config);
+	roboto_black = io.Fonts->AddFontFromFileTTF(font_path.c_str(), (40.0f/1080.0f)*yres, &config);
 
 	io.Fonts->Build();
+
+	
+}
+
+void SixMansPlugin::setRes(size_t& x, size_t& y) {
+	std::string res_str = gameWrapper->GetSettings().GetVideoSettings().Resolution;
+	size_t pos = res_str.find("x");
+	x = std::stoi(res_str.substr(0, pos));
+	y = std::stoi(res_str.substr(pos + 1, res_str.length() - pos + 1));
 }
