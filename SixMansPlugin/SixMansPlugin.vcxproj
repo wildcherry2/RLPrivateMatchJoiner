@@ -98,8 +98,7 @@
       <Command>powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File update_version.ps1 "./version.h"</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>"$(BakkesModPath)\bakkesmodsdk\bakkesmod-patch.exe" "$(TargetPath)"
-"C:\Program Files (x86)\Steam\steamapps\common\rocketleague\Binaries\Win64\RocketLeague.exe"</Command>
+      <Command>%(Command)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
