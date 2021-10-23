@@ -12,7 +12,7 @@ void SixMansPlugin::Render()
 		ImGui::End();
 		return;
 	}
-	//renderCreateMatch();
+	renderCreateMatch();
 
 
 	ImGui::End();
@@ -69,10 +69,12 @@ void SixMansPlugin::renderButton(std::string text) {
 	if (!cv) return;
 	bool enabled = cv.getBoolValue(); //unnecessary?
 	
+	//disable num lock, shift + 0 or shift + insert gives error from a crash
+
 	ImGui::NewLine();
 	ImGui::SameLine(10.0f);
 	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)color.HSV(138.0f, 255.0f, 0.0f, 255.0f)); //change to textured buttons
-	if (ImGui::Button(text.c_str(), ImVec2{330.0f,100.0f})) gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("6mReady"); });
+	if (ImGui::Button(text.c_str(), ImVec2{(330.0f/1920.f)*xres,(100.0f/1920.0f)*xres})) gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("6mReady"); });
 
 	ImGui::PopStyleColor();
 	ImGui::PopFont();
