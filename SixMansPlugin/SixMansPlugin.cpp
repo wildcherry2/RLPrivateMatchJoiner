@@ -18,9 +18,6 @@ void SixMansPlugin::onLoad()
 	//CALLING THIS AGAIN IS PROBABLY CAUSING THE OCCASIONAL CRASH
 	//cvarManager->executeCommand("exec config.cfg"); //maybe make this its own config, if writeconfig {file} is a thing
 
-	//LOG(std::to_string(xres));
-	//LOG(std::to_string(yres));
-
 	startServer();
 	
 }

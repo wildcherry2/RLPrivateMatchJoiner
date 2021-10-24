@@ -99,7 +99,7 @@
       <Command>powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File update_version.ps1 "./version.h"</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>%(Command) &amp;&amp; "C:\Program Files (x86)\Steam\steamapps\common\rocketleague\Binaries\Win64\RocketLeague.exe"</Command>
+      <Command>%(Command)</Command>
     </PostBuildEvent>
     <CustomBuildStep>
       <Command>"C:\Program Files (x86)\Steam\steamapps\common\rocketleague\Binaries\Win64\RocketLeague.exe"</Command>

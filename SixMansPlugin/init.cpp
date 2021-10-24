@@ -105,7 +105,7 @@ void SixMansPlugin::unregisterCvars() {
 	cvarManager->removeNotifier("6mReady");
 	cvarManager->removeNotifier("6mDisableServer");
 	cvarManager->removeNotifier("6mEnableServer");
-	//cvarManager->removeBind("F3"); //need to store what this is set to initially
+	cvarManager->removeBind("F3"); //need to store what this is set to initially
 	cvarManager->log("cvars unregistered,mod disabled!");
 }
 

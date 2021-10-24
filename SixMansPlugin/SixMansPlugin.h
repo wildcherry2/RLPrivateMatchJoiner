@@ -96,6 +96,7 @@ public:
 	bool isWindowOpen_ = false;
 	bool isMinimized_ = false;
 	bool doAction = false;
+	bool notif_enabled = true;
 	std::string menuTitle_ = "sixmansplugininterface";
 	size_t xres;
 	size_t yres;
@@ -118,7 +119,6 @@ public:
 	void renderNote(std::string text);
 	void renderActionNotif();
 	void renderStatusNotif(size_t type, size_t code); //type = in progress notif (0 = joining...,1=creating...,2=retrying in x secs...)| error notif (3), code = array of errors index
-	bool notif_enabled = true;
 	virtual void Render() override;
 	virtual std::string GetMenuName() override;
 	virtual std::string GetMenuTitle() override;
@@ -128,7 +128,11 @@ public:
 	virtual void OnClose() override;
 
 	
-
+	const std::string STAT_ERROR[3] = {
+		"Joining match...",
+		"Creating match...",
+		"Error!"
+	};
 	//name arrays
 	const std::string MAP_CODENAMES[35] = {
 		"Underwater_P",
