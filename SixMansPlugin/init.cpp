@@ -134,7 +134,7 @@ void SixMansPlugin::initAutojoinCvars() {
 //also inits logo
 void SixMansPlugin::initNotifVars() {
 	logo = std::make_shared<ImageWrapper>(gameWrapper->GetDataFolder() / "sixmanlogo.png", false, true);
-	setRes(xres, yres);
+	setRes(xres, yres); //this causes crashes
 
 	action_notif_width = res_ratio_w * xres;
 	action_notif_height = res_ratio_h * yres;

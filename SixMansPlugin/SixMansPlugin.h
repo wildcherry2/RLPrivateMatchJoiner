@@ -97,7 +97,7 @@ public:
 	bool isMinimized_ = false;
 	bool doAction = false;
 	std::string menuTitle_ = "sixmansplugininterface";
-	size_t xres /*= std::stoi(gameWrapper->GetSettings().GetVideoSettings().Resolution.substr(0,4))*/; //1920x1080, will need to change to delimiter by "x" for triple digit resolutions
+	size_t xres/* = std::stoi(gameWrapper->GetSettings().GetVideoSettings().Resolution.substr(0,4))*/; //1920x1080, will need to change to delimiter by "x" for triple digit resolutions
 	size_t yres/* = std::stoi(gameWrapper->GetSettings().GetVideoSettings().Resolution.substr(5,4))*/;
 	float res_ratio_x = 1550 / 1920.0; //multiply these by res to get scaled toast
 	float res_ratio_y = 20 / 1080.0; //currently bugged for any res < 1080p, because no delimiter
@@ -117,6 +117,8 @@ public:
 	void renderButton(std::string text);
 	void renderNote(std::string text);
 	void renderCreateMatch();
+	void renderJoinMatch();
+	bool notif_enabled = true;
 	virtual void Render() override;
 	virtual std::string GetMenuName() override;
 	virtual std::string GetMenuTitle() override;

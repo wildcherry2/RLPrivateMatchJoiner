@@ -54,6 +54,7 @@
     <OutDir>$(SolutionDir)plugins\</OutDir>
     <IntDir>$(SolutionDir)build\.intermediates\$(Configuration)\</IntDir>
     <IncludePath>$(IncludePath)</IncludePath>
+    <CustomBuildAfterTargets>FinalizeBuildStatus</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnableManifest>false</VcpkgEnableManifest>
@@ -98,8 +99,11 @@
       <Command>powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File update_version.ps1 "./version.h"</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>%(Command)</Command>
+      <Command>%(Command) &amp;&amp; "C:\Program Files (x86)\Steam\steamapps\common\rocketleague\Binaries\Win64\RocketLeague.exe"</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>"C:\Program Files (x86)\Steam\steamapps\common\rocketleague\Binaries\Win64\RocketLeague.exe"</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="fmt\src\format.cc" />

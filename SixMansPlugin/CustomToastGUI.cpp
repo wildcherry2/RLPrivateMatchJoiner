@@ -5,6 +5,7 @@
 // Do ImGui rendering here
 void SixMansPlugin::Render()
 {
+	if (!notif_enabled) return;
 	int flags = ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoResize + ImGuiWindowFlags_NoScrollbar + ImGuiWindowFlags_NoTitleBar;
 	if (!ImGui::Begin(menuTitle_.c_str(), &isWindowOpen_, flags))
 	{
@@ -12,8 +13,8 @@ void SixMansPlugin::Render()
 		ImGui::End();
 		return;
 	}
-	renderCreateMatch();
-
+	//renderCreateMatch();
+	renderJoinMatch();
 
 	ImGui::End();
 
@@ -31,6 +32,17 @@ void SixMansPlugin::renderCreateMatch() {
 	renderText("\nThe match info is loaded in the game!\nPress the button below to create:");
 	ImGui::NewLine();
 	renderButton("Create");
+	renderNote("NOTE: For options, press F2->Plugins->6Mans Plugin Settings");
+}
+
+void SixMansPlugin::renderJoinMatch() {
+	renderBlankNotif();
+	renderLogo();
+	ImGui::SameLine();
+	renderHeader("Join 6Mans:\nLobby #0001");
+	renderText("\nThe match info is loaded in the game!\nPress the button below to join:");
+	ImGui::NewLine();
+	renderButton("Join");
 	renderNote("NOTE: For options, press F2->Plugins->6Mans Plugin Settings");
 }
 
