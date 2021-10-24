@@ -14,7 +14,9 @@ void SixMansPlugin::Render()
 		return;
 	}
 	//renderCreateMatch();
-	renderJoinMatch();
+	//renderJoinMatch();
+	//if (cvarManager->getCvar("6mEventType").getIntValue() == 1) renderJoinMatch();
+	renderActionButton();
 
 	ImGui::End();
 
@@ -24,26 +26,24 @@ void SixMansPlugin::Render()
 	}
 }
 
-void SixMansPlugin::renderCreateMatch() {
+void SixMansPlugin::renderActionButton() {
 	renderBlankNotif();
 	renderLogo();
 	ImGui::SameLine();
-	renderHeader("Create 6Mans:\nLobby #0001");
-	renderText("\nThe match info is loaded in the game!\nPress the button below to create:");
-	ImGui::NewLine();
-	renderButton("Create");
-	renderNote("NOTE: For options, press F2->Plugins->6Mans Plugin Settings");
-}
-
-void SixMansPlugin::renderJoinMatch() {
-	renderBlankNotif();
-	renderLogo();
-	ImGui::SameLine();
-	renderHeader("Join 6Mans:\nLobby #0001");
-	renderText("\nThe match info is loaded in the game!\nPress the button below to join:");
-	ImGui::NewLine();
-	renderButton("Join");
-	renderNote("NOTE: For options, press F2->Plugins->6Mans Plugin Settings");
+	if (cvarManager->getCvar("6mEventType").getIntValue() == 1) {
+		renderHeader("Join 6Mans:\nLobby #0001");
+		renderText("\nThe match info is loaded in the game!\nPress the button below to join:");
+		ImGui::NewLine();
+		renderButton("Join");
+		renderNote("NOTE: For options, press F2->Plugins->6Mans Plugin Settings");
+	}
+	else {
+		renderHeader("Create 6Mans:\nLobby #0001");
+		renderText("\nThe match info is loaded in the game!\nPress the button below to create:");
+		ImGui::NewLine();
+		renderButton("Create");
+		renderNote("NOTE: For options, press F2->Plugins->6Mans Plugin Settings");
+	}
 }
 
 void SixMansPlugin::renderBlankNotif() {

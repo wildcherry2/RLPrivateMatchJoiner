@@ -116,8 +116,7 @@ public:
 	void renderText(std::string text);
 	void renderButton(std::string text);
 	void renderNote(std::string text);
-	void renderCreateMatch();
-	void renderJoinMatch();
+	void renderActionButton();
 	bool notif_enabled = true;
 	virtual void Render() override;
 	virtual std::string GetMenuName() override;
