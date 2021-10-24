@@ -52,8 +52,10 @@ void SixMansPlugin::gotoPrivateMatch() {
 				mw.CreatePrivateMatch(region, cm);
 			}
 			else if (event_code == 1) {
-				cvarManager->log("[gotoPrivateMatch] Joining with name: " + name + "and pass: " + pass);
-				mw.JoinPrivateMatch(cvarManager->getCvar("6mServerName").getStringValue(), cvarManager->getCvar("6mServerPass").getStringValue());
+				const std::string thisname = cvarManager->getCvar("6mServerName").getStringValue();
+				const std::string thispass = cvarManager->getCvar("6mServerPass").getStringValue();
+				cvarManager->log("[gotoPrivateMatch] Joining with name: " + thisname + "and pass: " + thispass);
+				mw.JoinPrivateMatch(thisname,thispass);
 			}
 			else cvarManager->log("[gotoPrivateMatch] Invalid event code!");
 
@@ -197,3 +199,10 @@ void SixMansPlugin::monitorOnlineState() {
 //struct UGFxData_PrivateMatch_TA_OnShellSet_Params
 //{
 //};
+
+//called once game is joined after creation
+//"Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete"; //gets called on black screen as well, call isinonline game after to confirm
+// 
+// called on leave match
+//"Function TAGame.GameEvent_Soccar_TA.Destroyed"
+//"Function TAGame.GameEvent_Soccar_TA.CommitPlayerMatchData";

@@ -2,7 +2,8 @@
 /*
 * TODO:
 * Toasts
-* Saving settings to cfg-last bool in cvar declaration sets this,fix crashing related issue?
+* Replace monitor with function hooks
+* Rework f2 gui to work properly/use less cvars; Saving settings to cfg-last bool in cvar declaration sets this,fix crashing related issue?
 * Test join once its working, separate option for disabling auto join for create
 * Clean up unnecessary vars/functions/function calls/includes
 * Documentation

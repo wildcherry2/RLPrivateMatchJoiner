@@ -42,10 +42,10 @@ void SixMansPlugin::initGuiCvars() {
 		cvarManager->getCvar("6mMap").setValue(MAP_CODENAMES[cw.getIntValue()]);
 		selected_map = MAP_CODENAMES[cw.getIntValue()];
 		});
-	cvarManager->registerCvar("6mAutotabInToggle", "1", "Toggles autotab back in on server request", true, true, 0, true, 1, true).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	cvarManager->registerCvar("6mAutotabInToggle", "1", "Toggles autotab back in on server request", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_autotab_enabled = cw.getBoolValue();
 		});;
-	cvarManager->registerCvar("6mModEnabled", "1", "", true, true, 0, true, 1, true).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	cvarManager->registerCvar("6mModEnabled", "1", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_enabled = cw.getBoolValue();
 		if (is_enabled) cvarManager->executeCommand("6mEnableMod");
 		else cvarManager->executeCommand("6mDisableMod");
@@ -112,10 +112,10 @@ void SixMansPlugin::unregisterCvars() {
 void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mEndRecursiveJoin", "0", "", true, true, 0, true, 1, false);
 	cvarManager->registerCvar("6mEndMonitor", "0", "", true, true, 0, true, 1, false);
-	cvarManager->registerCvar("6mTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 30, true, 120, true).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	cvarManager->registerCvar("6mTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 30, true, 120, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		time_to_wait = cw.getIntValue();
 		});;
-	cvarManager->registerCvar("6mAutoRetryToggle", "1", "", true, true, 0, true, 1, true).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	cvarManager->registerCvar("6mAutoRetryToggle", "1", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_enabled_autoretry = cw.getBoolValue();
 		});
 }
