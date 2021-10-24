@@ -14,7 +14,7 @@ void SixMansPlugin::Render()
 		return;
 	}
 
-	renderActionButton();
+	renderActionNotif();
 
 	ImGui::End();
 
@@ -24,7 +24,7 @@ void SixMansPlugin::Render()
 	}
 }
 
-void SixMansPlugin::renderActionButton() {
+void SixMansPlugin::renderActionNotif() {
 	renderBlankNotif();
 	renderLogo();
 	ImGui::SameLine();
@@ -44,9 +44,13 @@ void SixMansPlugin::renderActionButton() {
 	}
 }
 
+void SixMansPlugin::renderStatusNotif(size_t type, size_t code) {
+
+}
+
 void SixMansPlugin::renderBlankNotif() {
-	ImGui::SetWindowPos(ImVec2{ action_notif_x, action_notif_y });
-	ImGui::SetWindowSize(ImVec2{ action_notif_width, action_notif_height });
+	ImGui::SetWindowPos(ImVec2{ action_notif_x, action_notif_y }); //all notifs have the same origin, generify
+	ImGui::SetWindowSize(ImVec2{ action_notif_width, action_notif_height }); //maybe only set width and let height adjust automatically
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.WindowRounding = 12.0f;
 	style.WindowBorderSize = 0.0f;
@@ -134,29 +138,3 @@ void SixMansPlugin::OnClose()
 {
 	isWindowOpen_ = false;
 }
-
-//void SixMansPlugin::setResVars() {
-//	SettingsWrapper sw = gameWrapper->GetSettings();
-//	xres = std::stof(sw.GetVideoSettings().Resolution.substr(0, 4));
-//	yres = std::stof(sw.GetVideoSettings().Resolution.substr(7, 4));
-//}
-
-/*
-*	1920x1080
-*   012345678
-*	
-*	pos = 4
-*	length = 9
-*	sub 0->pos = 1920
-*	pos + 1 = begin of yres = length of xres + delimiter
-*	sub pos + 1-> length - pos + 1
-* 
-*	1280x720
-*	01234567
-* 
-*	pos = 4
-*	length = 8
-*	sub 0->pos = 1280
-*	sub pos + 1->length
-*	
-*/
