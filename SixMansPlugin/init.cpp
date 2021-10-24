@@ -9,7 +9,7 @@ void SixMansPlugin::init() {
 	initUtilityCvars();
 	initAutojoinCvars();
 	initNotifVars();
-	//setRes(xres, yres);
+
 }
 
 void SixMansPlugin::initMatchCvars() {
@@ -38,13 +38,10 @@ void SixMansPlugin::initMatchCvars() {
 }
 
 void SixMansPlugin::initGuiCvars() {
-
 	cvarManager->registerCvar("6mMapNameSelection", "18", "Enter map name", true, false, false, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		cvarManager->getCvar("6mMap").setValue(MAP_CODENAMES[cw.getIntValue()]);
 		selected_map = MAP_CODENAMES[cw.getIntValue()];
 		});
-	cvarManager->registerCvar("6mIsQuickMatchWindowEnabled", "0", "Toggles quick private match join/create window", true, true, 0, true, 1, false); //change to notifier
-	cvarManager->registerCvar("6mGeneratedLink", "", "Generated link", true, false, false, false,false,false);
 	cvarManager->registerCvar("6mAutotabInToggle", "1", "Toggles autotab back in on server request", true, true, 0, true, 1, true).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_autotab_enabled = cw.getBoolValue();
 		});;
@@ -52,10 +49,7 @@ void SixMansPlugin::initGuiCvars() {
 		is_enabled = cw.getBoolValue();
 		if (is_enabled) cvarManager->executeCommand("6mEnableMod");
 		else cvarManager->executeCommand("6mDisableMod");
-		});;
-	cvarManager->registerCvar("6mDoAction", "0", "Toggles autotab back in on server request", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
-		doAction = cw.getBoolValue();
-		});;
+		});
 }
 
 void SixMansPlugin::initServerCvars() {
@@ -79,7 +73,6 @@ void SixMansPlugin::initUtilityCvars() {
 		gotoPrivateMatch();
 		in_game = false;
 		}, "", PERMISSION_ALL);
-
 	cvarManager->registerNotifier("6mDisableMod", [this](std::vector<std::string> args) {
 		unregisterCvars();
 		}, "", PERMISSION_ALL);
@@ -87,10 +80,6 @@ void SixMansPlugin::initUtilityCvars() {
 		init();
 		cvarManager->executeCommand("6mEnableServer");
 		}, "", PERMISSION_ALL);
-
-	/*cvarManager->registerNotifier("toasttest",[this](std::vector<std::string> args) {
-		renderCreateToast();
-		},"",PERMISSION_ALL);*/
 	cvarManager->setBind("F3", "togglemenu SixMansPluginInterface");
 }
 
@@ -134,7 +123,7 @@ void SixMansPlugin::initAutojoinCvars() {
 //also inits logo
 void SixMansPlugin::initNotifVars() {
 	logo = std::make_shared<ImageWrapper>(gameWrapper->GetDataFolder() / "sixmanlogo.png", false, true);
-	setRes(xres, yres); //this causes crashes
+	setRes(xres, yres);
 
 	action_notif_width = res_ratio_w * xres;
 	action_notif_height = res_ratio_h * yres;

@@ -13,9 +13,7 @@ void SixMansPlugin::Render()
 		ImGui::End();
 		return;
 	}
-	//renderCreateMatch();
-	//renderJoinMatch();
-	//if (cvarManager->getCvar("6mEventType").getIntValue() == 1) renderJoinMatch();
+
 	renderActionButton();
 
 	ImGui::End();
@@ -49,15 +47,15 @@ void SixMansPlugin::renderActionButton() {
 void SixMansPlugin::renderBlankNotif() {
 	ImGui::SetWindowPos(ImVec2{ action_notif_x, action_notif_y });
 	ImGui::SetWindowSize(ImVec2{ action_notif_width, action_notif_height });
-	ImGuiStyle& style = ImGui::GetStyle(); //put in header
+	ImGuiStyle& style = ImGui::GetStyle();
 	style.WindowRounding = 12.0f;
 	style.WindowBorderSize = 0.0f;
 }
 
 void SixMansPlugin::renderLogo() {
 	if (auto logoTex = logo->GetImGuiTex()) {
-		auto rect = ImVec2{ (80.0f/1920.0f)*xres, (80.0f/1920.0f)*xres }; //put in header
-		ImGui::Image(logoTex, { rect.x,rect.y });
+		auto logo_rect = ImVec2{ (80.0f / 1920.0f) * xres, (80.0f / 1920.0f) * xres };
+		ImGui::Image(logoTex, { logo_rect.x,logo_rect.y });
 	}
 }
 
@@ -75,11 +73,7 @@ void SixMansPlugin::renderText(std::string text) {
 
 void SixMansPlugin::renderButton(std::string text) {
 	ImGui::PushFont(roboto_bold);
-	ImColor color; //put in header
-	
-	CVarWrapper cv = cvarManager->getCvar("6mDoAction");
-	if (!cv) return;
-	bool enabled = cv.getBoolValue(); //unnecessary?
+	ImColor color;
 	
 	//disable num lock, shift + 0 or shift + insert gives error from a crash
 	//probably should change height to be a function of yres instead of xres
