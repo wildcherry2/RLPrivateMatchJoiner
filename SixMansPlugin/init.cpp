@@ -9,7 +9,6 @@ void SixMansPlugin::init() {
 	initServerCvars();
 	initUtilityCvars();
 	initAutojoinCvars();
-	//initNotifVars();
 
 }
 
@@ -39,7 +38,7 @@ void SixMansPlugin::initMatchCvars() {
 }
 
 void SixMansPlugin::initGuiCvars() {
-	cvarManager->registerCvar("6mMapNameSelection", "18", "Enter map name", true, false, false, true).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	cvarManager->registerCvar("6mMapNameSelection", "18", "Enter map name", true, false, false, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		cvarManager->getCvar("6mMap").setValue(MAP_CODENAMES[cw.getIntValue()]);
 		selected_map = MAP_CODENAMES[cw.getIntValue()];
 		});

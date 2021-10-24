@@ -55,7 +55,9 @@ void SixMansPlugin::gotoPrivateMatch() {
 				cvarManager->log("[gotoPrivateMatch] Joining with name: " + name + "and pass: " + pass);
 				mw.JoinPrivateMatch(cvarManager->getCvar("6mServerName").getStringValue(), cvarManager->getCvar("6mServerPass").getStringValue());
 			}
-			else cvarManager->log("[gotoPrivateMatch] Invalid event code!");		
+			else cvarManager->log("[gotoPrivateMatch] Invalid event code!");
+
+			//if (!in_game) cvarManager->executeCommand("togglemenu SixMansPluginInterface");
 		}
 		if (is_enabled_autoretry) {
 			gameWrapper->SetTimeout([this](GameWrapper* gw) {
