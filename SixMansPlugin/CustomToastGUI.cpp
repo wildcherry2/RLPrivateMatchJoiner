@@ -28,7 +28,7 @@ void SixMansPlugin::renderActionNotif() {
 	renderBlankNotif();
 	renderLogo();
 	ImGui::SameLine();
-	if (cvarManager->getCvar("6mEventType").getIntValue() == 1) {
+	if (cvarManager->getCvar("6mEventType").getIntValue() == 1) { //cvarmanager out of scope, need execute
 		renderHeader("Join 6Mans:\nLobby #0001");
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
 		renderText("The match info is loaded in the game!\nPress the button below to join:");
@@ -50,9 +50,9 @@ void SixMansPlugin::renderActionNotif() {
 	}
 }
 
-void SixMansPlugin::renderStatusNotif(size_t type, size_t code) {
-
-}
+//void SixMansPlugin::renderStatusNotif(size_t type, size_t code) {
+//
+//}
 
 void SixMansPlugin::renderBlankNotif() {
 	ImGui::SetWindowPos(ImVec2{ action_notif_x, action_notif_y }); //all notifs have the same origin, generify

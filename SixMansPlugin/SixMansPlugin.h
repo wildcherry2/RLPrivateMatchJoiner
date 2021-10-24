@@ -118,7 +118,7 @@ public:
 	void renderButton(std::string text);
 	void renderNote(std::string text);
 	void renderActionNotif();
-	void renderStatusNotif(size_t type, size_t code); //type = in progress notif (0 = joining...,1=creating...,2=retrying in x secs...)| error notif (3), code = array of errors index
+	//void renderStatusNotif(size_t type, size_t code); //type = in progress notif (0 = joining...,1=creating...,2=retrying in x secs...)| error notif (3), code = array of errors index
 	virtual void Render() override;
 	virtual std::string GetMenuName() override;
 	virtual std::string GetMenuTitle() override;
