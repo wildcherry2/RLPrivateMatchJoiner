@@ -35,6 +35,7 @@
 #include <utility>
 #include <string>
 #include <cstring>
+#include <stack>
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
 
@@ -55,6 +56,7 @@ public:
 	size_t time_to_wait = 45;
 	bool is_enabled_autoretry = true;
 	void monitorOnlineState();
+	void autoRetry();
 
 	//init
 	void init();
@@ -65,6 +67,10 @@ public:
 	void initUtilityCvars();
 	void initAutojoinCvars();
 	void unregisterCvars();
+
+	//custom cfg
+	void cfgRead();
+	void cfgWrite();
 
 	//f2 gui
 	void RenderSettings() override;
@@ -224,5 +230,5 @@ public:
 		"South America (SAM)"
 	};
 
-	void autoRetry();
+	
 };

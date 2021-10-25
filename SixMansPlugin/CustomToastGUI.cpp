@@ -60,9 +60,6 @@ void SixMansPlugin::renderBlankNotif() {
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.WindowRounding = 12.0f;
 	style.WindowBorderSize = 0.0f;
-	//style.ItemSpacing = ImVec2{ 10.0f,10.0f };
-	//style.FramePadding = ImVec2{ 20.0f,20.0f };
-	//ImGui::Dummy(ImVec2(10.0f, 10.0f));
 }
 
 void SixMansPlugin::renderLogo() {
@@ -104,12 +101,6 @@ void SixMansPlugin::renderButton(std::string text) {
 
 void SixMansPlugin::renderNote(std::string text) {
 	ImGui::PushFont(roboto_reg);
-	//ImGui::NewLine(); //use padding instead, quick method for now
-	//ImGui::NewLine();
-	/*ImGui::NewLine();
-	ImGui::NewLine();
-	ImGui::NewLine();*/
-
 	ImGui::Text(text.c_str());
 	ImGui::PopFont();
 }
