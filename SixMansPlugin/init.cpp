@@ -119,7 +119,9 @@ void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mAutoRetryToggle", "1", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_enabled_autoretry = cw.getBoolValue();
 		});
-	cvarManager->registerCvar("6mInGame", "0", "", true, true, 0, true, 1, false);
+	cvarManager->registerCvar("6mInGame", "0", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+		in_game = cw.getBoolValue();
+		});;
 }
 
 //also inits logo
@@ -162,7 +164,7 @@ void SixMansPlugin::initHooks() {
 	gameWrapper->HookEventPost("Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete", [this](std::string eventName) {
 		cvarManager->getCvar("6mInGame").setValue("1");
 		});
-	/*gameWrapper->HookEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed", [this](std::string eventName) {
-		if (!gameWrapper->IsInOnlineGame()) cvarManager->getCvar("6mInGame").setValue("0");
-		});*/
+	gameWrapper->HookEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed", [this](std::string eventName) {
+		cvarManager->getCvar("6mInGame").setValue("0");
+		});
 }

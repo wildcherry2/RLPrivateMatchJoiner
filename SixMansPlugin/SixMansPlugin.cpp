@@ -26,7 +26,7 @@ void SixMansPlugin::onUnload()
 {
 	cvarManager->executeCommand("6mDisableServer");
 	cvarManager->getCvar("6mEndMonitor").setValue("1");
-	cvarManager->executeCommand("writeconfig");
+	//cvarManager->executeCommand("writeconfig");
 	//unregisterCvars();
 	cvarManager->log("6Mans Plugin unloaded.");
 }
@@ -72,8 +72,8 @@ void SixMansPlugin::autoRetry() {
 	gameWrapper->SetTimeout([this](GameWrapper* gw) {
 		/*if (!in_game && !cvarManager->getCvar("6mEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
 		else { cvarManager->log("[gotoPrivateMatch] Success."); return; }*/
-		if (cvarManager->getCvar("6mInGame").getBoolValue()) { LOG("In game, unwinding recursion..."); return; }
-		else {LOG("Not in game, calling again..."), autoRetry(); } //not calling gotoprivatematch again
+		if (in_game) { LOG("In game, unwinding recursion..."); return; }
+		else {LOG("Not in game, calling again..."), gotoPrivateMatch(); } //CHANGED THIS 10/24 NEEDS BUILDING AND TESTING
 
 		}, cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue());
 }
