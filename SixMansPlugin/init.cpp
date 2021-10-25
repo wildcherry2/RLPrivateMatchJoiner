@@ -11,6 +11,9 @@ void SixMansPlugin::init() {
 	initUtilityCvars();
 	initAutojoinCvars();
 
+	/*cfg_man = std::make_shared<Config>(gameWrapper,cvarManager);
+	LOG("Loading config...");
+	cfg_man->loadConfig();*/
 }
 
 void SixMansPlugin::initMatchCvars() {
@@ -23,7 +26,7 @@ void SixMansPlugin::initMatchCvars() {
 	cvarManager->registerCvar("6mServerPass", "", "Enter the server password", true, false, false, false,false,false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		pass = cw.getStringValue();
 		});
-	cvarManager->registerCvar("6mMap", MAP_CODENAMES[17], "Enter internal map names (see MapsStruct.h for names)", true, false, false, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	cvarManager->registerCvar("6mMap", MAP_CODENAMES[17], "Enter internal map names (see MapsStruct.h for names)", true, false, false, false,false,false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		selected_map = cw.getStringValue();
 		}); //gonna want to save this choice
 	cvarManager->registerCvar("6mRegion", "0", "Enter the region code (0-9)", true, true, 0, true, 9, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
@@ -39,7 +42,7 @@ void SixMansPlugin::initMatchCvars() {
 }
 
 void SixMansPlugin::initGuiCvars() {
-	cvarManager->registerCvar("6mMapNameSelection", "18", "Enter map name", true, false, false, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+	cvarManager->registerCvar("6mMapNameSelection", "18", "Enter map name", true, false, false, false,false,false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		cvarManager->getCvar("6mMap").setValue(MAP_CODENAMES[cw.getIntValue()]);
 		selected_map = MAP_CODENAMES[cw.getIntValue()];
 		});
@@ -81,7 +84,11 @@ void SixMansPlugin::initUtilityCvars() {
 		init();
 		cvarManager->executeCommand("6mEnableServer");
 		}, "", PERMISSION_ALL);
-	cvarManager->setBind("F3", "togglemenu SixMansPluginInterface");
+	cvarManager->registerNotifier("6ml", [this](std::vector<std::string> args) {
+		Config cfg2(*gameWrapper, *cvarManager);
+		cfg2.loadConfig();
+		}, "", PERMISSION_ALL);
+	cvarManager->setBind("F3", "6ml");
 }
 
 void SixMansPlugin::unregisterCvars() {

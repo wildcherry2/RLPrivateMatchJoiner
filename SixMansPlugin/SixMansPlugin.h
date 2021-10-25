@@ -35,6 +35,7 @@
 #include <utility>
 #include <string>
 #include <cstring>
+#include "CFG.h"
 #include <stack>
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
@@ -69,8 +70,7 @@ public:
 	void unregisterCvars();
 
 	//custom cfg
-	void cfgRead();
-	void cfgWrite();
+	//std::shared_ptr<Config> cfg_man;
 
 	//f2 gui
 	void RenderSettings() override;

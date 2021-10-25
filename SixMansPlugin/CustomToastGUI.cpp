@@ -14,7 +14,7 @@ void SixMansPlugin::Render()
 		return;
 	}
 
-	renderActionNotif();
+	//renderActionNotif();
 
 	ImGui::End();
 

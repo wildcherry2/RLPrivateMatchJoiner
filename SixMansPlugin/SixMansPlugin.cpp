@@ -24,8 +24,10 @@ void SixMansPlugin::onLoad()
 
 void SixMansPlugin::onUnload()
 {
-	cvarManager->executeCommand("6mDisableServer");
-	cvarManager->getCvar("6mEndMonitor").setValue("1");
+	//cvarManager->executeCommand("6mDisableServer");
+	//cvarManager->getCvar("6mEndMonitor").setValue("1");
+	LOG("Saving config...");
+	//cfg_man->saveConfig();
 	//cvarManager->executeCommand("writeconfig");
 	//unregisterCvars();
 	cvarManager->log("6Mans Plugin unloaded.");

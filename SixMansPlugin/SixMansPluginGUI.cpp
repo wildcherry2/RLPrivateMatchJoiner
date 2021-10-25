@@ -15,6 +15,7 @@ void SixMansPlugin::RenderSettings() {
 	renderMapCombobox("Default Map");
 	renderAutotabEnabled();
 	renderAutoretryEnabled();
+	renderTimeRetry();
 }
 
 void SixMansPlugin::renderModEnabledCheckbox() { 
@@ -72,7 +73,7 @@ void SixMansPlugin::renderAutoretryEnabled() {
 		ImGui::EndTooltip();
 	}
 
-	if (enabled) renderTimeRetry();
+	//if (enabled) renderTimeRetry();
 }
 void SixMansPlugin::renderTimeRetry() {
 	CVarWrapper cv = cvarManager->getCvar("6mTimeBeforeRetrying");

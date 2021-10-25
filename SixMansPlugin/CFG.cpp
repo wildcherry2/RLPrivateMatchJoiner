@@ -1,17 +1,36 @@
 #include "pch.h"
-#include "SixMansPlugin.h"
+#include "CFG.h"
 
-void SixMansPlugin::cfgRead(){
-	try { //std::filesystem::exists
-		std::ifstream cfg_file;
-		cfg_file.open(gameWrapper->GetDataFolder() / "smp.cfg");
-		std::stack<std::string> cvar_stack;
-	}
-	catch (std::ios_base::failure e) {
-		LOG("[CFG Manager] Error reading from cfg!");
-	}
+Config::Config(GameWrapper gameWrapper, CVarManagerWrapper cvarManager) {
+	this->gameWrapper = &gameWrapper;
+	this->cvarManager = &cvarManager;
+	//os = std::ofstream("config.json");
+	//is = std::ifstream("config.json");
+}
+//6mMapNameSelection int,6mAutotabInToggle bool
+void Config::loadConfig() {
+	std::ifstream is;
+	std::string path = gameWrapper->GetDataFolder().string() + "\\config.json";
+	is.open(path);
+	//if(!is.is_open()) is.open("config.json");
+	is >> saved_settings_json;
+	LOG("JSON 6mMapNameSelection = " + saved_settings_json["6mMapNameSelection"].get<std::string>());
+	cvarManager->getCvar("6mMapNameSelection").setValue(saved_settings_json["6mMapNameSelection"].get<std::string>());
+	LOG("CVAR 6mMapNameSelection = " + cvarManager->getCvar("6mMapNameSelection").getStringValue());
+	is.close();
+	
 }
 
-void SixMansPlugin::cfgWrite() {
+void Config::saveConfig() {
+	saved_settings_json["6mMapNameSelection"] = cvarManager->getCvar("6mMapNameSelection").getStringValue();
+	LOG("JSON 6mMapNameSelection = " + saved_settings_json["6mMapNameSelection"].get<std::string>());
 
+	std::ofstream o;
+	std::string path = gameWrapper->GetDataFolder().string() + "\\config.json";
+	o.open(path);
+	if (o.is_open()) LOG("opened");
+	//if(!o.is_open()) o.open("config.json");
+	o << saved_settings_json << std::endl;
+	LOG("CVAR 6mMapNameSelection = " + cvarManager->getCvar("6mMapNameSelection").getStringValue());
+	o.close();
 }
