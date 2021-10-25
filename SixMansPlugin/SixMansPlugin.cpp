@@ -62,14 +62,20 @@ void SixMansPlugin::gotoPrivateMatch() {
 			//if (!in_game) cvarManager->executeCommand("togglemenu SixMansPluginInterface");
 		}
 		if (is_enabled_autoretry) {
-			gameWrapper->SetTimeout([this](GameWrapper* gw) {
-				if (!in_game && !cvarManager->getCvar("6mEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
-				else { cvarManager->log("[gotoPrivateMatch] Success."); return; }
-
-				}, cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue());
-				
+			LOG("Beginning autoretry routine...");
+			autoRetry();	
 		}
 
+}
+
+void SixMansPlugin::autoRetry() {
+	gameWrapper->SetTimeout([this](GameWrapper* gw) {
+		/*if (!in_game && !cvarManager->getCvar("6mEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
+		else { cvarManager->log("[gotoPrivateMatch] Success."); return; }*/
+		if (cvarManager->getCvar("6mInGame").getBoolValue()) { LOG("In game, unwinding recursion..."); return; }
+		else {LOG("Not in game, calling again..."), autoRetry(); } //not calling gotoprivatematch again
+
+		}, cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue());
 }
 
 Region SixMansPlugin::getRegion(int region) {

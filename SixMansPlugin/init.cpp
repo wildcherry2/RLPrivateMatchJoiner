@@ -4,6 +4,7 @@
 void SixMansPlugin::init() {
 	
 	initNotifVars();
+	initHooks();
 	initMatchCvars();
 	initGuiCvars();
 	initServerCvars();
@@ -68,10 +69,10 @@ void SixMansPlugin::initServerCvars() {
 
 void SixMansPlugin::initUtilityCvars() {
 	cvarManager->registerNotifier("6mReady", [this](std::vector<std::string> args) {
-		in_game = false; //insurance
-		if (is_enabled_autoretry) { monitorOnlineState(); }
+		//in_game = false; //insurance
+		//if (is_enabled_autoretry) { monitorOnlineState(); }
 		gotoPrivateMatch();
-		in_game = false;
+		//in_game = false;
 		}, "", PERMISSION_ALL);
 	cvarManager->registerNotifier("6mDisableMod", [this](std::vector<std::string> args) {
 		unregisterCvars();
@@ -118,6 +119,7 @@ void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mAutoRetryToggle", "1", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_enabled_autoretry = cw.getBoolValue();
 		});
+	cvarManager->registerCvar("6mInGame", "0", "", true, true, 0, true, 1, false);
 }
 
 //also inits logo
@@ -154,4 +156,13 @@ void SixMansPlugin::setRes(size_t& x, size_t& y) {
 	size_t pos = res_str.find("x");
 	x = std::stoi(res_str.substr(0, pos));
 	y = std::stoi(res_str.substr(pos + 1, res_str.length() - pos + 1));
+}
+
+void SixMansPlugin::initHooks() {
+	gameWrapper->HookEventPost("Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete", [this](std::string eventName) {
+		cvarManager->getCvar("6mInGame").setValue("1");
+		});
+	/*gameWrapper->HookEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed", [this](std::string eventName) {
+		if (!gameWrapper->IsInOnlineGame()) cvarManager->getCvar("6mInGame").setValue("0");
+		});*/
 }

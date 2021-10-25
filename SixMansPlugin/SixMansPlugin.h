@@ -56,10 +56,11 @@ public:
 	bool is_enabled_autoretry = true;
 	void monitorOnlineState();
 
-	//cvar
+	//init
 	void init();
 	void initMatchCvars();
 	void initGuiCvars();
+	void initHooks();
 	void initServerCvars();
 	void initUtilityCvars();
 	void initAutojoinCvars();
@@ -222,4 +223,6 @@ public:
 		"South Africa (SAF)",
 		"South America (SAM)"
 	};
+
+	void autoRetry();
 };
