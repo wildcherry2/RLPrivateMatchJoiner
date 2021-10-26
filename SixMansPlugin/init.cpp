@@ -10,10 +10,7 @@ void SixMansPlugin::init() {
 	initServerCvars();
 	initUtilityCvars();
 	initAutojoinCvars();
-
-	/*cfg_man = std::make_shared<Config>(gameWrapper,cvarManager);
-	LOG("Loading config...");
-	cfg_man->loadConfig();*/
+	initCFGMan();
 }
 
 void SixMansPlugin::initMatchCvars() {
@@ -72,10 +69,7 @@ void SixMansPlugin::initServerCvars() {
 
 void SixMansPlugin::initUtilityCvars() {
 	cvarManager->registerNotifier("6mReady", [this](std::vector<std::string> args) {
-		//in_game = false; //insurance
-		//if (is_enabled_autoretry) { monitorOnlineState(); }
 		gotoPrivateMatch();
-		//in_game = false;
 		}, "", PERMISSION_ALL);
 	cvarManager->registerNotifier("6mDisableMod", [this](std::vector<std::string> args) {
 		unregisterCvars();
@@ -84,11 +78,15 @@ void SixMansPlugin::initUtilityCvars() {
 		init();
 		cvarManager->executeCommand("6mEnableServer");
 		}, "", PERMISSION_ALL);
-	cvarManager->registerNotifier("6ml", [this](std::vector<std::string> args) {
-		Config cfg2(*gameWrapper, *cvarManager);
-		cfg2.loadConfig();
+	cvarManager->setBind("F3", "6mLoadCvar");
+	cvarManager->registerNotifier("6mSaveCvar", [this](std::vector<std::string> args) {
+		args.erase(args.begin());
+		saveConfig(args);
 		}, "", PERMISSION_ALL);
-	cvarManager->setBind("F3", "6ml");
+	cvarManager->registerNotifier("6mLoadCvar", [this](std::vector<std::string> args) {
+		args.erase(args.begin());
+		loadConfig(args);
+		}, "", PERMISSION_ALL);
 }
 
 void SixMansPlugin::unregisterCvars() {

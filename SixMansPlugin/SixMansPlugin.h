@@ -35,7 +35,8 @@
 #include <utility>
 #include <string>
 #include <cstring>
-#include "CFG.h"
+#include "nlohmann/json.hpp"
+//#include "CFG.h"
 #include <stack>
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
@@ -70,7 +71,14 @@ public:
 	void unregisterCvars();
 
 	//custom cfg
-	//std::shared_ptr<Config> cfg_man;
+	void initCFGMan();
+	void loadConfig(std::vector<std::string> cvars);
+	void saveConfig(std::vector<std::string> cvars);
+	//std::vector<std::string> varbuf;
+	nlohmann::json set_file;
+	std::ifstream is;
+	std::ofstream os;
+	const std::string path = gameWrapper->GetDataFolder().string() + "\\config.json";
 
 	//f2 gui
 	void RenderSettings() override;
@@ -229,6 +237,16 @@ public:
 		"South Africa (SAF)",
 		"South America (SAM)"
 	};
+
+	const std::string PERSISTENT_CVARS[5] = {
+		"6mMapNameSelection",
+		"6mAutotabInToggle",
+		"6mModEnabled",
+		"6mTimeBeforeRetrying",
+		"6mAutoRetryToggle"
+	};
+
+	const size_t NUM_PER_CVARS = 5;
 
 	
 };

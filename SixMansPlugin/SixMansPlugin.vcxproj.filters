@@ -167,9 +167,6 @@
     <ClInclude Include="Simple-Web-Server\utility.hpp">
       <Filter>Simple-Web-Server</Filter>
     </ClInclude>
-    <ClInclude Include="CFG.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SixMansPlugin.rc">

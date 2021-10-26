@@ -1,36 +1,36 @@
 #include "pch.h"
-#include "CFG.h"
+#include "SixMansPlugin.h"
 
-Config::Config(GameWrapper gameWrapper, CVarManagerWrapper cvarManager) {
-	this->gameWrapper = &gameWrapper;
-	this->cvarManager = &cvarManager;
-	//os = std::ofstream("config.json");
-	//is = std::ifstream("config.json");
-}
-//6mMapNameSelection int,6mAutotabInToggle bool
-void Config::loadConfig() {
-	std::ifstream is;
-	std::string path = gameWrapper->GetDataFolder().string() + "\\config.json";
-	is.open(path);
-	//if(!is.is_open()) is.open("config.json");
-	is >> saved_settings_json;
-	LOG("JSON 6mMapNameSelection = " + saved_settings_json["6mMapNameSelection"].get<std::string>());
-	cvarManager->getCvar("6mMapNameSelection").setValue(saved_settings_json["6mMapNameSelection"].get<std::string>());
-	LOG("CVAR 6mMapNameSelection = " + cvarManager->getCvar("6mMapNameSelection").getStringValue());
-	is.close();
-	
+void SixMansPlugin::loadConfig(std::vector<std::string> cvars) {
+	try {
+		for (auto it = cvars.begin(); it != cvars.end(); it++) {
+			cvarManager->getCvar(*it).setValue(set_file[*it].get<std::string>());
+		}
+	}
+	catch (std::exception e) {
+		LOG("[CFG Manager] Error loading vars from json!");
+	}
 }
 
-void Config::saveConfig() {
-	saved_settings_json["6mMapNameSelection"] = cvarManager->getCvar("6mMapNameSelection").getStringValue();
-	LOG("JSON 6mMapNameSelection = " + saved_settings_json["6mMapNameSelection"].get<std::string>());
+void SixMansPlugin::saveConfig(std::vector<std::string> cvars) {
+	try {
+		for (auto it = cvars.begin(); it != cvars.end(); it++) {
+			set_file[*it] = cvarManager->getCvar(*it).getStringValue();
+		}
+		os.open(path);
+		os << set_file;
+		os.close();
+	}
+	catch (std::exception e) {
+		LOG("[CFG Manager] Error saving vars to json!");
+	}
+}
 
-	std::ofstream o;
-	std::string path = gameWrapper->GetDataFolder().string() + "\\config.json";
-	o.open(path);
-	if (o.is_open()) LOG("opened");
-	//if(!o.is_open()) o.open("config.json");
-	o << saved_settings_json << std::endl;
-	LOG("CVAR 6mMapNameSelection = " + cvarManager->getCvar("6mMapNameSelection").getStringValue());
-	o.close();
+void SixMansPlugin::initCFGMan() {
+	if (std::filesystem::exists(path)) {
+		is.open(path);
+		is >> set_file;
+		is.close();
+	}
+	else LOG("[CFG Manager] json does not exist!");
 }
