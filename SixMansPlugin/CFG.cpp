@@ -2,17 +2,20 @@
 #include "SixMansPlugin.h"
 
 void SixMansPlugin::loadConfig(std::vector<std::string> cvars) {
-	try {
-		for (auto it = cvars.begin(); it != cvars.end(); it++) {
-			cvarManager->getCvar(*it).setValue(set_file[*it].get<std::string>());
-		}
+	/*try {*/
+	for (auto it = cvars.begin(); it != cvars.end(); it++) {
+
+		cvarManager->getCvar(*it).setValue(set_file[*it].get<std::string>());
+		LOG("[CFG Manager] Loaded " + *it + " = " + cvarManager->getCvar(*it).getStringValue());
+
 	}
-	catch (std::exception e) {
+	//}
+	/*catch (std::exception e) {
 		LOG("[CFG Manager] Error loading vars from json!");
-	}
+	}*/
 }
 
-void SixMansPlugin::saveConfig(std::vector<std::string> cvars) {
+void SixMansPlugin::saveConfig( std::vector<std::string> cvars) {
 	try {
 		for (auto it = cvars.begin(); it != cvars.end(); it++) {
 			set_file[*it] = cvarManager->getCvar(*it).getStringValue();
@@ -33,4 +36,10 @@ void SixMansPlugin::initCFGMan() {
 		is.close();
 	}
 	else LOG("[CFG Manager] json does not exist!");
+
+	cvarManager->executeCommand("6mLoadCvar \"6mMapNameSelection\"");
+	cvarManager->executeCommand("6mLoadCvar \"6mAutotabInToggle\"");
+	//cvarManager->executeCommand("6mLoadCvar \"6mModEnabled\"");
+	cvarManager->executeCommand("6mLoadCvar \"6mTimeBeforeRetrying\"");
+	cvarManager->executeCommand("6mLoadCvar \"6mAutoRetryToggle\"");
 }

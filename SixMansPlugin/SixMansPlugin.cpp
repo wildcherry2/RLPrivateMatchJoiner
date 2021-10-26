@@ -15,6 +15,7 @@ void SixMansPlugin::onLoad()
 	
 	//occasional crashing after changing shit in settings and reloading the plugin, maybe writeconfig is trying to write unregistered cvars? or loadconfig is loading into unregistered cvars?
 	init();
+	//loadConfig(PERSISTENT_CVARS);
 	//CALLING THIS AGAIN IS PROBABLY CAUSING THE OCCASIONAL CRASH
 	//cvarManager->executeCommand("exec config.cfg"); //maybe make this its own config, if writeconfig {file} is a thing
 
@@ -24,9 +25,10 @@ void SixMansPlugin::onLoad()
 
 void SixMansPlugin::onUnload()
 {
-	//cvarManager->executeCommand("6mDisableServer");
+	cvarManager->executeCommand("6mDisableServer");
 	//cvarManager->getCvar("6mEndMonitor").setValue("1");
 	LOG("Saving config...");
+	saveConfig(PERSISTENT_CVARS);
 	//cfg_man->saveConfig(PERSISTENT_CVARS);
 	//cvarManager->executeCommand("writeconfig");
 	//unregisterCvars();
@@ -96,28 +98,28 @@ Region SixMansPlugin::getRegion(int region) {
 	}
 }
 
-void SixMansPlugin::monitorOnlineState() {
-	monitor = std::thread([this]() {
-		while (!cvarManager->getCvar("6mEndMonitor").getBoolValue()) {
-			if (!gameWrapper->IsInOnlineGame()) {
-				cvarManager->log("[Monitor] not in online game...");
-				in_game = false;
-			}
-			else {
-				cvarManager->log("[Monitor] detected online game!");
-				cvarManager->log("[Monitor] terminating monitor...");
-				//cvarManager->getCvar("6mEndMonitor").setValue("0");
-				in_game = true;
-				return;
-			}
-			std::this_thread::sleep_for(std::chrono::seconds(2));
-		}
-		cvarManager->getCvar("6mEndMonitor").setValue("0");
-		cvarManager->log("[Monitor] terminating monitor...");
-		return;
-		});
-	monitor.detach();
-}
+//void SixMansPlugin::monitorOnlineState() {
+//	monitor = std::thread([this]() {
+//		while (!cvarManager->getCvar("6mEndMonitor").getBoolValue()) {
+//			if (!gameWrapper->IsInOnlineGame()) {
+//				cvarManager->log("[Monitor] not in online game...");
+//				in_game = false;
+//			}
+//			else {
+//				cvarManager->log("[Monitor] detected online game!");
+//				cvarManager->log("[Monitor] terminating monitor...");
+//				//cvarManager->getCvar("6mEndMonitor").setValue("0");
+//				in_game = true;
+//				return;
+//			}
+//			std::this_thread::sleep_for(std::chrono::seconds(2));
+//		}
+//		cvarManager->getCvar("6mEndMonitor").setValue("0");
+//		cvarManager->log("[Monitor] terminating monitor...");
+//		return;
+//		});
+//	monitor.detach();
+//}
 
 //// Function TAGame.GFxData_PrivateMatch_TA.StartSearch
 //struct UGFxData_PrivateMatch_TA_StartSearch_Params

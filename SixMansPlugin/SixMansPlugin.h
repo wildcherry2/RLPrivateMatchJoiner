@@ -52,15 +52,16 @@ public:
 	Region getRegion(int region);
 
 	//autojoin
-	std::thread monitor; //use function hooks instead of thread, works for now though
+	//std::thread monitor; //use function hooks instead of thread, works for now though
 	bool in_game = false;
-	bool mon_running = true;
+	//bool mon_running = true;
 	size_t time_to_wait = 45;
 	bool is_enabled_autoretry = true;
-	void monitorOnlineState();
+	//void monitorOnlineState();
 	void autoRetry();
 
 	//init
+	bool mod_switch = false;
 	void init();
 	void initMatchCvars();
 	void initGuiCvars();
@@ -72,9 +73,10 @@ public:
 
 	//custom cfg
 	void initCFGMan();
-	void loadConfig(std::vector<std::string> cvars);
-	void saveConfig(std::vector<std::string> cvars);
-	//std::vector<std::string> varbuf;
+	void loadConfig(const std::vector<std::string> cvars);
+	//void loadConfig(std::string cvars);
+	void saveConfig(const std::vector<std::string> cvars);
+	std::vector<std::string> cvarbuf;
 	nlohmann::json set_file;
 	std::ifstream is;
 	std::ofstream os;
@@ -238,7 +240,7 @@ public:
 		"South America (SAM)"
 	};
 
-	const std::string PERSISTENT_CVARS[5] = {
+	const std::vector<std::string> PERSISTENT_CVARS = {
 		"6mMapNameSelection",
 		"6mAutotabInToggle",
 		"6mModEnabled",
