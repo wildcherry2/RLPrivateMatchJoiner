@@ -2,11 +2,14 @@
 /*
 * TODO:
 * Toasts
-* Replace monitor with function hooks
-* Rework f2 gui to work properly/use less cvars; Saving settings to cfg-last bool in cvar declaration sets this,fix crashing related issue?
+* Persistent toast on action failure
+* Enabled works, but need to be able to save/load it
 * Test join once its working, separate option for disabling auto join for create
 * Clean up unnecessary vars/functions/function calls/includes
 * Documentation
+* 
+* BUGS:
+* Enabling autoretry while 6mans window is up, then disabling the mod via f2 causes crash- should probably grey out options on gotoprivatematch call
 */
 #pragma once
 
@@ -144,6 +147,13 @@ public:
 	virtual bool IsActiveOverlay() override;
 	virtual void OnOpen() override;
 	virtual void OnClose() override;
+
+	//interface countdown
+	void countdown(size_t seconds_top);
+	//size_t time_left();
+	std::chrono::time_point<std::chrono::system_clock> start_time;
+	bool cd_started = false;
+	//bool attempting_action = false;
 
 	
 	const std::string STAT_ERROR[3] = {

@@ -29,14 +29,20 @@ void SixMansPlugin::onUnload()
 	//cvarManager->getCvar("6mEndMonitor").setValue("1");
 	LOG("Saving config...");
 	saveConfig(PERSISTENT_CVARS);
+	cvarManager->removeNotifier("6mEnableMod");
+	cvarManager->removeNotifier("6mDisableMod");
+	cvarManager->removeCvar("6mModEnabled");
+	//gameWrapper->UnregisterDrawables();
 	//cfg_man->saveConfig(PERSISTENT_CVARS);
 	//cvarManager->executeCommand("writeconfig");
 	//unregisterCvars();
+	LOG("WARNING: If you manually unload the plugin, you'll have to restart the game to load it again.");
 	cvarManager->log("6Mans Plugin unloaded.");
 }
 
 void SixMansPlugin::gotoPrivateMatch() {
-	cvarManager->log("[gotoPrivateMatch] called.");
+	cvarManager->log("[GoToPrivateMatch] called.");
+	cvarManager->executeCommand("togglemenu SixMansPluginInterface"); //we dont want it to disappear on failure
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
 		if(!in_game && mw) { 
 			if (event_code == 0) {
@@ -52,21 +58,23 @@ void SixMansPlugin::gotoPrivateMatch() {
 				cm.OrangeTeamSettings = red;
 				cm.bClubServer = false;
 
-				cvarManager->log("[gotoPrivateMatch] Creating with name: " + cm.ServerName + "and pass: " + cm.Password);
+				cvarManager->log("[GoToPrivateMatch] Creating with name: " + cm.ServerName + "and pass: " + cm.Password);
 				mw.CreatePrivateMatch(region, cm);
 			}
 			else if (event_code == 1) {
 				const std::string thisname = cvarManager->getCvar("6mServerName").getStringValue();
 				const std::string thispass = cvarManager->getCvar("6mServerPass").getStringValue();
-				cvarManager->log("[gotoPrivateMatch] Joining with name: " + thisname + "and pass: " + thispass);
+				cvarManager->log("[GoToPrivateMatch] Joining with name: " + thisname + "and pass: " + thispass);
+				//attempting_action = true;
 				mw.JoinPrivateMatch(thisname,thispass);
 			}
-			else cvarManager->log("[gotoPrivateMatch] Invalid event code!");
+			else cvarManager->log("[GoToPrivateMatch] Invalid event code!");
 
 			//if (!in_game) cvarManager->executeCommand("togglemenu SixMansPluginInterface");
 		}
 		if (is_enabled_autoretry) {
 			LOG("[Autoretry] Beginning autoretry routine...");
+			//attempting_action = false;
 			autoRetry();	
 		}
 

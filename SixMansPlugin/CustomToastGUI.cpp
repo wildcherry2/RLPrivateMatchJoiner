@@ -14,7 +14,7 @@ void SixMansPlugin::Render()
 		return;
 	}
 
-	//renderActionNotif();
+	renderActionNotif();
 
 	ImGui::End();
 
@@ -92,8 +92,15 @@ void SixMansPlugin::renderButton(std::string text) {
 
 	//ImGui::NewLine();
 	ImGui::SameLine(10.0f);
-	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)color.HSV(138.0f, 255.0f, 0.0f, 255.0f)); //change to textured buttons
-	if (ImGui::Button(text.c_str(), ImVec2{(330.0f/1920.f)*xres,(100.0f/1920.0f)*xres})) gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("6mReady"); });
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)color.HSV(138.0f, 255.0f, 0.0f, 255.0f));
+
+	/*if (attempting_action) { 
+		text = "Attempting..."; 
+		ImGui::Button(text.c_str(), ImVec2{ (330.0f / 1920.f) * xres,(100.0f / 1920.0f) * xres });
+	}*/
+	//else {
+	if (ImGui::Button(text.c_str(), ImVec2{ (330.0f / 1920.f) * xres,(100.0f / 1920.0f) * xres })) gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("6mReady"); });
+	//}
 
 	ImGui::PopStyleColor();
 	ImGui::PopFont();
@@ -103,6 +110,12 @@ void SixMansPlugin::renderNote(std::string text) {
 	ImGui::PushFont(roboto_reg);
 	ImGui::Text(text.c_str());
 	ImGui::PopFont();
+}
+
+void SixMansPlugin::countdown(size_t time) {
+	//std::chrono::time_point<std::chrono::system_clock> start_time = std::chrono::system_clock::now();
+	std::chrono::time_point<std::chrono::system_clock> marked_time = std::chrono::system_clock::now();
+	size_t seconds_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(marked_time - start_time).count()/1000;
 }
 
 // Name of the menu that is used to toggle the window.

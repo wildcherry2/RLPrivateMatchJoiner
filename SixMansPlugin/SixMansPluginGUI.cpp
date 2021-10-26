@@ -25,6 +25,8 @@ void SixMansPlugin::renderModEnabledCheckbox() {
 
 	if (ImGui::Checkbox("Enabled", &enabled)) cv.setValue(enabled);
 
+
+
 	ImGui::SameLine();
 	ImGui::TextDisabled("(?)");
 	if (ImGui::IsItemHovered())

@@ -12,8 +12,10 @@ void SixMansPlugin::init() {
 			}, "", PERMISSION_ALL);
 		cvarManager->registerCvar("6mModEnabled", "1", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) { //make this a notifier
 			is_enabled = cw.getBoolValue();
+			cvarbuf.clear();
+			cvarbuf.push_back("6mModEnabled");
+			saveConfig(cvarbuf);
 			if (is_enabled) {
-
 
 				cvarManager->executeCommand("6mEnableMod");
 			}
@@ -62,9 +64,15 @@ void SixMansPlugin::initGuiCvars() {
 	cvarManager->registerCvar("6mMapNameSelection", "18", "Enter map name", true, false, false, false,false,false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		cvarManager->getCvar("6mMap").setValue(MAP_CODENAMES[cw.getIntValue()]);
 		selected_map = MAP_CODENAMES[cw.getIntValue()];
+		cvarbuf.clear();
+		cvarbuf.push_back("6mMapNameSelection");
+		saveConfig(cvarbuf);
 		});
 	cvarManager->registerCvar("6mAutotabInToggle", "1", "Toggles autotab back in on server request", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_autotab_enabled = cw.getBoolValue();
+		cvarbuf.clear();
+		cvarbuf.push_back("6mAutotabInToggle");
+		saveConfig(cvarbuf);
 		});;
 	
 }
@@ -88,7 +96,7 @@ void SixMansPlugin::initUtilityCvars() {
 		gotoPrivateMatch();
 		}, "", PERMISSION_ALL);
 	
-	//cvarManager->setBind("F3", "6mLoadCvar");
+	cvarManager->setBind("F3", "togglemenu SixMansPluginInterface");
 	cvarManager->registerNotifier("6mSaveCvar", [this](std::vector<std::string> args) {
 		args.erase(args.begin()); //dont care about the notifier name
 		saveConfig(args);
@@ -125,7 +133,7 @@ void SixMansPlugin::unregisterCvars() {
 	cvarManager->removeNotifier("6mLoadCvar");
 	//cvarManager->removeNotifier("6mEnableMod");
 	//cvarManager->removeNotifier("6mDisableMod");
-	//cvarManager->removeBind("F3"); //need to store what this is set to initially
+	cvarManager->removeBind("F3"); //need to store what this is set to initially
 	gameWrapper->UnhookEvent("Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete");
 	gameWrapper->UnhookEvent("Function TAGame.GameEvent_Soccar_TA.Destroyed");
 	cvarManager->log("cvars unregistered,mod disabled!");
@@ -136,16 +144,22 @@ void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mEndMonitor", "0", "", true, true, 0, true, 1, false);*/
 	cvarManager->registerCvar("6mTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 30, true, 120, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		time_to_wait = cw.getIntValue();
+		cvarbuf.clear();
+		cvarbuf.push_back("6mTimeBeforeRetrying");
+		saveConfig(cvarbuf);
 		});;
 	cvarManager->registerCvar("6mAutoRetryToggle", "1", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_enabled_autoretry = cw.getBoolValue();
+		cvarbuf.clear();
+		cvarbuf.push_back("6mAutoRetryToggle");
+		saveConfig(cvarbuf);
 		});
 	cvarManager->registerCvar("6mInGame", "0", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		in_game = cw.getBoolValue();
 		});;
 }
 
-//also inits logo
+//inits logo, fonts, helper vars for interface
 void SixMansPlugin::initNotifVars() {
 	logo = std::make_shared<ImageWrapper>(gameWrapper->GetDataFolder() / "sixmanlogo.png", false, true);
 	setRes(xres, yres);
