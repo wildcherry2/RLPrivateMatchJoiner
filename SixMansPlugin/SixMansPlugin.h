@@ -3,10 +3,14 @@
 * TODO:
 * Toasts
 * Persistent toast on action failure
+* Autoretry countdown
 * Enabled works, but need to be able to save/load it
 * Test join once its working, separate option for disabling auto join for create
 * Clean up unnecessary vars/functions/function calls/includes
+* Save exclusive logging to text file instead of printing on console for bug reports
 * Documentation
+* 
+* c++20?
 * 
 * BUGS:
 * Enabling autoretry while 6mans window is up, then disabling the mod via f2 causes crash- should probably grey out options on gotoprivatematch call

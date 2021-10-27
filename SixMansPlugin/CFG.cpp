@@ -3,7 +3,7 @@
 
 void SixMansPlugin::loadConfig(std::vector<std::string> cvars) {
 	/*try {*/
-	for (auto it = cvars.begin(); it != cvars.end(); it++) {
+	[[unlikely]] for (auto it = cvars.begin(); it != cvars.end(); it++) {
 
 		cvarManager->getCvar(*it).setValue(set_file[*it].get<std::string>());
 		LOG("[CFG Manager] Loaded " + *it + " = " + cvarManager->getCvar(*it).getStringValue());
@@ -17,8 +17,9 @@ void SixMansPlugin::loadConfig(std::vector<std::string> cvars) {
 
 void SixMansPlugin::saveConfig( std::vector<std::string> cvars) {
 	try {
-		for (auto it = cvars.begin(); it != cvars.end(); it++) {
+		[[likely]] for (auto it = cvars.begin(); it != cvars.end(); it++) {
 			set_file[*it] = cvarManager->getCvar(*it).getStringValue();
+			LOG("[CFG Manager] Saved " + *it + " = " + cvarManager->getCvar(*it).getStringValue());
 		}
 		os.open(path);
 		os << set_file;

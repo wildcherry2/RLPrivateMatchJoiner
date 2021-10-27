@@ -44,8 +44,8 @@ void SixMansPlugin::gotoPrivateMatch() {
 	cvarManager->log("[GoToPrivateMatch] called.");
 	cvarManager->executeCommand("togglemenu SixMansPluginInterface"); //we dont want it to disappear on failure
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
-		if(!in_game && mw) { 
-			if (event_code == 0) {
+		if(!in_game && mw) [[likely]] { 
+			if (event_code == 0) [[unlikely]] {
 				CustomMatchSettings cm;
 				CustomMatchTeamSettings blue;
 				CustomMatchTeamSettings red;
@@ -61,18 +61,18 @@ void SixMansPlugin::gotoPrivateMatch() {
 				cvarManager->log("[GoToPrivateMatch] Creating with name: " + cm.ServerName + "and pass: " + cm.Password);
 				mw.CreatePrivateMatch(region, cm);
 			}
-			else if (event_code == 1) {
+			else if (event_code == 1) [[likely]] {
 				const std::string thisname = cvarManager->getCvar("6mServerName").getStringValue();
 				const std::string thispass = cvarManager->getCvar("6mServerPass").getStringValue();
 				cvarManager->log("[GoToPrivateMatch] Joining with name: " + thisname + "and pass: " + thispass);
 				//attempting_action = true;
 				mw.JoinPrivateMatch(thisname,thispass);
 			}
-			else cvarManager->log("[GoToPrivateMatch] Invalid event code!");
+			else [[unlikely]] cvarManager->log("[GoToPrivateMatch] Invalid event code!");
 
 			//if (!in_game) cvarManager->executeCommand("togglemenu SixMansPluginInterface");
 		}
-		if (is_enabled_autoretry) {
+		if (is_enabled_autoretry) [[likely]] {
 			LOG("[Autoretry] Beginning autoretry routine...");
 			//attempting_action = false;
 			autoRetry();	
@@ -84,8 +84,8 @@ void SixMansPlugin::autoRetry() {
 	gameWrapper->SetTimeout([this](GameWrapper* gw) {
 		/*if (!in_game && !cvarManager->getCvar("6mEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
 		else { cvarManager->log("[gotoPrivateMatch] Success."); return; }*/
-		if (in_game) { LOG("[Autoretry] In game, unwinding recursion..."); return; }
-		else {LOG("[Autoretry] Not in game, calling again..."), gotoPrivateMatch(); } //CHANGED THIS 10/24 NEEDS BUILDING AND TESTING
+		if (in_game)[[unlikely]] {LOG("[Autoretry] In game, unwinding recursion..."); return;}
+		else [[likely]] {LOG("[Autoretry] Not in game, calling again..."), gotoPrivateMatch();} //CHANGED THIS 10/24 NEEDS BUILDING AND TESTING
 
 		}, cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue());
 }

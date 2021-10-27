@@ -83,6 +83,7 @@ void SixMansPlugin::renderText(std::string text) {
 	ImGui::PopFont();
 }
 
+//gamewrapper timeout for countdown?
 void SixMansPlugin::renderButton(std::string text) {
 	ImGui::PushFont(roboto_bold);
 	ImColor color;
