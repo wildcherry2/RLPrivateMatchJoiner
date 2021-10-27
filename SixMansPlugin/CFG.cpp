@@ -3,7 +3,7 @@
 
 void SixMansPlugin::loadConfig(std::vector<std::string> cvars) {
 	/*try {*/
-	[[unlikely]] for (auto it = cvars.begin(); it != cvars.end(); it++) {
+	for (auto it = cvars.begin(); it != cvars.end(); it++) [[unlikely]] {
 
 		cvarManager->getCvar(*it).setValue(set_file[*it].get<std::string>());
 		LOG("[CFG Manager] Loaded " + *it + " = " + cvarManager->getCvar(*it).getStringValue());
@@ -17,7 +17,7 @@ void SixMansPlugin::loadConfig(std::vector<std::string> cvars) {
 
 void SixMansPlugin::saveConfig( std::vector<std::string> cvars) {
 	try {
-		[[likely]] for (auto it = cvars.begin(); it != cvars.end(); it++) {
+		for (auto it = cvars.begin(); it != cvars.end(); it++) [[likely]] {
 			set_file[*it] = cvarManager->getCvar(*it).getStringValue();
 			LOG("[CFG Manager] Saved " + *it + " = " + cvarManager->getCvar(*it).getStringValue());
 		}
@@ -31,12 +31,12 @@ void SixMansPlugin::saveConfig( std::vector<std::string> cvars) {
 }
 
 void SixMansPlugin::initCFGMan() {
-	if (std::filesystem::exists(path)) {
+	if (std::filesystem::exists(path)) [[likely]] {
 		is.open(path);
 		is >> set_file;
 		is.close();
 	}
-	else LOG("[CFG Manager] json does not exist!");
+	else [[unlikely]] LOG("[CFG Manager] json does not exist!");
 
 	cvarManager->executeCommand("6mLoadCvar \"6mMapNameSelection\"");
 	cvarManager->executeCommand("6mLoadCvar \"6mAutotabInToggle\"");

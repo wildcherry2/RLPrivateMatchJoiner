@@ -2,8 +2,6 @@
 #include "pch.h"
 #include "SixMansPlugin.h"
 
-//https://bakkesmodwiki.github.io/bakkesmod_api/Classes/Wrappers/Modals/ModalWrapper/ for dealing with annoying popup
-
 BAKKESMOD_PLUGIN(SixMansPlugin, "6Mans Plugin", plugin_version, PLUGINTYPE_FREEPLAY)
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
@@ -13,14 +11,8 @@ void SixMansPlugin::onLoad()
 {
 	_globalCvarManager = cvarManager;
 	
-	//occasional crashing after changing shit in settings and reloading the plugin, maybe writeconfig is trying to write unregistered cvars? or loadconfig is loading into unregistered cvars?
 	init();
-	//loadConfig(PERSISTENT_CVARS);
-	//CALLING THIS AGAIN IS PROBABLY CAUSING THE OCCASIONAL CRASH
-	//cvarManager->executeCommand("exec config.cfg"); //maybe make this its own config, if writeconfig {file} is a thing
-
 	startServer();
-	
 }
 
 void SixMansPlugin::onUnload()
@@ -32,10 +24,6 @@ void SixMansPlugin::onUnload()
 	cvarManager->removeNotifier("6mEnableMod");
 	cvarManager->removeNotifier("6mDisableMod");
 	cvarManager->removeCvar("6mModEnabled");
-	//gameWrapper->UnregisterDrawables();
-	//cfg_man->saveConfig(PERSISTENT_CVARS);
-	//cvarManager->executeCommand("writeconfig");
-	//unregisterCvars();
 	LOG("WARNING: If you manually unload the plugin, you'll have to restart the game to load it again.");
 	cvarManager->log("6Mans Plugin unloaded.");
 }
@@ -70,7 +58,6 @@ void SixMansPlugin::gotoPrivateMatch() {
 			}
 			else [[unlikely]] cvarManager->log("[GoToPrivateMatch] Invalid event code!");
 
-			//if (!in_game) cvarManager->executeCommand("togglemenu SixMansPluginInterface");
 		}
 		if (is_enabled_autoretry) [[likely]] {
 			LOG("[Autoretry] Beginning autoretry routine...");
@@ -82,11 +69,8 @@ void SixMansPlugin::gotoPrivateMatch() {
 
 void SixMansPlugin::autoRetry() {
 	gameWrapper->SetTimeout([this](GameWrapper* gw) {
-		/*if (!in_game && !cvarManager->getCvar("6mEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
-		else { cvarManager->log("[gotoPrivateMatch] Success."); return; }*/
 		if (in_game)[[unlikely]] {LOG("[Autoretry] In game, unwinding recursion..."); return;}
-		else [[likely]] {LOG("[Autoretry] Not in game, calling again..."), gotoPrivateMatch();} //CHANGED THIS 10/24 NEEDS BUILDING AND TESTING
-
+		else [[likely]] {LOG("[Autoretry] Not in game, calling again..."), gotoPrivateMatch();}
 		}, cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue());
 }
 

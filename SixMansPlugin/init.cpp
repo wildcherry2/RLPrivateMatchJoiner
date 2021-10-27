@@ -2,7 +2,7 @@
 #include "SixMansPlugin.h"
 
 void SixMansPlugin::init() {
-	if (!mod_switch) {
+	if (!mod_switch) [[unlikely]] {
 		cvarManager->registerNotifier("6mEnableMod", [this](std::vector<std::string> args) {
 			init();
 			cvarManager->executeCommand("6mEnableServer");
@@ -109,21 +109,14 @@ void SixMansPlugin::initUtilityCvars() {
 
 void SixMansPlugin::unregisterCvars() {
 	cvarManager->executeCommand("6mDisableServer");
-	//cvarManager->getCvar("6mEndMonitor").setValue("1");
-	//cvarManager->executeCommand("6mDisableServer");
 	cvarManager->removeCvar("6mEventType");
 	cvarManager->removeCvar("6mServerName");
 	cvarManager->removeCvar("6mServerPass");
 	cvarManager->removeCvar("6mMap");
 	cvarManager->removeCvar("6mRegion");
-	//cvarManager->removeCvar("6mIsQuickMatchWindowEnabled");
 	cvarManager->removeCvar("6mMapNameSelection");
-	//cvarManager->removeCvar("6mGeneratedLink");
-	//cvarManager->removeCvar("6mEndRecursiveJoin");
 	cvarManager->removeCvar("6mAutotabInToggle");
 	cvarManager->removeCvar("6mAutoRetryToggle");
-	//cvarManager->removeCvar("6mEndRecursiveJoin");
-	//cvarManager->removeCvar("6mEndMonitor");
 	cvarManager->removeCvar("6mTimeBeforeRetrying");
 	cvarManager->removeNotifier("6mGetMatchVars");
 	cvarManager->removeNotifier("6mReady");
@@ -131,8 +124,6 @@ void SixMansPlugin::unregisterCvars() {
 	cvarManager->removeNotifier("6mEnableServer");
 	cvarManager->removeNotifier("6mSaveCvar");
 	cvarManager->removeNotifier("6mLoadCvar");
-	//cvarManager->removeNotifier("6mEnableMod");
-	//cvarManager->removeNotifier("6mDisableMod");
 	cvarManager->removeBind("F3"); //need to store what this is set to initially
 	gameWrapper->UnhookEvent("Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete");
 	gameWrapper->UnhookEvent("Function TAGame.GameEvent_Soccar_TA.Destroyed");
@@ -140,8 +131,6 @@ void SixMansPlugin::unregisterCvars() {
 }
 
 void SixMansPlugin::initAutojoinCvars() {
-	/*cvarManager->registerCvar("6mEndRecursiveJoin", "0", "", true, true, 0, true, 1, false);
-	cvarManager->registerCvar("6mEndMonitor", "0", "", true, true, 0, true, 1, false);*/
 	cvarManager->registerCvar("6mTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 30, true, 120, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		time_to_wait = cw.getIntValue();
 		cvarbuf.clear();
