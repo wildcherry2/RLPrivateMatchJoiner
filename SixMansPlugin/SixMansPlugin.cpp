@@ -42,7 +42,7 @@ void SixMansPlugin::onUnload()
 
 void SixMansPlugin::gotoPrivateMatch() {
 	cvarManager->log("[GoToPrivateMatch] called.");
-	cvarManager->executeCommand("togglemenu SixMansPluginInterface"); //we dont want it to disappear on failure
+	//cvarManager->executeCommand("togglemenu SixMansPluginInterface"); //we dont want it to disappear on failure
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
 		if(!in_game && mw) [[likely]] { 
 			if (event_code == 0) [[unlikely]] {
@@ -84,7 +84,7 @@ void SixMansPlugin::autoRetry() {
 	gameWrapper->SetTimeout([this](GameWrapper* gw) {
 		/*if (!in_game && !cvarManager->getCvar("6mEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
 		else { cvarManager->log("[gotoPrivateMatch] Success."); return; }*/
-		if (in_game)[[unlikely]] {LOG("[Autoretry] In game, unwinding recursion..."); return;}
+		if (in_game || can_manually_back_out)[[unlikely]] {LOG("[Autoretry] In game or player backed out, unwinding recursion..."); return;} //need to reset these vars after
 		else [[likely]] {LOG("[Autoretry] Not in game, calling again..."), gotoPrivateMatch();} //CHANGED THIS 10/24 NEEDS BUILDING AND TESTING
 
 		}, cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue());
@@ -105,29 +105,6 @@ Region SixMansPlugin::getRegion(int region) {
 		default: return Region::USE;
 	}
 }
-
-//void SixMansPlugin::monitorOnlineState() {
-//	monitor = std::thread([this]() {
-//		while (!cvarManager->getCvar("6mEndMonitor").getBoolValue()) {
-//			if (!gameWrapper->IsInOnlineGame()) {
-//				cvarManager->log("[Monitor] not in online game...");
-//				in_game = false;
-//			}
-//			else {
-//				cvarManager->log("[Monitor] detected online game!");
-//				cvarManager->log("[Monitor] terminating monitor...");
-//				//cvarManager->getCvar("6mEndMonitor").setValue("0");
-//				in_game = true;
-//				return;
-//			}
-//			std::this_thread::sleep_for(std::chrono::seconds(2));
-//		}
-//		cvarManager->getCvar("6mEndMonitor").setValue("0");
-//		cvarManager->log("[Monitor] terminating monitor...");
-//		return;
-//		});
-//	monitor.detach();
-//}
 
 //// Function TAGame.GFxData_PrivateMatch_TA.StartSearch
 //struct UGFxData_PrivateMatch_TA_StartSearch_Params
@@ -220,6 +197,8 @@ Region SixMansPlugin::getRegion(int region) {
 
 //called once game is joined after creation
 //"Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete"; //gets called on black screen as well, call isinonline game after to confirm
+// "Function ProjectX.OnlineGameJoinGame_X.EventJoinGameComplete";
+// "Function TAGame.GFxData_SeasonReward_TA.HandleRewardUpdateOnGameJoin";
 // 
 // called on leave match
 //"Function TAGame.GameEvent_Soccar_TA.Destroyed"

@@ -157,6 +157,12 @@ void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mInGame", "0", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		in_game = cw.getBoolValue();
 		});;
+	cvarManager->registerCvar("6mCanBackOut", "0", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+		can_manually_back_out = cw.getBoolValue();
+		});
+	/*cvarManager->registerNotifier("6mCancel", [this](std::vector<std::string> args) {
+		is_enabled_autoretry = false;
+		}, "", PERMISSION_ALL);*/
 }
 
 //inits logo, fonts, helper vars for interface
@@ -196,8 +202,10 @@ void SixMansPlugin::setRes(size_t& x, size_t& y) {
 }
 
 void SixMansPlugin::initHooks() {
-	gameWrapper->HookEventPost("Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete", [this](std::string eventName) {
+	gameWrapper->HookEventPost("Function ProjectX.OnlineGameJoinGame_X.EventJoinGameComplete", [this](std::string eventName) { //still gets called on black screen
 		cvarManager->getCvar("6mInGame").setValue("1");
+		cvarManager->getCvar("6mCanBackOut").setValue("1");
+		cvarManager->executeCommand("closemenu SixMansPluginInterface");
 		});
 	gameWrapper->HookEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed", [this](std::string eventName) {
 		cvarManager->getCvar("6mInGame").setValue("0");

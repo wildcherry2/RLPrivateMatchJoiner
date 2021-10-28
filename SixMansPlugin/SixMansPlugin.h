@@ -64,6 +64,7 @@ public:
 	//bool mon_running = true;
 	size_t time_to_wait = 45;
 	bool is_enabled_autoretry = true;
+	bool can_manually_back_out = false;
 	//void monitorOnlineState();
 	void autoRetry();
 
