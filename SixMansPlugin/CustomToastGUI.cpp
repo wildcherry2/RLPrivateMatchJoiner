@@ -152,5 +152,6 @@ void SixMansPlugin::OnOpen()
 // Called when window is closed
 void SixMansPlugin::OnClose()
 {
+	//add reset everything, close button
 	isWindowOpen_ = false;
 }
