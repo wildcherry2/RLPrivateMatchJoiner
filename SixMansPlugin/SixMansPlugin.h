@@ -8,7 +8,6 @@
 * Test join once its working, separate option for disabling auto join for create
 * Clean up unnecessary vars/functions/function calls/includes
 * Save exclusive logging to text file instead of printing on console for bug reports
-* cvar macros to minimize getcvar calls, especially in the main gui
 * Documentation
 * 
 * c++20?
@@ -59,10 +58,13 @@ public:
 	void gotoPrivateMatch();
 	Region getRegion(int region);
 
-	//autoretry
+	//autojoin
+	//std::thread monitor; //use function hooks instead of thread, works for now though
 	bool in_game = false;
+	//bool mon_running = true;
 	size_t time_to_wait = 45;
 	bool is_enabled_autoretry = true;
+	//void monitorOnlineState();
 	void autoRetry();
 
 	//init
@@ -79,6 +81,7 @@ public:
 	//custom cfg
 	void initCFGMan();
 	void loadConfig(const std::vector<std::string> cvars);
+	//void loadConfig(std::string cvars);
 	void saveConfig(const std::vector<std::string> cvars);
 	std::vector<std::string> cvarbuf;
 	nlohmann::json set_file;
@@ -99,6 +102,7 @@ public:
 	bool is_autotab_enabled = true;
 	char name_field_storage[100] = "";
 	char pass_field_storage[100] = "";
+	std::string link = ""; //probably not needed
 
 	//server
 	void startServer();
@@ -121,7 +125,6 @@ public:
 	std::string menuTitle_ = "sixmansplugininterface";
 	size_t xres;
 	size_t yres;
-	int flags = ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoResize + ImGuiWindowFlags_NoScrollbar + ImGuiWindowFlags_NoTitleBar;
 	float res_ratio_x = 1550 / 1920.0; //multiply these by res to get scaled toast
 	float res_ratio_y = 20 / 1080.0;
 	float res_ratio_w = 350 / 1920.0;
@@ -131,7 +134,6 @@ public:
 	ImFont* roboto_reg;
 	ImFont* roboto_black;
 	ImFont* roboto_bold;
-	ImVec2 logo_rect = ImVec2{ (80.0f / 1920.0f) * xres, (80.0f / 1920.0f) * xres };
 	void setRes(size_t& x, size_t& y);
 	void initNotifVars();
 	void renderBlankNotif();

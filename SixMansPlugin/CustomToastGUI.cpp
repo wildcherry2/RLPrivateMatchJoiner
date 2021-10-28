@@ -6,6 +6,7 @@
 void SixMansPlugin::Render()
 {
 	if (!notif_enabled) return;
+	int flags = ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoResize + ImGuiWindowFlags_NoScrollbar + ImGuiWindowFlags_NoTitleBar;
 	if (!ImGui::Begin(menuTitle_.c_str(), &isWindowOpen_, flags))
 	{
 		// Early out if the window is collapsed, as an optimization.
@@ -55,7 +56,7 @@ void SixMansPlugin::renderActionNotif() {
 
 void SixMansPlugin::renderBlankNotif() {
 	ImGui::SetWindowPos(ImVec2{ action_notif_x, action_notif_y }); //all notifs have the same origin, generify
-	ImGui::SetWindowSize(ImVec2{ action_notif_width, 0 }); //setting height to 0 lets it autoresize
+	ImGui::SetWindowSize(ImVec2{ action_notif_width,/* action_notif_height*/0 }); //setting height to 0 lets it autoresize
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.WindowRounding = 12.0f;
 	style.WindowBorderSize = 0.0f;
@@ -63,6 +64,7 @@ void SixMansPlugin::renderBlankNotif() {
 
 void SixMansPlugin::renderLogo() {
 	if (auto logoTex = logo->GetImGuiTex()) {
+		auto logo_rect = ImVec2{ (80.0f / 1920.0f) * xres, (80.0f / 1920.0f) * xres };
 		ImGui::Image(logoTex, { logo_rect.x,logo_rect.y });
 	}
 }
