@@ -106,6 +106,15 @@ Region SixMansPlugin::getRegion(int region) {
 	}
 }
 
+//called once game is joined after creation
+//"Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete"; //gets called on black screen/join failure as well, call isinonline game after to confirm
+// "Function ProjectX.OnlineGameJoinGame_X.EventJoinGameComplete"; //doesnt get called on join failure, but gets called on black screen
+// "Function TAGame.GFxData_SeasonReward_TA.HandleRewardUpdateOnGameJoin";
+// 
+// called on leave match
+//"Function TAGame.GameEvent_Soccar_TA.Destroyed"
+//"Function TAGame.GameEvent_Soccar_TA.CommitPlayerMatchData";
+
 //// Function TAGame.GFxData_PrivateMatch_TA.StartSearch
 //struct UGFxData_PrivateMatch_TA_StartSearch_Params
 //{
@@ -195,11 +204,3 @@ Region SixMansPlugin::getRegion(int region) {
 //{
 //};
 
-//called once game is joined after creation
-//"Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete"; //gets called on black screen as well, call isinonline game after to confirm
-// "Function ProjectX.OnlineGameJoinGame_X.EventJoinGameComplete";
-// "Function TAGame.GFxData_SeasonReward_TA.HandleRewardUpdateOnGameJoin";
-// 
-// called on leave match
-//"Function TAGame.GameEvent_Soccar_TA.Destroyed"
-//"Function TAGame.GameEvent_Soccar_TA.CommitPlayerMatchData";

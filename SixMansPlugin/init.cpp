@@ -105,6 +105,10 @@ void SixMansPlugin::initUtilityCvars() {
 		args.erase(args.begin());
 		loadConfig(args);
 		}, "", PERMISSION_ALL);
+	cvarManager->registerNotifier("test", [this](std::vector<std::string> args) {
+		cvarManager->getCvar("6mServerName").setValue("adsfasdf2");
+		cvarManager->getCvar("6mServerPass").setValue("adsfasdf2");
+		}, "", PERMISSION_ALL);
 }
 
 void SixMansPlugin::unregisterCvars() {
