@@ -14,7 +14,9 @@ void SixMansPlugin::RenderSettings() {
 	renderModEnabledCheckbox();
 	renderMapCombobox("Default Map");
 	renderAutotabEnabled();
+	renderAutojoinEnabled();
 	renderAutoretryEnabled();
+	renderTimeRetry();
 }
 
 void SixMansPlugin::renderModEnabledCheckbox() { 
@@ -23,6 +25,8 @@ void SixMansPlugin::renderModEnabledCheckbox() {
 	bool enabled = cv.getBoolValue();
 
 	if (ImGui::Checkbox("Enabled", &enabled)) cv.setValue(enabled);
+
+
 
 	ImGui::SameLine();
 	ImGui::TextDisabled("(?)");
@@ -52,6 +56,25 @@ void SixMansPlugin::renderAutotabEnabled() {
 		ImGui::EndTooltip();
 	}
 }
+
+void SixMansPlugin::renderAutojoinEnabled() {
+	CVarWrapper cv = cvarManager->getCvar("6mAutojoinToggle");
+	if (!cv) return;
+	bool enabled = cv.getBoolValue();
+
+	if (ImGui::Checkbox("Autojoin", &enabled)) cv.setValue(enabled);
+	ImGui::SameLine();
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted("Enable or disable automatically joining once match info is loaded");
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
+}
+
 void SixMansPlugin::renderAutoretryEnabled() { 
 	CVarWrapper cv = cvarManager->getCvar("6mAutoRetryToggle");
 	if (!cv) return;
@@ -72,7 +95,7 @@ void SixMansPlugin::renderAutoretryEnabled() {
 		ImGui::EndTooltip();
 	}
 
-	if (enabled) renderTimeRetry();
+	//if (enabled) renderTimeRetry();
 }
 void SixMansPlugin::renderTimeRetry() {
 	CVarWrapper cv = cvarManager->getCvar("6mTimeBeforeRetrying");

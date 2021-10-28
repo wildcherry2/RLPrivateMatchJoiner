@@ -14,9 +14,11 @@ void SixMansPlugin::onLoad()
 	_globalCvarManager = cvarManager;
 	
 	//occasional crashing after changing shit in settings and reloading the plugin, maybe writeconfig is trying to write unregistered cvars? or loadconfig is loading into unregistered cvars?
-	initCvars();
-	cvarManager->executeCommand("exec config.cfg"); //maybe make this its own config, if writeconfig {file} is a thing
-	gameWrapper->LoadToastTexture("sixmanlogo", gameWrapper->GetDataFolder() / "sixmanlogo.png");
+	init();
+	//loadConfig(PERSISTENT_CVARS);
+	//CALLING THIS AGAIN IS PROBABLY CAUSING THE OCCASIONAL CRASH
+	//cvarManager->executeCommand("exec config.cfg"); //maybe make this its own config, if writeconfig {file} is a thing
+
 	startServer();
 	
 }
@@ -24,17 +26,27 @@ void SixMansPlugin::onLoad()
 void SixMansPlugin::onUnload()
 {
 	cvarManager->executeCommand("6mDisableServer");
-	cvarManager->getCvar("6mEndMonitor").setValue("1");
-	cvarManager->executeCommand("writeconfig");
+	//cvarManager->getCvar("6mEndMonitor").setValue("1");
+	LOG("Saving config...");
+	saveConfig(PERSISTENT_CVARS);
+	cvarManager->removeNotifier("6mEnableMod");
+	cvarManager->removeNotifier("6mDisableMod");
+	cvarManager->removeCvar("6mModEnabled");
+	//gameWrapper->UnregisterDrawables();
+	//cfg_man->saveConfig(PERSISTENT_CVARS);
+	//cvarManager->executeCommand("writeconfig");
 	//unregisterCvars();
+	LOG("WARNING: If you manually unload the plugin, you'll have to restart the game to load it again.");
 	cvarManager->log("6Mans Plugin unloaded.");
 }
 
 void SixMansPlugin::gotoPrivateMatch() {
-	cvarManager->log("[gotoPrivateMatch] called.");
+	cvarManager->log("[GoToPrivateMatch] called.");
+	gpm_called = true;
+	//cvarManager->executeCommand("togglemenu SixMansPluginInterface"); //we dont want it to disappear on failure
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
-		if(!in_game && mw) { 
-			if (event_code == 0) {
+		if(!in_game && mw) [[likely]] { 
+			if (event_code == 0) [[unlikely]] {
 				CustomMatchSettings cm;
 				CustomMatchTeamSettings blue;
 				CustomMatchTeamSettings red;
@@ -47,24 +59,36 @@ void SixMansPlugin::gotoPrivateMatch() {
 				cm.OrangeTeamSettings = red;
 				cm.bClubServer = false;
 
-				cvarManager->log("[gotoPrivateMatch] Creating with name: " + cm.ServerName + "and pass: " + cm.Password);
+				cvarManager->log("[GoToPrivateMatch] Creating with name: " + cm.ServerName + "and pass: " + cm.Password);
 				mw.CreatePrivateMatch(region, cm);
 			}
-			else if (event_code == 1) {
-				cvarManager->log("[gotoPrivateMatch] Joining with name: " + name + "and pass: " + pass);
-				mw.JoinPrivateMatch(cvarManager->getCvar("6mServerName").getStringValue(), cvarManager->getCvar("6mServerPass").getStringValue());
+			else if (event_code == 1) [[likely]] {
+				const std::string thisname = cvarManager->getCvar("6mServerName").getStringValue();
+				const std::string thispass = cvarManager->getCvar("6mServerPass").getStringValue();
+				cvarManager->log("[GoToPrivateMatch] Joining with name: " + thisname + "and pass: " + thispass);
+				//attempting_action = true;
+				mw.JoinPrivateMatch(thisname,thispass);
 			}
-			else cvarManager->log("[gotoPrivateMatch] Invalid event code!");		
-		}
-		if (is_enabled_autoretry) {
-			gameWrapper->SetTimeout([this](GameWrapper* gw) {
-				if (!in_game && !cvarManager->getCvar("6mEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
-				else { cvarManager->log("[gotoPrivateMatch] Success."); return; }
+			else [[unlikely]] cvarManager->log("[GoToPrivateMatch] Invalid event code!");
 
-				}, cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue());
-				
+			//if (!in_game) cvarManager->executeCommand("togglemenu SixMansPluginInterface");
+		}
+		if (is_enabled_autoretry) [[likely]] {
+			LOG("[Autoretry] Beginning autoretry routine...");
+			//attempting_action = false;
+			autoRetry();	
 		}
 
+}
+
+void SixMansPlugin::autoRetry() {
+	gameWrapper->SetTimeout([this](GameWrapper* gw) {
+		/*if (!in_game && !cvarManager->getCvar("6mEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
+		else { cvarManager->log("[gotoPrivateMatch] Success."); return; }*/
+		if (in_game || can_manually_back_out)[[unlikely]] {LOG("[Autoretry] In game or player backed out, unwinding recursion..."); return;} //need to reset these vars after
+		else [[likely]] {LOG("[Autoretry] Not in game, calling again..."), gotoPrivateMatch();} //CHANGED THIS 10/24 NEEDS BUILDING AND TESTING
+
+		}, cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue());
 }
 
 Region SixMansPlugin::getRegion(int region) {
@@ -83,28 +107,31 @@ Region SixMansPlugin::getRegion(int region) {
 	}
 }
 
-void SixMansPlugin::monitorOnlineState() {
-	monitor = std::thread([this]() {
-		while (!cvarManager->getCvar("6mEndMonitor").getBoolValue()) {
-			if (!gameWrapper->IsInOnlineGame()) {
-				cvarManager->log("[Monitor] not in online game...");
-				in_game = false;
-			}
-			else {
-				cvarManager->log("[Monitor] detected online game!");
-				cvarManager->log("[Monitor] terminating monitor...");
-				//cvarManager->getCvar("6mEndMonitor").setValue("0");
-				in_game = true;
-				return;
-			}
-			std::this_thread::sleep_for(std::chrono::seconds(2));
-		}
-		cvarManager->getCvar("6mEndMonitor").setValue("0");
-		cvarManager->log("[Monitor] terminating monitor...");
-		return;
-		});
-	monitor.detach();
-}
+//called once game is joined after creation
+//"Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete"; //gets called on black screen/join failure as well, call isinonline game after to confirm
+// "Function ProjectX.OnlineGameJoinGame_X.EventJoinGameComplete"; //doesnt get called on join failure, but gets called on black screen
+// "Function TAGame.GFxData_SeasonReward_TA.HandleRewardUpdateOnGameJoin";
+// 
+// called on leave match
+//"Function TAGame.GameEvent_Soccar_TA.Destroyed"
+//"Function TAGame.GameEvent_Soccar_TA.CommitPlayerMatchData";
+//
+//called after error modal closed
+//Function TAGame.LocalPlayer_TA.CheckForRankedReconnect
+//- Function TAGame.RankedReconnectSave_TA.RankedReconnectAvailable
+//- Function TAGame.RankedReconnectSave_TA.RankedReconnectAvailable
+//
+//called on black screen
+//Function ProjectX.OnlineGamePrivateMatch_X.OnPrivateMatchError
+//-Function ProjectX.OnlineGameMatchmakingBase_X.EventFindGameError
+//- Function TAGame.GFxData_OnlineMatchStatus_TA.SetError
+//--Function TAGame.GFxData_OnlineMatchStatus_TA.OnSearchError
+//Function TAGame.GFxData_ConnectionStats_TA.HandleGRISpawned
+//Function ProjectX.GameInfo_X.DisconnectExistingPlayer
+//Function TAGame.GFxData_ConnectionStats_TA.HandleControllerReceived
+//Function TAGame.GFxShell_TA.ShowErrorMessage
+//
+
 
 //// Function TAGame.GFxData_PrivateMatch_TA.StartSearch
 //struct UGFxData_PrivateMatch_TA_StartSearch_Params
@@ -194,3 +221,4 @@ void SixMansPlugin::monitorOnlineState() {
 //struct UGFxData_PrivateMatch_TA_OnShellSet_Params
 //{
 //};
+

@@ -1,0 +1,1 @@
+Get-Content (-join($env:APPDATA, "\bakkesmod\bakkesmod\bakkesmod.log")) -wait -tail 1 | select-string -pattern "SixMansPlugin"
