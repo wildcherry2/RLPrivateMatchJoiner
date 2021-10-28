@@ -74,7 +74,12 @@ void SixMansPlugin::initGuiCvars() {
 		cvarbuf.push_back("6mAutotabInToggle");
 		saveConfig(cvarbuf);
 		});;
-	
+	cvarManager->registerCvar("6mAutojoinToggle", "1", "Toggles autojoin once match info is loaded", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+		is_autojoin_enabled = cw.getBoolValue();
+		cvarbuf.clear();
+		cvarbuf.push_back("6mAutojoinToggle");
+		saveConfig(cvarbuf);
+		});;
 }
 
 void SixMansPlugin::initServerCvars() {
@@ -164,6 +169,8 @@ void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mCanBackOut", "0", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		can_manually_back_out = cw.getBoolValue();
 		});
+	
+
 	/*cvarManager->registerNotifier("6mCancel", [this](std::vector<std::string> args) {
 		is_enabled_autoretry = false;
 		}, "", PERMISSION_ALL);*/

@@ -43,4 +43,5 @@ void SixMansPlugin::initCFGMan() {
 	//cvarManager->executeCommand("6mLoadCvar \"6mModEnabled\"");
 	cvarManager->executeCommand("6mLoadCvar \"6mTimeBeforeRetrying\"");
 	cvarManager->executeCommand("6mLoadCvar \"6mAutoRetryToggle\"");
+	cvarManager->executeCommand("6mLoadCvar \"6mAutojoinToggle\"");
 }

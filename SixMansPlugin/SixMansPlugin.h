@@ -2,9 +2,7 @@
 /*
 * TODO:
 * Toasts
-* Persistent toast on action failure
 * Autoretry countdown
-* Need a toggle for autojoin in gui
 * Enabled works, but need to be able to save/load it
 * Test join once its working, separate option for disabling auto join for create
 * Clean up unnecessary vars/functions/function calls/includes
@@ -100,8 +98,10 @@ public:
 	void renderMapCombobox(std::string name);
 	void renderAutoretryEnabled();
 	void renderTimeRetry();
+	void renderAutojoinEnabled();
 	bool is_enabled = true; //for overall mod
 	bool is_autotab_enabled = true;
+	bool is_autojoin_enabled = true;
 	char name_field_storage[100] = "";
 	char pass_field_storage[100] = "";
 	std::string link = ""; //probably not needed
