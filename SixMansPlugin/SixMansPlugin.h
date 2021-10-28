@@ -4,6 +4,7 @@
 * Toasts
 * Persistent toast on action failure
 * Autoretry countdown
+* Need a toggle for autojoin in gui
 * Enabled works, but need to be able to save/load it
 * Test join once its working, separate option for disabling auto join for create
 * Clean up unnecessary vars/functions/function calls/includes

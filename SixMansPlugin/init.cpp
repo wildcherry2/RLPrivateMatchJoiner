@@ -202,7 +202,7 @@ void SixMansPlugin::setRes(size_t& x, size_t& y) {
 }
 
 void SixMansPlugin::initHooks() {
-	gameWrapper->HookEventPost("Function ProjectX.OnlineGameJoinGame_X.EventJoinGameComplete", [this](std::string eventName) { //still gets called on black screen
+	gameWrapper->HookEventPost("Function ProjectX.OnlineGameJoinGame_X.EventJoinGameComplete", [this](std::string eventName) { //still gets called on black screen, try rewards function
 		cvarManager->getCvar("6mInGame").setValue("1");
 		cvarManager->getCvar("6mCanBackOut").setValue("1");
 		cvarManager->executeCommand("closemenu SixMansPluginInterface");
