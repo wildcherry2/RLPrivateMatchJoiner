@@ -57,6 +57,7 @@ public:
 	virtual void onUnload();
 	void gotoPrivateMatch();
 	Region getRegion(int region);
+	bool gpm_called = false;
 
 	//autojoin
 	//std::thread monitor; //use function hooks instead of thread, works for now though

@@ -169,7 +169,9 @@ void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mCanBackOut", "0", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		can_manually_back_out = cw.getBoolValue();
 		});
-	
+	cvarManager->registerCvar("6mgpmCalled", "0", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+		gpm_called = cw.getBoolValue();
+		});
 
 	/*cvarManager->registerNotifier("6mCancel", [this](std::vector<std::string> args) {
 		is_enabled_autoretry = false;
@@ -220,5 +222,10 @@ void SixMansPlugin::initHooks() {
 		});
 	gameWrapper->HookEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed", [this](std::string eventName) {
 		cvarManager->getCvar("6mInGame").setValue("0");
+		});
+
+	//on black screen
+	gameWrapper->HookEventPost("Function TAGame.GFxShell_TA.ShowErrorMessage", [this](std::string eventName) {
+		if(cvarManager->getCvar("6mgpmCalled").getBoolValue()) cvarManager->executeCommand("openmenu SixMansPluginInterface");
 		});
 }

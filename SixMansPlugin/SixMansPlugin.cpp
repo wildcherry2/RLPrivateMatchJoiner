@@ -42,6 +42,7 @@ void SixMansPlugin::onUnload()
 
 void SixMansPlugin::gotoPrivateMatch() {
 	cvarManager->log("[GoToPrivateMatch] called.");
+	gpm_called = true;
 	//cvarManager->executeCommand("togglemenu SixMansPluginInterface"); //we dont want it to disappear on failure
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
 		if(!in_game && mw) [[likely]] { 
@@ -114,6 +115,23 @@ Region SixMansPlugin::getRegion(int region) {
 // called on leave match
 //"Function TAGame.GameEvent_Soccar_TA.Destroyed"
 //"Function TAGame.GameEvent_Soccar_TA.CommitPlayerMatchData";
+//
+//called after error modal closed
+//Function TAGame.LocalPlayer_TA.CheckForRankedReconnect
+//- Function TAGame.RankedReconnectSave_TA.RankedReconnectAvailable
+//- Function TAGame.RankedReconnectSave_TA.RankedReconnectAvailable
+//
+//called on black screen
+//Function ProjectX.OnlineGamePrivateMatch_X.OnPrivateMatchError
+//-Function ProjectX.OnlineGameMatchmakingBase_X.EventFindGameError
+//- Function TAGame.GFxData_OnlineMatchStatus_TA.SetError
+//--Function TAGame.GFxData_OnlineMatchStatus_TA.OnSearchError
+//Function TAGame.GFxData_ConnectionStats_TA.HandleGRISpawned
+//Function ProjectX.GameInfo_X.DisconnectExistingPlayer
+//Function TAGame.GFxData_ConnectionStats_TA.HandleControllerReceived
+//Function TAGame.GFxShell_TA.ShowErrorMessage
+//
+
 
 //// Function TAGame.GFxData_PrivateMatch_TA.StartSearch
 //struct UGFxData_PrivateMatch_TA_StartSearch_Params
