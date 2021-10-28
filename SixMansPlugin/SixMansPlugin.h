@@ -5,6 +5,7 @@
 * Autoretry countdown
 * Enabled works, but need to be able to save/load it
 * Test join once its working, separate option for disabling auto join for create
+* Make sure it can recover after joining/creating (seems to work now w/o autoretry enabled)
 * Clean up unnecessary vars/functions/function calls/includes
 * Save exclusive logging to text file instead of printing on console for bug reports
 * Documentation
