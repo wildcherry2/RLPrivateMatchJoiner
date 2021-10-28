@@ -4,8 +4,9 @@
 * Toasts
 * Autoretry countdown
 * Enabled works, but need to be able to save/load it
-* Test join once its working, separate option for disabling auto join for create
+* Test join once its working, separate option for disabling auto join for create,grey out things right
 * Make sure it can recover after joining/creating (seems to work now w/o autoretry enabled)
+* Ensure server starts (sometimes doesn't on launch, needs redundancy)
 * Clean up unnecessary vars/functions/function calls/includes
 * Save exclusive logging to text file instead of printing on console for bug reports
 * Documentation
@@ -126,9 +127,11 @@ public:
 	bool isMinimized_ = false;
 	bool doAction = false;
 	bool notif_enabled = true;
+	bool countdown = false;
 	std::string menuTitle_ = "sixmansplugininterface";
 	size_t xres;
 	size_t yres;
+	size_t countdown_start = time_to_wait;
 	float res_ratio_x = 1550 / 1920.0; //multiply these by res to get scaled toast
 	float res_ratio_y = 20 / 1080.0;
 	float res_ratio_w = 350 / 1920.0;
@@ -146,6 +149,7 @@ public:
 	void renderText(std::string text);
 	void renderButton(std::string text);
 	void renderNote(std::string text);
+	void renderCountdown();
 	void renderActionNotif();
 	//void renderStatusNotif(size_t type, size_t code); //type = in progress notif (0 = joining...,1=creating...,2=retrying in x secs...)| error notif (3), code = array of errors index
 	virtual void Render() override;
@@ -157,7 +161,7 @@ public:
 	virtual void OnClose() override;
 
 	//interface countdown
-	void countdown(size_t seconds_top);
+	//void countdown(size_t seconds_top);
 	//size_t time_left();
 	std::chrono::time_point<std::chrono::system_clock> start_time;
 	bool cd_started = false;

@@ -102,6 +102,7 @@ void SixMansPlugin::initUtilityCvars() {
 		}, "", PERMISSION_ALL);
 	
 	cvarManager->setBind("F3", "togglemenu SixMansPluginInterface");
+	cvarManager->setBind("F5", "6mCount 1");
 	cvarManager->registerNotifier("6mSaveCvar", [this](std::vector<std::string> args) {
 		args.erase(args.begin()); //dont care about the notifier name
 		saveConfig(args);
@@ -143,6 +144,7 @@ void SixMansPlugin::unregisterCvars() {
 	//cvarManager->removeNotifier("6mEnableMod");
 	//cvarManager->removeNotifier("6mDisableMod");
 	cvarManager->removeBind("F3"); //need to store what this is set to initially
+	cvarManager->removeBind("F5");
 	gameWrapper->UnhookEvent("Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete");
 	gameWrapper->UnhookEvent("Function TAGame.GameEvent_Soccar_TA.Destroyed");
 	cvarManager->log("cvars unregistered,mod disabled!");
@@ -172,7 +174,9 @@ void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mgpmCalled", "0", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		gpm_called = cw.getBoolValue();
 		});
-
+	cvarManager->registerCvar("6mCount", "0", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+		countdown = cw.getBoolValue();
+		});
 	/*cvarManager->registerNotifier("6mCancel", [this](std::vector<std::string> args) {
 		is_enabled_autoretry = false;
 		}, "", PERMISSION_ALL);*/
@@ -224,8 +228,16 @@ void SixMansPlugin::initHooks() {
 		cvarManager->getCvar("6mInGame").setValue("0");
 		});
 
-	//on black screen
+	//on black screen/cancel, doesnt apply to join failures, TEST TO MAKE SURE THIS IS CALLED AFTER FIRST HOOK SO THE MENU OPENS
 	gameWrapper->HookEventPost("Function TAGame.GFxShell_TA.ShowErrorMessage", [this](std::string eventName) {
+		LOG("Error modal!");
+		
 		if(cvarManager->getCvar("6mgpmCalled").getBoolValue()) cvarManager->executeCommand("openmenu SixMansPluginInterface");
+		});
+
+	//called on join failure
+	gameWrapper->HookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError", [this](std::string eventName) {
+		LOG("Join failure!");
+		cvarManager->getCvar("6mCount").setValue("1"); cvarManager->executeCommand("openmenu SixMansPluginInterface");
 		});
 }

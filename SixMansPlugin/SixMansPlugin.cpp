@@ -107,6 +107,8 @@ Region SixMansPlugin::getRegion(int region) {
 	}
 }
 
+//FIND FUNCTION FOR JOIN FAIL ERROR MODAL/INDICATOR, USEFUL FOR COUNTDOWN START
+// 
 //called once game is joined after creation
 //"Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete"; //gets called on black screen/join failure as well, call isinonline game after to confirm
 // "Function ProjectX.OnlineGameJoinGame_X.EventJoinGameComplete"; //doesnt get called on join failure, but gets called on black screen
@@ -116,7 +118,7 @@ Region SixMansPlugin::getRegion(int region) {
 //"Function TAGame.GameEvent_Soccar_TA.Destroyed"
 //"Function TAGame.GameEvent_Soccar_TA.CommitPlayerMatchData";
 //
-//called after error modal closed
+//called after error modal closed [create fail modal]
 //Function TAGame.LocalPlayer_TA.CheckForRankedReconnect
 //- Function TAGame.RankedReconnectSave_TA.RankedReconnectAvailable
 //- Function TAGame.RankedReconnectSave_TA.RankedReconnectAvailable
@@ -131,94 +133,10 @@ Region SixMansPlugin::getRegion(int region) {
 //Function TAGame.GFxData_ConnectionStats_TA.HandleControllerReceived
 //Function TAGame.GFxShell_TA.ShowErrorMessage
 //
-
-
-//// Function TAGame.GFxData_PrivateMatch_TA.StartSearch
-//struct UGFxData_PrivateMatch_TA_StartSearch_Params
-//{
-//};
+// called on join error
+// Function ProjectX.FindServerTask_X.HandleJoinMatchError
+//-Function Core.AsyncTask.SetError
+//Function ProjectX.OnlineGameServerBrowser_X.OnSearchError
+//- Function ProjectX.OnlineGameServerBrowser_X.EventSearchError
+//- Function TAGame.GFxData_ServerBrowser_TA.HandleSearchError
 //
-//// Function TAGame.GFxData_PrivateMatch_TA.StartClubSearch
-//struct UGFxData_PrivateMatch_TA_StartClubSearch_Params
-//{
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.CreateRandom16CharGuidString
-//struct UGFxData_PrivateMatch_TA_CreateRandom16CharGuidString_Params
-//{
-//	struct FString                                     ReturnValue;                                               // (Parm, OutParm, ReturnParm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.CancelSearch
-//struct UGFxData_PrivateMatch_TA_CancelSearch_Params
-//{
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.SetRegionSelection
-//struct UGFxData_PrivateMatch_TA_SetRegionSelection_Params
-//{
-//	int                                                Row;                                                       // (Parm)
-//	bool                                               bSelected;                                                 // (Parm)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.GetPreferredRegion
-//struct UGFxData_PrivateMatch_TA_GetPreferredRegion_Params
-//{
-//	struct FString                                     ReturnValue;                                               // (Parm, OutParm, ReturnParm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.HandleRegionsSynced
-//struct UGFxData_PrivateMatch_TA_HandleRegionsSynced_Params
-//{
-//	class UGFxData_Regions_TA* RegionsData;                                               // (Parm)
-//	TArray<struct FString>                             ArrayInitializer_A6D087254D424B72E4032488012D54CC;         // (Const, OutParm, NeedCtorLink)
-//	struct FGFxRegion                                  StructInitializer_F07394B84F162393EA2E36B1237F899D;        // (Const, OutParm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.SetPublic
-//struct UGFxData_PrivateMatch_TA_SetPublic_Params
-//{
-//	bool                                               bValue;                                                    // (Parm)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.SetPassword
-//struct UGFxData_PrivateMatch_TA_SetPassword_Params
-//{
-//	struct FString                                     InPassword;                                                // (Parm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.SetServerName
-//struct UGFxData_PrivateMatch_TA_SetServerName_Params
-//{
-//	struct FString                                     InServerName;                                              // (Parm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.SetSelectedMaxPlayerCount
-//struct UGFxData_PrivateMatch_TA_SetSelectedMaxPlayerCount_Params
-//{
-//	int                                                MaxPlayerCount;                                            // (Parm)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.GetCustomMatchRegion
-//struct UGFxData_PrivateMatch_TA_GetCustomMatchRegion_Params
-//{
-//	struct FString                                     ReturnValue;                                               // (Parm, OutParm, ReturnParm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.SetCustomMatchSettings
-//struct UGFxData_PrivateMatch_TA_SetCustomMatchSettings_Params
-//{
-//	struct U_Types_X_FCustomMatchSettings              InSettings;                                                // (Const, Parm, OutParm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.GetCustomMatchSettings
-//struct UGFxData_PrivateMatch_TA_GetCustomMatchSettings_Params
-//{
-//	struct U_Types_X_FCustomMatchSettings              ReturnValue;                                               // (Parm, OutParm, ReturnParm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.OnShellSet
-//struct UGFxData_PrivateMatch_TA_OnShellSet_Params
-//{
-//};
-

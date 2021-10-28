@@ -13,8 +13,10 @@ void SixMansPlugin::Render()
 		ImGui::End();
 		return;
 	}
-
-	renderActionNotif();
+	if (!countdown)
+		renderActionNotif();
+	else
+		renderCountdown();
 
 	ImGui::End();
 
@@ -22,6 +24,24 @@ void SixMansPlugin::Render()
 	{
 		gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("togglemenu " + GetMenuName()); });
 	}
+}
+
+void SixMansPlugin::renderCountdown() {
+	renderBlankNotif();
+	renderLogo();
+
+	ImGui::SameLine();
+	renderHeader("Looks like you\ncouldn't join...");
+	ImGui::Dummy(ImVec2(3.0f, 3.0f));
+	renderText("Autoretry is enabled!");
+	ImGui::Dummy(ImVec2(3.0f, 3.0f));
+	ImGui::NewLine();
+	renderText("Retrying in " + std::to_string(countdown_start) + " seconds...");
+	/*while (countdown_start > 0) {
+		gameWrapper->SetTimeout([this](GameWrapper* gw) {
+			countdown_start--;
+			}, 1.0f);
+	}*/
 }
 
 void SixMansPlugin::renderActionNotif() {
@@ -113,11 +133,11 @@ void SixMansPlugin::renderNote(std::string text) {
 	ImGui::PopFont();
 }
 
-void SixMansPlugin::countdown(size_t time) {
-	//std::chrono::time_point<std::chrono::system_clock> start_time = std::chrono::system_clock::now();
-	std::chrono::time_point<std::chrono::system_clock> marked_time = std::chrono::system_clock::now();
-	size_t seconds_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(marked_time - start_time).count()/1000;
-}
+//void SixMansPlugin::countdown(size_t time) {
+//	//std::chrono::time_point<std::chrono::system_clock> start_time = std::chrono::system_clock::now();
+//	std::chrono::time_point<std::chrono::system_clock> marked_time = std::chrono::system_clock::now();
+//	size_t seconds_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(marked_time - start_time).count()/1000;
+//}
 
 // Name of the menu that is used to toggle the window.
 std::string SixMansPlugin::GetMenuName()
