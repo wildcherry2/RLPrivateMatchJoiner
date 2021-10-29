@@ -44,6 +44,7 @@
 #include <string>
 #include <cstring>
 #include "nlohmann/json.hpp"
+#include "Timer.h"
 //#include "CFG.h"
 #include <stack>
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);

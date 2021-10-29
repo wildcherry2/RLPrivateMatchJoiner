@@ -115,6 +115,9 @@ void SixMansPlugin::initUtilityCvars() {
 		cvarManager->getCvar("6mServerName").setValue("adsfasdf2");
 		cvarManager->getCvar("6mServerPass").setValue("adsfasdf2");
 		}, "", PERMISSION_ALL);
+	cvarManager->registerNotifier("end", [this](std::vector<std::string> args) {
+		gameWrapper->GetPlayerController().NoReservationKick(); //this works on loading screens!
+		}, "", PERMISSION_ALL);
 }
 
 void SixMansPlugin::unregisterCvars() {
@@ -145,8 +148,8 @@ void SixMansPlugin::unregisterCvars() {
 	//cvarManager->removeNotifier("6mDisableMod");
 	cvarManager->removeBind("F3"); //need to store what this is set to initially
 	cvarManager->removeBind("F5");
-	gameWrapper->UnhookEvent("Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete");
-	gameWrapper->UnhookEvent("Function TAGame.GameEvent_Soccar_TA.Destroyed");
+	gameWrapper->UnhookEventPost("Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete");
+	gameWrapper->UnhookEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed");
 	cvarManager->log("cvars unregistered,mod disabled!");
 }
 

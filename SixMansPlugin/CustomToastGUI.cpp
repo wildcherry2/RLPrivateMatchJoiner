@@ -33,7 +33,7 @@ void SixMansPlugin::renderCountdown() {
 	ImGui::SameLine();
 	renderHeader("Looks like you\ncouldn't join...");
 	ImGui::Dummy(ImVec2(3.0f, 3.0f));
-	renderText("Autoretry is enabled!");
+	renderText("Autoretry is enabled!"); //branch here if autoretry is disabled to click a button
 	ImGui::Dummy(ImVec2(3.0f, 3.0f));
 	ImGui::NewLine();
 	renderText("Retrying in " + std::to_string(countdown_start) + " seconds...");

@@ -107,6 +107,7 @@ Region SixMansPlugin::getRegion(int region) {
 	}
 }
 
+//FinishEvent() server wrapper,GetGameEvent() or NoReservationKick() player controller for leaving black screens?
 //FIND FUNCTION FOR JOIN FAIL ERROR MODAL/INDICATOR, USEFUL FOR COUNTDOWN START
 // 
 //called once game is joined after creation
