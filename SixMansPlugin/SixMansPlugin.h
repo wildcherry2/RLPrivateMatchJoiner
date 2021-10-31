@@ -60,6 +60,7 @@ public:
 	void gotoPrivateMatch();
 	Region getRegion(int region);
 	bool gpm_called = false;
+	Timer timer;
 
 	//autojoin
 	//std::thread monitor; //use function hooks instead of thread, works for now though

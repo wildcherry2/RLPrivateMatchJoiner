@@ -11,30 +11,29 @@ struct Timer_Instance;
 
 class Timer {
 	public:
-	size_t pushNewInstance(bool is_count_up, chrono::seconds tick, int& shared_var); //return id
-	size_t pushNewInstance(bool is_count_up, chrono::seconds tick, int& shared_var, size_t time_to_run);
-
-	std::shared_ptr<Timer_Instance> getInstance(int id);
-	void clearVector();
+		size_t pushNewInstance(double& shared_var,int time_to_run);
+		Timer_Instance* getInstance(int id);
+		void clearVector();
+		void begin();
+		void destroy();
 
 	private:
-	vector<std::shared_ptr<Timer_Instance>> timers;
+		thread time_th;
+		vector<Timer_Instance> timers;
+		bool timer_running = true;
 };
 
 struct Timer_Instance {
-	
-	Timer_Instance(bool is_count_up,chrono::seconds tick, int id, int& shared_var);
-	Timer_Instance(bool is_count_up, chrono::seconds tick, int id, int& shared_var, size_t time_to_run);
+	Timer_Instance(int id,double& shared_var, int time_to_run);
 	void start();
+	void tock();
 
-	int* shared_var;
-	int current = 0;
-
-	shared_ptr<thread> pthread;
-	size_t time_to_run;
-	chrono::seconds tick;
+	double* shared_var;
+	double start_time;
+	int time_to_run = -1;
+	int tick = 1;
 	string err = "";
-	bool is_count_up, active = true;
+	bool done = false, has_started = false;
 	int id = -1;
 };
 
