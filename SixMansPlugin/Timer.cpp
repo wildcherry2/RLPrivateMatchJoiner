@@ -18,6 +18,13 @@ void Timer::clearVector() {
 	timers.clear();
 }
 
+void Timer::deleteInstance(int id) {
+	if(id < timers.size())
+	{
+		timers.erase(timers.begin() + id);
+	}
+}
+
 void Timer::destroy() {
 	timer_running = false;
 	clearVector();
@@ -26,16 +33,22 @@ void Timer::destroy() {
 void Timer::begin() {
 	time_th = thread([this]() {
 		while (timer_running) {	
-			for (auto it = timers.begin(); it != timers.end(); it++) {
-				if (it->has_started && !it->done) it->tock();
-				else if (!it->has_started && !it->done) {
-					it->start();
-				}
-				else {
-					timers.erase(it);
+			if (timers.size() == 0) {
+				std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			}
+			if(timers.size() != 0)
+			{
+				for (auto it = timers.begin(); it != timers.end(); it++) {
+					if (it->has_started && !it->done) it->tock();
+					/*else if (!it->has_started && !it->done) {
+						it->start();
+					}*/
+					else if(it->has_started && it->done) {
+						timers.erase(it);
+					}
 				}
 			}
-			std::this_thread::sleep_for(std::chrono::milliseconds(5));
+			std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		}
 
 		return;

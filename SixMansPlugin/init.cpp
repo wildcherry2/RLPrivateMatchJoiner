@@ -158,6 +158,9 @@ void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mEndMonitor", "0", "", true, true, 0, true, 1, false);*/
 	cvarManager->registerCvar("6mTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 30, true, 120, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		time_to_wait = cw.getIntValue();
+		/*countdown_start = 0;
+		countdown_index = timer.pushNewInstance(countdown_start, time_to_wait);
+		timer.begin();*/
 		cvarbuf.clear();
 		cvarbuf.push_back("6mTimeBeforeRetrying");
 		saveConfig(cvarbuf);
@@ -180,6 +183,10 @@ void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mCount", "0", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		countdown = cw.getBoolValue();
 		});
+	/*countdown_start = 0;
+	countdown_index = timer.pushNewInstance(countdown_start, time_to_wait);*/
+	//timer.begin();
+	//countdown_index = timer.pushNewInstance(countdown_start,cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue());
 	/*cvarManager->registerNotifier("6mCancel", [this](std::vector<std::string> args) {
 		is_enabled_autoretry = false;
 		}, "", PERMISSION_ALL);*/

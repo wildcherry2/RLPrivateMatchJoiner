@@ -20,7 +20,7 @@ void SixMansPlugin::onLoad()
 	//cvarManager->executeCommand("exec config.cfg"); //maybe make this its own config, if writeconfig {file} is a thing
 
 	startServer();
-	
+	//timer.pushNewInstance();
 }
 
 void SixMansPlugin::onUnload()
@@ -73,20 +73,31 @@ void SixMansPlugin::gotoPrivateMatch() {
 
 			//if (!in_game) cvarManager->executeCommand("togglemenu SixMansPluginInterface");
 		}
-		if (is_enabled_autoretry) [[likely]] {
+		if (is_enabled_autoretry) [[likely]] { //need to handle autoretry enabled but autojoin disabled, need to store if we've tried or not before starting
 			LOG("[Autoretry] Beginning autoretry routine...");
 			//attempting_action = false;
 			autoRetry();	
+		}
+		else {
+			countdown = true;
 		}
 
 }
 
 void SixMansPlugin::autoRetry() {
 	gameWrapper->SetTimeout([this](GameWrapper* gw) {
+		initCountdown();
 		/*if (!in_game && !cvarManager->getCvar("6mEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
 		else { cvarManager->log("[gotoPrivateMatch] Success."); return; }*/
-		if (in_game || can_manually_back_out)[[unlikely]] {LOG("[Autoretry] In game or player backed out, unwinding recursion..."); return;} //need to reset these vars after
-		else [[likely]] {LOG("[Autoretry] Not in game, calling again..."), gotoPrivateMatch();} //CHANGED THIS 10/24 NEEDS BUILDING AND TESTING
+		if (in_game || can_manually_back_out) [[unlikely]] { countdown = false; LOG("[Autoretry] In game or player backed out, unwinding recursion..."); return; } //need to reset these vars after
+		else [[likely]] { 
+			//countdown_index = timer.pushNewInstance(countdown_start, time_to_wait);
+			initCountdown();
+			countdown = true;
+			//countdown_start = 0;
+			
+			LOG("[Autoretry] Not in game, calling again..."), gotoPrivateMatch(); 
+		} //CHANGED THIS 10/24 NEEDS BUILDING AND TESTING
 
 		}, cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue());
 }

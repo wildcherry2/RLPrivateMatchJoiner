@@ -130,10 +130,15 @@ public:
 	bool doAction = false;
 	bool notif_enabled = true;
 	bool countdown = false;
+	bool hastried = false;
 	std::string menuTitle_ = "sixmansplugininterface";
 	size_t xres;
 	size_t yres;
-	size_t countdown_start = time_to_wait;
+	//size_t countdown_start = time_to_wait;
+	double countdown_c;
+	double countdown_start;
+	double countdown_current;
+	int countdown_index = -1;
 	float res_ratio_x = 1550 / 1920.0; //multiply these by res to get scaled toast
 	float res_ratio_y = 20 / 1080.0;
 	float res_ratio_w = 350 / 1920.0;
@@ -152,6 +157,7 @@ public:
 	void renderButton(std::string text);
 	void renderNote(std::string text);
 	void renderCountdown();
+	void initCountdown();
 	void renderActionNotif();
 	//void renderStatusNotif(size_t type, size_t code); //type = in progress notif (0 = joining...,1=creating...,2=retrying in x secs...)| error notif (3), code = array of errors index
 	virtual void Render() override;

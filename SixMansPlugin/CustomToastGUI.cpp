@@ -16,7 +16,11 @@ void SixMansPlugin::Render()
 	if (!countdown)
 		renderActionNotif();
 	else
+	{
+		//if(!timer.getInstance(countdown_index)->has_started) timer.getInstance(countdown_index)->start();
+		
 		renderCountdown();
+	}
 
 	ImGui::End();
 
@@ -33,15 +37,41 @@ void SixMansPlugin::renderCountdown() {
 	ImGui::SameLine();
 	renderHeader("Looks like you\ncouldn't join...");
 	ImGui::Dummy(ImVec2(3.0f, 3.0f));
-	renderText("Autoretry is enabled!"); //branch here if autoretry is disabled to click a button
-	ImGui::Dummy(ImVec2(3.0f, 3.0f));
-	ImGui::NewLine();
-	renderText("Retrying in " + std::to_string(countdown_start) + " seconds...");
+	
+	if (is_enabled_autoretry) {
+		renderText("Autoretry is enabled!"); //branch here if autoretry is disabled to click a button
+		ImGui::Dummy(ImVec2(3.0f, 3.0f));
+		ImGui::NewLine();
+
+		countdown_current = ImGui::GetTime();
+		double val = time_to_wait - (countdown_current - countdown_start);
+		std::string t_string = val <= 0 ? "0" : std::to_string((int)val); //optimize
+		std::string finalstr = "Retrying in " + t_string + " seconds...";
+		LOG(std::to_string(val));
+		renderText(finalstr);
+	}
+
+	else {
+		renderText("Try again?");
+		ImGui::Dummy(ImVec2(3.0f, 3.0f));
+		ImGui::NewLine();
+		if (cvarManager->getCvar("6mEventType").getIntValue() == 1)
+			renderButton("Join");
+		else
+			renderButton("Create");
+		
+	}
 	/*while (countdown_start > 0) {
 		gameWrapper->SetTimeout([this](GameWrapper* gw) {
 			countdown_start--;
 			}, 1.0f);
 	}*/
+}
+
+void SixMansPlugin::initCountdown() {
+	countdown_c = time_to_wait;
+	countdown_start = ImGui::GetTime();
+	countdown_current = countdown_start;
 }
 
 void SixMansPlugin::renderActionNotif() {

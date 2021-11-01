@@ -13,6 +13,7 @@ class Timer {
 	public:
 		size_t pushNewInstance(double& shared_var,int time_to_run);
 		Timer_Instance* getInstance(int id);
+		void deleteInstance(int id);
 		void clearVector();
 		void begin();
 		void destroy();
@@ -33,7 +34,7 @@ struct Timer_Instance {
 	int time_to_run = -1;
 	int tick = 1;
 	string err = "";
-	bool done = false, has_started = false, enabled = false;
+	bool done = false, has_started = false;
 	int id = -1;
 };
 
