@@ -28,11 +28,14 @@ void Timer::begin() {
 		while (timer_running) {	
 			for (auto it = timers.begin(); it != timers.end(); it++) {
 				if (it->has_started && !it->done) it->tock();
-				else if(!it->has_started && !it->done) {
+				else if (!it->has_started && !it->done) {
 					it->start();
 				}
+				else {
+					timers.erase(it);
+				}
 			}
-			std::this_thread::sleep_for(std::chrono::milliseconds(3));
+			std::this_thread::sleep_for(std::chrono::milliseconds(5));
 		}
 
 		return;

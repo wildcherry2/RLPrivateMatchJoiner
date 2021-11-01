@@ -33,7 +33,7 @@ struct Timer_Instance {
 	int time_to_run = -1;
 	int tick = 1;
 	string err = "";
-	bool done = false, has_started = false;
+	bool done = false, has_started = false, enabled = false;
 	int id = -1;
 };
 
