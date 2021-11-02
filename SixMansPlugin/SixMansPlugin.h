@@ -4,16 +4,13 @@
 * Test join once its working, separate option for disabling auto join for create,grey out things right
 * Make it persistent when going from training -> main menu
 * Save exclusive logging to text file instead of printing on console for bug reports
-* Documentation
+* Documentation/wrap everything in namespaces for organization
 */
 #pragma once
 
 #include "pch.h"
 #include "version.h"
-#include <datetimeapi.h>
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
-
-
 
 class SixMansPlugin: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow, public BakkesMod::Plugin::PluginWindow
 {
@@ -53,7 +50,7 @@ public:
 	std::ifstream is;
 	std::ofstream os;
 	//const std::string lpath = gameWrapper->GetDataFolder().string() + "\\config.json";
-	const std::string path = gameWrapper->GetDataFolder().string() + "\\config.json";
+	const std::string path = gameWrapper->GetDataFolder().string() + "\\6m\\config.json";
 
 	//f2 gui
 	void RenderSettings() override;
@@ -121,6 +118,12 @@ public:
 	virtual bool IsActiveOverlay() override;
 	virtual void OnOpen() override;
 	virtual void OnClose() override;
+
+	//date
+	SYSTEMTIME t = { 0 };
+	//GetLocalTime(&t);
+	std::ostringstream ss;
+	//ss << gameWrapper->GetDataFolder().string() << "\\logs\\" << t.wMonth << "-" << t.wDay << "-" << t.wYear << "_6mLog.log";
 
 	const std::string STAT_ERROR[3] = {
 		"Joining match...",

@@ -2,8 +2,8 @@
 #include "SixMansPlugin.h"
 
 void SixMansPlugin::init() {
-	
-
+	GetLocalTime(&t);
+	ss << gameWrapper->GetDataFolder().string() << "\\logs\\" << t.wMonth << "-" << t.wDay << "-" << t.wYear << "_6mLog.log";
 	if (!mod_switch) {
 		cvarManager->registerNotifier("6mEnableMod", [this](std::vector<std::string> args) {
 			init();
@@ -54,11 +54,11 @@ void SixMansPlugin::initMatchCvars() {
 		region = getRegion(cw.getIntValue());
 		});
 	cvarManager->registerNotifier("6mGetMatchVars", [this](std::vector<std::string> args) {
-		cvarManager->log("Event= " + cvarManager->getCvar("6mEventType").getStringValue());
-		cvarManager->log("Name= " + cvarManager->getCvar("6mServerName").getStringValue());
-		cvarManager->log("Pass= " + cvarManager->getCvar("6mServerPass").getStringValue());
-		cvarManager->log("Region= " + cvarManager->getCvar("6mRegion").getStringValue());
-		cvarManager->log("Map= " + cvarManager->getCvar("6mMap").getStringValue());
+		logt("Event= " + cvarManager->getCvar("6mEventType").getStringValue());
+		logt("Name= " + cvarManager->getCvar("6mServerName").getStringValue());
+		logt("Pass= " + cvarManager->getCvar("6mServerPass").getStringValue());
+		logt("Region= " + cvarManager->getCvar("6mRegion").getStringValue());
+		logt("Map= " + cvarManager->getCvar("6mMap").getStringValue());
 		}, "", PERMISSION_ALL);
 }
 
@@ -93,7 +93,7 @@ void SixMansPlugin::initServerCvars() {
 		req.url = "http://localhost:6969/halt";
 		req.body = "";
 		HttpWrapper::SendCurlRequest(req, [this](int code, std::string result) {
-			cvarManager->log("[cvarManager] sent request to shut down...");
+			logt("[cvarManager] sent request to shut down...");
 			});
 		}, "", PERMISSION_ALL);
 }
@@ -155,7 +155,7 @@ void SixMansPlugin::unregisterCvars() {
 	gameWrapper->UnhookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError");
 	gameWrapper->UnhookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError");
 
-	cvarManager->log("cvars unregistered,mod disabled!");
+	logt("cvars unregistered,mod disabled!");
 }
 
 void SixMansPlugin::initAutojoinCvars() {
@@ -233,14 +233,14 @@ void SixMansPlugin::initHooks() {
 
 	//on black screen/cancel, doesnt apply to join failures, TEST TO MAKE SURE THIS IS CALLED AFTER FIRST HOOK SO THE MENU OPENS
 	gameWrapper->HookEventPost("Function TAGame.GFxShell_TA.ShowErrorMessage", [this](std::string eventName) {
-		LOG("Error modal!");
+		logt("Error modal!");
 		
 		if(cvarManager->getCvar("6mgpmCalled").getBoolValue()) cvarManager->executeCommand("openmenu SixMansPluginInterface");
 		});
 
 	//called on join failure
 	gameWrapper->HookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError", [this](std::string eventName) {
-		LOG("Join failure!");
+		logt("Join failure!");
 		cvarManager->getCvar("6mCount").setValue("1"); cvarManager->executeCommand("openmenu SixMansPluginInterface");
 		});
 }

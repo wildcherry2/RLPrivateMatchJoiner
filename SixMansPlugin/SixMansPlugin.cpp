@@ -20,14 +20,14 @@ void SixMansPlugin::onLoad()
 void SixMansPlugin::onUnload()
 {
 	cvarManager->executeCommand("6mDisableServer");
-	LOG("Saving config...");
+	logt("Saving config...");
 	saveConfig(PERSISTENT_CVARS);
-	LOG("WARNING: If you manually unload the plugin, you'll have to restart the game to load it again.");
-	cvarManager->log("6Mans Plugin unloaded.");
+	logt("WARNING: If you manually unload the plugin, you'll have to restart the game to load it again.");
+	logt("6Mans Plugin unloaded.");
 }
 
 void SixMansPlugin::gotoPrivateMatch() {
-	cvarManager->log("[GoToPrivateMatch] called.");
+	logt("[GoToPrivateMatch] called.");
 	gpm_called = true;
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
 		if(!in_game && mw) [[likely]] { 
@@ -44,20 +44,20 @@ void SixMansPlugin::gotoPrivateMatch() {
 				cm.OrangeTeamSettings = red;
 				cm.bClubServer = false;
 
-				cvarManager->log("[GoToPrivateMatch] Creating with name: " + cm.ServerName + "and pass: " + cm.Password);
+				logt("[GoToPrivateMatch] Creating with name: " + cm.ServerName + "and pass: " + cm.Password);
 				mw.CreatePrivateMatch(region, cm);
 			}
 			else if (event_code == 1) [[likely]] {
 				const std::string thisname = cvarManager->getCvar("6mServerName").getStringValue();
 				const std::string thispass = cvarManager->getCvar("6mServerPass").getStringValue();
-				cvarManager->log("[GoToPrivateMatch] Joining with name: " + thisname + "and pass: " + thispass);
+				logt("[GoToPrivateMatch] Joining with name: " + thisname + "and pass: " + thispass);
 				mw.JoinPrivateMatch(thisname,thispass);
 			}
-			else [[unlikely]] cvarManager->log("[GoToPrivateMatch] Invalid event code!");
+			else [[unlikely]] logt("[GoToPrivateMatch] Invalid event code!");
 
 		}
 		if (is_enabled_autoretry) [[likely]] { //need to handle autoretry enabled but autojoin disabled, need to store if we've tried or not before starting
-			LOG("[Autoretry] Beginning autoretry routine...");
+			logt("[Autoretry] Beginning autoretry routine...");
 			autoRetry();	
 		}
 		else {
@@ -69,11 +69,11 @@ void SixMansPlugin::gotoPrivateMatch() {
 void SixMansPlugin::autoRetry() {
 	initCountdown();
 	gameWrapper->SetTimeout([this](GameWrapper* gw) {
-		if (in_game || can_manually_back_out) [[unlikely]] { countdown = false; LOG("[Autoretry] In game or player backed out, unwinding recursion..."); return; } //need to reset these vars after
+		if (in_game || can_manually_back_out) [[unlikely]] { countdown = false; logt("[Autoretry] In game or player backed out, unwinding recursion..."); return; } //need to reset these vars after
 		else [[likely]] { 
 			countdown = true;
 			
-			LOG("[Autoretry] Not in game, calling again..."); gotoPrivateMatch();
+			logt("[Autoretry] Not in game, calling again..."); gotoPrivateMatch();
 		} //CHANGED THIS 10/24 NEEDS BUILDING AND TESTING
 
 		}, cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue());
@@ -97,15 +97,11 @@ Region SixMansPlugin::getRegion(int region) {
 
 
 void SixMansPlugin::logt(std::string text) {
-	SYSTEMTIME t = {0};
-	GetLocalTime(&t);
-	std::ostringstream ss;
-	ss << gameWrapper->GetDataFolder().string() << "\\" << t.wMonth << "-" << t.wDay << "-" << t.wYear << "_6mLog.log";
 	os.open(ss.str(), std::ios::app);
 	os << text << std::endl;
 	os.close();
 
-	LOG("[Logger]" + text);
+	logt(text);
 }
 
 //FinishEvent() server wrapper,GetGameEvent() or NoReservationKick() player controller for leaving black screens?

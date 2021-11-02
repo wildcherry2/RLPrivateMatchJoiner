@@ -5,18 +5,18 @@ void SixMansPlugin::startServer() {
 	server_thread = std::thread([this]() {
 		SimpleWeb::Server<SimpleWeb::HTTP> server = SimpleWeb::Server<SimpleWeb::HTTP>();
 		server.config.port = 6969;
-		//cvarManager->log("[Server] Server loaded");
+		//cvarManager->logt("[Server] Server loaded");
 		logt("[Server] Server loaded!");
 
 		server.on_error = [this](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request, const SimpleWeb::error_code& ec) {
-			//cvarManager->log("[Server] Server error occurred! Probably a request to stop the server.");
+			//cvarManager->logt("[Server] Server error occurred! Probably a request to stop the server.");
 			logt("[Server] Server error occurred! Probably a request to stop the server.");
 		};
 
 		//URL syntax: localhost:[port]/match?event=[eventcode]?name=[servername]?pass=[serverpass]?region=[serverregion]
 		//Example: http://localhost:6969/match?event=0&name=b1234&pass=h1jk&region=0
 		server.resource["^/match$"]["GET"] = [this](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response, std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request) {
-			this->cvarManager->log("[Server] Request received...");
+			this->logt("[Server] Request received...");
 			auto fields = request->parse_query_string();
 
 			auto it = fields.begin();
@@ -27,7 +27,7 @@ void SixMansPlugin::startServer() {
 			this->cvarManager->getCvar("6mServerPass").setValue(it->second);
 			it++;
 			this->cvarManager->getCvar("6mRegion").setValue(it->second);
-			//cvarManager->log("[Server] Vars sent!");
+			//cvarManager->logt("[Server] Vars sent!");
 			logt("[Server] Vars sent!");
 
 			response->close_connection_after_response = true;
@@ -42,20 +42,20 @@ void SixMansPlugin::startServer() {
 		//URL syntax: localhost:[port]/halt
 		//stops server, closing the thread
 		server.resource["^/halt$"]["GET"] = [this,&server](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response, std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request) {
-			//this->cvarManager->log("[Server] Request received...");
+			//this->cvarManager->logt("[Server] Request received...");
 			this->logt("[Server] Request received...");
 
 			response->close_connection_after_response = true;
 			response->write(SimpleWeb::StatusCode::success_accepted, "[Server] Stopping server!");
 			response->send();
-			//this->cvarManager->log("[Server] Stopping server...");
+			//this->cvarManager->logt("[Server] Stopping server...");
 			this->logt("[Server] Stopping server...");
 			
 			server.stop();
 		};
 
 		server.start();
-		//this->cvarManager->log("[Server] Thread closing!");
+		//this->cvarManager->logt("[Server] Thread closing!");
 		this->logt("[Server] Thread closing!");
 		return;
 	});

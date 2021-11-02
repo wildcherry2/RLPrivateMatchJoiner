@@ -46,7 +46,7 @@ void SixMansPlugin::renderCountdown() {
 		std::string t_string = val <= 0 ? "Retrying in 0 seconds..." : "Retrying in " + std::to_string((int)val) + " seconds...";
 		//countdown_current = ImGui::GetTime();
 
-		LOG(std::to_string(countdown_start));
+		logt(std::to_string(countdown_start));
 		renderText(t_string);
 	}
 
