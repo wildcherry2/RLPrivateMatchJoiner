@@ -13,29 +13,15 @@ void SixMansPlugin::onLoad()
 {
 	_globalCvarManager = cvarManager;
 	
-	//occasional crashing after changing shit in settings and reloading the plugin, maybe writeconfig is trying to write unregistered cvars? or loadconfig is loading into unregistered cvars?
 	init();
-	//loadConfig(PERSISTENT_CVARS);
-	//CALLING THIS AGAIN IS PROBABLY CAUSING THE OCCASIONAL CRASH
-	//cvarManager->executeCommand("exec config.cfg"); //maybe make this its own config, if writeconfig {file} is a thing
-
 	startServer();
-	
 }
 
 void SixMansPlugin::onUnload()
 {
 	cvarManager->executeCommand("6mDisableServer");
-	//cvarManager->getCvar("6mEndMonitor").setValue("1");
 	LOG("Saving config...");
 	saveConfig(PERSISTENT_CVARS);
-	cvarManager->removeNotifier("6mEnableMod");
-	cvarManager->removeNotifier("6mDisableMod");
-	cvarManager->removeCvar("6mModEnabled");
-	//gameWrapper->UnregisterDrawables();
-	//cfg_man->saveConfig(PERSISTENT_CVARS);
-	//cvarManager->executeCommand("writeconfig");
-	//unregisterCvars();
 	LOG("WARNING: If you manually unload the plugin, you'll have to restart the game to load it again.");
 	cvarManager->log("6Mans Plugin unloaded.");
 }
@@ -43,7 +29,6 @@ void SixMansPlugin::onUnload()
 void SixMansPlugin::gotoPrivateMatch() {
 	cvarManager->log("[GoToPrivateMatch] called.");
 	gpm_called = true;
-	//cvarManager->executeCommand("togglemenu SixMansPluginInterface"); //we dont want it to disappear on failure
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
 		if(!in_game && mw) [[likely]] { 
 			if (event_code == 0) [[unlikely]] {
@@ -66,27 +51,30 @@ void SixMansPlugin::gotoPrivateMatch() {
 				const std::string thisname = cvarManager->getCvar("6mServerName").getStringValue();
 				const std::string thispass = cvarManager->getCvar("6mServerPass").getStringValue();
 				cvarManager->log("[GoToPrivateMatch] Joining with name: " + thisname + "and pass: " + thispass);
-				//attempting_action = true;
 				mw.JoinPrivateMatch(thisname,thispass);
 			}
 			else [[unlikely]] cvarManager->log("[GoToPrivateMatch] Invalid event code!");
 
-			//if (!in_game) cvarManager->executeCommand("togglemenu SixMansPluginInterface");
 		}
-		if (is_enabled_autoretry) [[likely]] {
+		if (is_enabled_autoretry) [[likely]] { //need to handle autoretry enabled but autojoin disabled, need to store if we've tried or not before starting
 			LOG("[Autoretry] Beginning autoretry routine...");
-			//attempting_action = false;
 			autoRetry();	
+		}
+		else {
+			countdown = true;
 		}
 
 }
 
 void SixMansPlugin::autoRetry() {
+	initCountdown();
 	gameWrapper->SetTimeout([this](GameWrapper* gw) {
-		/*if (!in_game && !cvarManager->getCvar("6mEndRecursiveJoin").getBoolValue()) { cvarManager->log("[gotoPrivateMatch] Checking..."); gotoPrivateMatch(); return; }
-		else { cvarManager->log("[gotoPrivateMatch] Success."); return; }*/
-		if (in_game || can_manually_back_out)[[unlikely]] {LOG("[Autoretry] In game or player backed out, unwinding recursion..."); return;} //need to reset these vars after
-		else [[likely]] {LOG("[Autoretry] Not in game, calling again..."), gotoPrivateMatch();} //CHANGED THIS 10/24 NEEDS BUILDING AND TESTING
+		if (in_game || can_manually_back_out) [[unlikely]] { countdown = false; LOG("[Autoretry] In game or player backed out, unwinding recursion..."); return; } //need to reset these vars after
+		else [[likely]] { 
+			countdown = true;
+			
+			LOG("[Autoretry] Not in game, calling again..."); gotoPrivateMatch();
+		} //CHANGED THIS 10/24 NEEDS BUILDING AND TESTING
 
 		}, cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue());
 }
@@ -107,6 +95,9 @@ Region SixMansPlugin::getRegion(int region) {
 	}
 }
 
+//FinishEvent() server wrapper,GetGameEvent() or NoReservationKick() player controller for leaving black screens?
+//FIND FUNCTION FOR JOIN FAIL ERROR MODAL/INDICATOR, USEFUL FOR COUNTDOWN START
+// 
 //called once game is joined after creation
 //"Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete"; //gets called on black screen/join failure as well, call isinonline game after to confirm
 // "Function ProjectX.OnlineGameJoinGame_X.EventJoinGameComplete"; //doesnt get called on join failure, but gets called on black screen
@@ -116,7 +107,7 @@ Region SixMansPlugin::getRegion(int region) {
 //"Function TAGame.GameEvent_Soccar_TA.Destroyed"
 //"Function TAGame.GameEvent_Soccar_TA.CommitPlayerMatchData";
 //
-//called after error modal closed
+//called after error modal closed [create fail modal]
 //Function TAGame.LocalPlayer_TA.CheckForRankedReconnect
 //- Function TAGame.RankedReconnectSave_TA.RankedReconnectAvailable
 //- Function TAGame.RankedReconnectSave_TA.RankedReconnectAvailable
@@ -131,94 +122,10 @@ Region SixMansPlugin::getRegion(int region) {
 //Function TAGame.GFxData_ConnectionStats_TA.HandleControllerReceived
 //Function TAGame.GFxShell_TA.ShowErrorMessage
 //
-
-
-//// Function TAGame.GFxData_PrivateMatch_TA.StartSearch
-//struct UGFxData_PrivateMatch_TA_StartSearch_Params
-//{
-//};
+// called on join error
+// Function ProjectX.FindServerTask_X.HandleJoinMatchError
+//-Function Core.AsyncTask.SetError
+//Function ProjectX.OnlineGameServerBrowser_X.OnSearchError
+//- Function ProjectX.OnlineGameServerBrowser_X.EventSearchError
+//- Function TAGame.GFxData_ServerBrowser_TA.HandleSearchError
 //
-//// Function TAGame.GFxData_PrivateMatch_TA.StartClubSearch
-//struct UGFxData_PrivateMatch_TA_StartClubSearch_Params
-//{
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.CreateRandom16CharGuidString
-//struct UGFxData_PrivateMatch_TA_CreateRandom16CharGuidString_Params
-//{
-//	struct FString                                     ReturnValue;                                               // (Parm, OutParm, ReturnParm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.CancelSearch
-//struct UGFxData_PrivateMatch_TA_CancelSearch_Params
-//{
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.SetRegionSelection
-//struct UGFxData_PrivateMatch_TA_SetRegionSelection_Params
-//{
-//	int                                                Row;                                                       // (Parm)
-//	bool                                               bSelected;                                                 // (Parm)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.GetPreferredRegion
-//struct UGFxData_PrivateMatch_TA_GetPreferredRegion_Params
-//{
-//	struct FString                                     ReturnValue;                                               // (Parm, OutParm, ReturnParm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.HandleRegionsSynced
-//struct UGFxData_PrivateMatch_TA_HandleRegionsSynced_Params
-//{
-//	class UGFxData_Regions_TA* RegionsData;                                               // (Parm)
-//	TArray<struct FString>                             ArrayInitializer_A6D087254D424B72E4032488012D54CC;         // (Const, OutParm, NeedCtorLink)
-//	struct FGFxRegion                                  StructInitializer_F07394B84F162393EA2E36B1237F899D;        // (Const, OutParm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.SetPublic
-//struct UGFxData_PrivateMatch_TA_SetPublic_Params
-//{
-//	bool                                               bValue;                                                    // (Parm)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.SetPassword
-//struct UGFxData_PrivateMatch_TA_SetPassword_Params
-//{
-//	struct FString                                     InPassword;                                                // (Parm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.SetServerName
-//struct UGFxData_PrivateMatch_TA_SetServerName_Params
-//{
-//	struct FString                                     InServerName;                                              // (Parm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.SetSelectedMaxPlayerCount
-//struct UGFxData_PrivateMatch_TA_SetSelectedMaxPlayerCount_Params
-//{
-//	int                                                MaxPlayerCount;                                            // (Parm)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.GetCustomMatchRegion
-//struct UGFxData_PrivateMatch_TA_GetCustomMatchRegion_Params
-//{
-//	struct FString                                     ReturnValue;                                               // (Parm, OutParm, ReturnParm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.SetCustomMatchSettings
-//struct UGFxData_PrivateMatch_TA_SetCustomMatchSettings_Params
-//{
-//	struct U_Types_X_FCustomMatchSettings              InSettings;                                                // (Const, Parm, OutParm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.GetCustomMatchSettings
-//struct UGFxData_PrivateMatch_TA_GetCustomMatchSettings_Params
-//{
-//	struct U_Types_X_FCustomMatchSettings              ReturnValue;                                               // (Parm, OutParm, ReturnParm, NeedCtorLink)
-//};
-//
-//// Function TAGame.GFxData_PrivateMatch_TA.OnShellSet
-//struct UGFxData_PrivateMatch_TA_OnShellSet_Params
-//{
-//};
-

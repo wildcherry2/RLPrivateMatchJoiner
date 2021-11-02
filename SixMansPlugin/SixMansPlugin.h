@@ -1,11 +1,8 @@
 //https://bakkesmodwiki.github.io/bakkesmod_api/
 /*
 * TODO:
-* Toasts
-* Autoretry countdown
-* Enabled works, but need to be able to save/load it
-* Test join once its working, separate option for disabling auto join for create
-* Make sure it can recover after joining/creating (seems to work now w/o autoretry enabled)
+* Test join once its working, separate option for disabling auto join for create,grey out things right
+* Test autoretry enabled with autojoin disabled
 * Clean up unnecessary vars/functions/function calls/includes
 * Save exclusive logging to text file instead of printing on console for bug reports
 * Documentation
@@ -43,6 +40,7 @@
 #include <string>
 #include <cstring>
 #include "nlohmann/json.hpp"
+#include "Timer.h"
 //#include "CFG.h"
 #include <stack>
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
@@ -58,15 +56,13 @@ public:
 	void gotoPrivateMatch();
 	Region getRegion(int region);
 	bool gpm_called = false;
+	Timer timer;
 
 	//autojoin
-	//std::thread monitor; //use function hooks instead of thread, works for now though
 	bool in_game = false;
-	//bool mon_running = true;
 	size_t time_to_wait = 45;
 	bool is_enabled_autoretry = true;
 	bool can_manually_back_out = false;
-	//void monitorOnlineState();
 	void autoRetry();
 
 	//init
@@ -83,7 +79,6 @@ public:
 	//custom cfg
 	void initCFGMan();
 	void loadConfig(const std::vector<std::string> cvars);
-	//void loadConfig(std::string cvars);
 	void saveConfig(const std::vector<std::string> cvars);
 	std::vector<std::string> cvarbuf;
 	nlohmann::json set_file;
@@ -106,7 +101,6 @@ public:
 	bool is_autojoin_enabled = true;
 	char name_field_storage[100] = "";
 	char pass_field_storage[100] = "";
-	std::string link = ""; //probably not needed
 
 	//server
 	void startServer();
@@ -126,9 +120,15 @@ public:
 	bool isMinimized_ = false;
 	bool doAction = false;
 	bool notif_enabled = true;
+	bool countdown = false;
+	bool hastried = false;
 	std::string menuTitle_ = "sixmansplugininterface";
 	size_t xres;
 	size_t yres;
+	double countdown_c;
+	double countdown_start = 20;
+	double countdown_current;
+	int countdown_index = -1;
 	float res_ratio_x = 1550 / 1920.0; //multiply these by res to get scaled toast
 	float res_ratio_y = 20 / 1080.0;
 	float res_ratio_w = 350 / 1920.0;
@@ -146,8 +146,9 @@ public:
 	void renderText(std::string text);
 	void renderButton(std::string text);
 	void renderNote(std::string text);
+	void renderCountdown();
+	void initCountdown();
 	void renderActionNotif();
-	//void renderStatusNotif(size_t type, size_t code); //type = in progress notif (0 = joining...,1=creating...,2=retrying in x secs...)| error notif (3), code = array of errors index
 	virtual void Render() override;
 	virtual std::string GetMenuName() override;
 	virtual std::string GetMenuTitle() override;
@@ -156,14 +157,6 @@ public:
 	virtual void OnOpen() override;
 	virtual void OnClose() override;
 
-	//interface countdown
-	void countdown(size_t seconds_top);
-	//size_t time_left();
-	std::chrono::time_point<std::chrono::system_clock> start_time;
-	bool cd_started = false;
-	//bool attempting_action = false;
-
-	
 	const std::string STAT_ERROR[3] = {
 		"Joining match...",
 		"Creating match...",

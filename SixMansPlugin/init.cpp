@@ -102,6 +102,7 @@ void SixMansPlugin::initUtilityCvars() {
 		}, "", PERMISSION_ALL);
 	
 	cvarManager->setBind("F3", "togglemenu SixMansPluginInterface");
+	cvarManager->setBind("F5", "6mCount 1");
 	cvarManager->registerNotifier("6mSaveCvar", [this](std::vector<std::string> args) {
 		args.erase(args.begin()); //dont care about the notifier name
 		saveConfig(args);
@@ -114,25 +115,22 @@ void SixMansPlugin::initUtilityCvars() {
 		cvarManager->getCvar("6mServerName").setValue("adsfasdf2");
 		cvarManager->getCvar("6mServerPass").setValue("adsfasdf2");
 		}, "", PERMISSION_ALL);
+	cvarManager->registerNotifier("end", [this](std::vector<std::string> args) {
+		gameWrapper->GetPlayerController().NoReservationKick(); //this works on loading screens!
+		}, "", PERMISSION_ALL);
 }
 
 void SixMansPlugin::unregisterCvars() {
+	cvarManager->executeCommand("closemenu SixMansPluginInterface");
 	cvarManager->executeCommand("6mDisableServer");
-	//cvarManager->getCvar("6mEndMonitor").setValue("1");
-	//cvarManager->executeCommand("6mDisableServer");
-	cvarManager->removeCvar("6mEventType");
 	cvarManager->removeCvar("6mServerName");
 	cvarManager->removeCvar("6mServerPass");
 	cvarManager->removeCvar("6mMap");
 	cvarManager->removeCvar("6mRegion");
-	//cvarManager->removeCvar("6mIsQuickMatchWindowEnabled");
 	cvarManager->removeCvar("6mMapNameSelection");
-	//cvarManager->removeCvar("6mGeneratedLink");
-	//cvarManager->removeCvar("6mEndRecursiveJoin");
+	cvarManager->removeCvar("6mAutojoinToggle"); 
 	cvarManager->removeCvar("6mAutotabInToggle");
 	cvarManager->removeCvar("6mAutoRetryToggle");
-	//cvarManager->removeCvar("6mEndRecursiveJoin");
-	//cvarManager->removeCvar("6mEndMonitor");
 	cvarManager->removeCvar("6mTimeBeforeRetrying");
 	cvarManager->removeNotifier("6mGetMatchVars");
 	cvarManager->removeNotifier("6mReady");
@@ -140,17 +138,16 @@ void SixMansPlugin::unregisterCvars() {
 	cvarManager->removeNotifier("6mEnableServer");
 	cvarManager->removeNotifier("6mSaveCvar");
 	cvarManager->removeNotifier("6mLoadCvar");
-	//cvarManager->removeNotifier("6mEnableMod");
-	//cvarManager->removeNotifier("6mDisableMod");
-	cvarManager->removeBind("F3"); //need to store what this is set to initially
-	gameWrapper->UnhookEvent("Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete");
-	gameWrapper->UnhookEvent("Function TAGame.GameEvent_Soccar_TA.Destroyed");
+	cvarManager->removeBind("F3");
+	cvarManager->removeBind("F5");
+	gameWrapper->UnhookEventPost("Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete");
+	gameWrapper->UnhookEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed");
+	gameWrapper->UnhookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError");
+	gameWrapper->UnhookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError");
 	cvarManager->log("cvars unregistered,mod disabled!");
 }
 
 void SixMansPlugin::initAutojoinCvars() {
-	/*cvarManager->registerCvar("6mEndRecursiveJoin", "0", "", true, true, 0, true, 1, false);
-	cvarManager->registerCvar("6mEndMonitor", "0", "", true, true, 0, true, 1, false);*/
 	cvarManager->registerCvar("6mTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 30, true, 120, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		time_to_wait = cw.getIntValue();
 		cvarbuf.clear();
@@ -172,10 +169,9 @@ void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mgpmCalled", "0", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		gpm_called = cw.getBoolValue();
 		});
-
-	/*cvarManager->registerNotifier("6mCancel", [this](std::vector<std::string> args) {
-		is_enabled_autoretry = false;
-		}, "", PERMISSION_ALL);*/
+	cvarManager->registerCvar("6mCount", "0", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
+		countdown = cw.getBoolValue();
+		});
 }
 
 //inits logo, fonts, helper vars for interface
@@ -224,8 +220,16 @@ void SixMansPlugin::initHooks() {
 		cvarManager->getCvar("6mInGame").setValue("0");
 		});
 
-	//on black screen
+	//on black screen/cancel, doesnt apply to join failures, TEST TO MAKE SURE THIS IS CALLED AFTER FIRST HOOK SO THE MENU OPENS
 	gameWrapper->HookEventPost("Function TAGame.GFxShell_TA.ShowErrorMessage", [this](std::string eventName) {
+		LOG("Error modal!");
+		
 		if(cvarManager->getCvar("6mgpmCalled").getBoolValue()) cvarManager->executeCommand("openmenu SixMansPluginInterface");
+		});
+
+	//called on join failure
+	gameWrapper->HookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError", [this](std::string eventName) {
+		LOG("Join failure!");
+		cvarManager->getCvar("6mCount").setValue("1"); cvarManager->executeCommand("openmenu SixMansPluginInterface");
 		});
 }
