@@ -123,22 +123,14 @@ void SixMansPlugin::initUtilityCvars() {
 void SixMansPlugin::unregisterCvars() {
 	cvarManager->executeCommand("closemenu SixMansPluginInterface");
 	cvarManager->executeCommand("6mDisableServer");
-	//cvarManager->getCvar("6mEndMonitor").setValue("1");
-	//cvarManager->executeCommand("6mDisableServer");
-	//cvarManager->removeCvar("6mEventType");
 	cvarManager->removeCvar("6mServerName");
 	cvarManager->removeCvar("6mServerPass");
 	cvarManager->removeCvar("6mMap");
 	cvarManager->removeCvar("6mRegion");
-	//cvarManager->removeCvar("6mIsQuickMatchWindowEnabled");
 	cvarManager->removeCvar("6mMapNameSelection");
-	//cvarManager->removeCvar("6mGeneratedLink");
-	//cvarManager->removeCvar("6mEndRecursiveJoin");
 	cvarManager->removeCvar("6mAutojoinToggle"); 
 	cvarManager->removeCvar("6mAutotabInToggle");
 	cvarManager->removeCvar("6mAutoRetryToggle");
-	//cvarManager->removeCvar("6mEndRecursiveJoin");
-	//cvarManager->removeCvar("6mEndMonitor");
 	cvarManager->removeCvar("6mTimeBeforeRetrying");
 	cvarManager->removeNotifier("6mGetMatchVars");
 	cvarManager->removeNotifier("6mReady");
@@ -146,23 +138,18 @@ void SixMansPlugin::unregisterCvars() {
 	cvarManager->removeNotifier("6mEnableServer");
 	cvarManager->removeNotifier("6mSaveCvar");
 	cvarManager->removeNotifier("6mLoadCvar");
-	//cvarManager->removeNotifier("6mEnableMod");
-	//cvarManager->removeNotifier("6mDisableMod");
-	cvarManager->removeBind("F3"); //need to store what this is set to initially
+	cvarManager->removeBind("F3");
 	cvarManager->removeBind("F5");
 	gameWrapper->UnhookEventPost("Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete");
 	gameWrapper->UnhookEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed");
+	gameWrapper->UnhookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError");
+	gameWrapper->UnhookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError");
 	cvarManager->log("cvars unregistered,mod disabled!");
 }
 
 void SixMansPlugin::initAutojoinCvars() {
-	/*cvarManager->registerCvar("6mEndRecursiveJoin", "0", "", true, true, 0, true, 1, false);
-	cvarManager->registerCvar("6mEndMonitor", "0", "", true, true, 0, true, 1, false);*/
 	cvarManager->registerCvar("6mTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 30, true, 120, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		time_to_wait = cw.getIntValue();
-		/*countdown_start = 0;
-		countdown_index = timer.pushNewInstance(countdown_start, time_to_wait);
-		timer.begin();*/
 		cvarbuf.clear();
 		cvarbuf.push_back("6mTimeBeforeRetrying");
 		saveConfig(cvarbuf);
@@ -185,13 +172,6 @@ void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mCount", "0", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		countdown = cw.getBoolValue();
 		});
-	/*countdown_start = 0;
-	countdown_index = timer.pushNewInstance(countdown_start, time_to_wait);*/
-	//timer.begin();
-	//countdown_index = timer.pushNewInstance(countdown_start,cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue());
-	/*cvarManager->registerNotifier("6mCancel", [this](std::vector<std::string> args) {
-		is_enabled_autoretry = false;
-		}, "", PERMISSION_ALL);*/
 }
 
 //inits logo, fonts, helper vars for interface

@@ -59,13 +59,10 @@ public:
 	Timer timer;
 
 	//autojoin
-	//std::thread monitor; //use function hooks instead of thread, works for now though
 	bool in_game = false;
-	//bool mon_running = true;
 	size_t time_to_wait = 45;
 	bool is_enabled_autoretry = true;
 	bool can_manually_back_out = false;
-	//void monitorOnlineState();
 	void autoRetry();
 
 	//init
@@ -82,7 +79,6 @@ public:
 	//custom cfg
 	void initCFGMan();
 	void loadConfig(const std::vector<std::string> cvars);
-	//void loadConfig(std::string cvars);
 	void saveConfig(const std::vector<std::string> cvars);
 	std::vector<std::string> cvarbuf;
 	nlohmann::json set_file;
@@ -105,7 +101,6 @@ public:
 	bool is_autojoin_enabled = true;
 	char name_field_storage[100] = "";
 	char pass_field_storage[100] = "";
-	std::string link = ""; //probably not needed
 
 	//server
 	void startServer();
@@ -130,9 +125,8 @@ public:
 	std::string menuTitle_ = "sixmansplugininterface";
 	size_t xres;
 	size_t yres;
-	//size_t countdown_start = time_to_wait;
 	double countdown_c;
-	double countdown_start;
+	double countdown_start = 20;
 	double countdown_current;
 	int countdown_index = -1;
 	float res_ratio_x = 1550 / 1920.0; //multiply these by res to get scaled toast
@@ -155,7 +149,6 @@ public:
 	void renderCountdown();
 	void initCountdown();
 	void renderActionNotif();
-	//void renderStatusNotif(size_t type, size_t code); //type = in progress notif (0 = joining...,1=creating...,2=retrying in x secs...)| error notif (3), code = array of errors index
 	virtual void Render() override;
 	virtual std::string GetMenuName() override;
 	virtual std::string GetMenuTitle() override;
@@ -164,14 +157,6 @@ public:
 	virtual void OnOpen() override;
 	virtual void OnClose() override;
 
-	//interface countdown
-	//void countdown(size_t seconds_top);
-	//size_t time_left();
-	std::chrono::time_point<std::chrono::system_clock> start_time;
-	bool cd_started = false;
-	//bool attempting_action = false;
-
-	
 	const std::string STAT_ERROR[3] = {
 		"Joining match...",
 		"Creating match...",

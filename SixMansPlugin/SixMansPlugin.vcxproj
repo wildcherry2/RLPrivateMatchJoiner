@@ -131,7 +131,6 @@
     <ClCompile Include="SixMansPluginGUI.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="CustomToastGUI.cpp" />
-    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h" />
@@ -159,7 +158,6 @@
     <ClInclude Include="Simple-Web-Server\server_https.hpp" />
     <ClInclude Include="Simple-Web-Server\status_code.hpp" />
     <ClInclude Include="Simple-Web-Server\utility.hpp" />
-    <ClInclude Include="Timer.h" />
     <ClInclude Include="version.h" />
   </ItemGroup>
   <ItemGroup>
