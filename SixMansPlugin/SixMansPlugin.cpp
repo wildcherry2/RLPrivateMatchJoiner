@@ -29,9 +29,9 @@ void SixMansPlugin::onUnload()
 	//cvarManager->getCvar("6mEndMonitor").setValue("1");
 	LOG("Saving config...");
 	saveConfig(PERSISTENT_CVARS);
-	cvarManager->removeNotifier("6mEnableMod");
+	/*cvarManager->removeNotifier("6mEnableMod");
 	cvarManager->removeNotifier("6mDisableMod");
-	cvarManager->removeCvar("6mModEnabled");
+	cvarManager->removeCvar("6mModEnabled");*/
 	//gameWrapper->UnregisterDrawables();
 	//cfg_man->saveConfig(PERSISTENT_CVARS);
 	//cvarManager->executeCommand("writeconfig");

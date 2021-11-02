@@ -1,11 +1,7 @@
 //https://bakkesmodwiki.github.io/bakkesmod_api/
 /*
 * TODO:
-* Toasts
-* Autoretry countdown
-* Enabled works, but need to be able to save/load it
 * Test join once its working, separate option for disabling auto join for create,grey out things right
-* Make sure it can recover after joining/creating (seems to work now w/o autoretry enabled)
 * Ensure server starts (sometimes doesn't on launch, needs redundancy)
 * Clean up unnecessary vars/functions/function calls/includes
 * Save exclusive logging to text file instead of printing on console for bug reports

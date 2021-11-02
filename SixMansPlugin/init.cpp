@@ -121,10 +121,11 @@ void SixMansPlugin::initUtilityCvars() {
 }
 
 void SixMansPlugin::unregisterCvars() {
+	cvarManager->executeCommand("closemenu SixMansPluginInterface");
 	cvarManager->executeCommand("6mDisableServer");
 	//cvarManager->getCvar("6mEndMonitor").setValue("1");
 	//cvarManager->executeCommand("6mDisableServer");
-	cvarManager->removeCvar("6mEventType");
+	//cvarManager->removeCvar("6mEventType");
 	cvarManager->removeCvar("6mServerName");
 	cvarManager->removeCvar("6mServerPass");
 	cvarManager->removeCvar("6mMap");
@@ -133,6 +134,7 @@ void SixMansPlugin::unregisterCvars() {
 	cvarManager->removeCvar("6mMapNameSelection");
 	//cvarManager->removeCvar("6mGeneratedLink");
 	//cvarManager->removeCvar("6mEndRecursiveJoin");
+	cvarManager->removeCvar("6mAutojoinToggle"); 
 	cvarManager->removeCvar("6mAutotabInToggle");
 	cvarManager->removeCvar("6mAutoRetryToggle");
 	//cvarManager->removeCvar("6mEndRecursiveJoin");
