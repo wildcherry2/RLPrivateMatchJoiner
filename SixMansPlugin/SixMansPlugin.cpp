@@ -95,6 +95,19 @@ Region SixMansPlugin::getRegion(int region) {
 	}
 }
 
+
+void SixMansPlugin::logt(std::string text) {
+	SYSTEMTIME t = {0};
+	GetLocalTime(&t);
+	std::ostringstream ss;
+	ss << gameWrapper->GetDataFolder().string() << "\\" << t.wMonth << "-" << t.wDay << "-" << t.wYear << "_6mLog.log";
+	os.open(ss.str(), std::ios::app);
+	os << text << std::endl;
+	os.close();
+
+	LOG("[Logger]" + text);
+}
+
 //FinishEvent() server wrapper,GetGameEvent() or NoReservationKick() player controller for leaving black screens?
 //FIND FUNCTION FOR JOIN FAIL ERROR MODAL/INDICATOR, USEFUL FOR COUNTDOWN START
 // 

@@ -2,6 +2,8 @@
 #include "SixMansPlugin.h"
 
 void SixMansPlugin::init() {
+	
+
 	if (!mod_switch) {
 		cvarManager->registerNotifier("6mEnableMod", [this](std::vector<std::string> args) {
 			init();

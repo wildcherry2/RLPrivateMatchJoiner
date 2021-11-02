@@ -10,6 +10,7 @@
 
 #include "pch.h"
 #include "version.h"
+#include <datetimeapi.h>
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
 
@@ -21,6 +22,7 @@ public:
 	virtual void onLoad();
 	virtual void onUnload();
 	void gotoPrivateMatch();
+	void logt(std::string text);
 	Region getRegion(int region);
 	bool gpm_called = false;
 
@@ -50,6 +52,7 @@ public:
 	nlohmann::json set_file;
 	std::ifstream is;
 	std::ofstream os;
+	//const std::string lpath = gameWrapper->GetDataFolder().string() + "\\config.json";
 	const std::string path = gameWrapper->GetDataFolder().string() + "\\config.json";
 
 	//f2 gui

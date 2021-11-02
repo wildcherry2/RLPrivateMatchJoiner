@@ -38,6 +38,8 @@ void SixMansPlugin::initCFGMan() {
 	}
 	else LOG("[CFG Manager] json does not exist!");
 
+	
+
 	cvarManager->executeCommand("6mLoadCvar \"6mMapNameSelection\"");
 	cvarManager->executeCommand("6mLoadCvar \"6mAutotabInToggle\"");
 	//cvarManager->executeCommand("6mLoadCvar \"6mModEnabled\"");
