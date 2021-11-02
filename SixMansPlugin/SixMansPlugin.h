@@ -2,7 +2,7 @@
 /*
 * TODO:
 * Test join once its working, separate option for disabling auto join for create,grey out things right
-* Ensure server starts (sometimes doesn't on launch, needs redundancy)
+* Test autoretry enabled with autojoin disabled
 * Clean up unnecessary vars/functions/function calls/includes
 * Save exclusive logging to text file instead of printing on console for bug reports
 * Documentation
