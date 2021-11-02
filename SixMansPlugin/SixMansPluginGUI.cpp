@@ -16,7 +16,6 @@ void SixMansPlugin::RenderSettings() {
 	renderAutotabEnabled();
 	renderAutojoinEnabled();
 	renderAutoretryEnabled();
-	renderTimeRetry();
 }
 
 void SixMansPlugin::renderModEnabledCheckbox() { 
@@ -94,6 +93,7 @@ void SixMansPlugin::renderAutoretryEnabled() {
 		ImGui::PopTextWrapPos();
 		ImGui::EndTooltip();
 	}
+	if(enabled) renderTimeRetry();
 }
 void SixMansPlugin::renderTimeRetry() {
 	CVarWrapper cv = cvarManager->getCvar("6mTimeBeforeRetrying");

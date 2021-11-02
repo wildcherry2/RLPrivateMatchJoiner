@@ -2,47 +2,14 @@
 /*
 * TODO:
 * Test join once its working, separate option for disabling auto join for create,grey out things right
-* Test autoretry enabled with autojoin disabled
-* Clean up unnecessary vars/functions/function calls/includes
+* Make it persistent when going from training -> main menu
 * Save exclusive logging to text file instead of printing on console for bug reports
 * Documentation
-* 
-* c++20?
-* 
-* BUGS:
-* Enabling autoretry while 6mans window is up, then disabling the mod via f2 causes crash- should probably grey out options on gotoprivatematch call
 */
 #pragma once
 
-#include "bakkesmod/plugin/bakkesmodplugin.h"
-#include "bakkesmod/plugin/pluginwindow.h"
-#include "bakkesmod/plugin/PluginSettingsWindow.h"
-#include "bakkesmod/wrappers/gamewrapper.h"
-#include "bakkesmod/wrappers/MatchmakingWrapper.h"
-#include "bakkesmod/wrappers/PlayerControllerWrapper.h"
-#include "bakkesmod/wrappers/GameEvent/GameEventWrapper.h"
-#include "bakkesmod/wrappers/SettingsWrapper.h"
-#include "bakkesmod/wrappers/ImageWrapper.h"
-#include "IMGUI/imgui.h"
-#include "IMGUI/imgui_impl_dx11.h"
-#include <regex>
-#include <algorithm>
+#include "pch.h"
 #include "version.h"
-#include "Simple-Web-Server/server_http.hpp">;
-#include <boost/filesystem.hpp>
-#include <boost/algorithm/string/trim.hpp>
-#include <fstream>
-#include <vector>
-#include <thread>
-#include <functional>
-#include <iostream>
-#include <utility>
-#include <string>
-#include <cstring>
-#include "nlohmann/json.hpp"
-#include "Timer.h"
-//#include "CFG.h"
-#include <stack>
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
 
@@ -56,7 +23,6 @@ public:
 	void gotoPrivateMatch();
 	Region getRegion(int region);
 	bool gpm_called = false;
-	Timer timer;
 
 	//autojoin
 	bool in_game = false;
@@ -118,17 +84,13 @@ public:
 	//interface	
 	bool isWindowOpen_ = false;
 	bool isMinimized_ = false;
-	bool doAction = false;
 	bool notif_enabled = true;
 	bool countdown = false;
-	bool hastried = false;
 	std::string menuTitle_ = "sixmansplugininterface";
 	size_t xres;
 	size_t yres;
-	double countdown_c;
 	double countdown_start = 20;
 	double countdown_current;
-	int countdown_index = -1;
 	float res_ratio_x = 1550 / 1920.0; //multiply these by res to get scaled toast
 	float res_ratio_y = 20 / 1080.0;
 	float res_ratio_w = 350 / 1920.0;

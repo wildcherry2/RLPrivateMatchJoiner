@@ -102,7 +102,7 @@ void SixMansPlugin::initUtilityCvars() {
 		}, "", PERMISSION_ALL);
 	
 	cvarManager->setBind("F3", "togglemenu SixMansPluginInterface");
-	cvarManager->setBind("F5", "6mCount 1");
+	//cvarManager->setBind("F5", "6mCount 1");
 	cvarManager->registerNotifier("6mSaveCvar", [this](std::vector<std::string> args) {
 		args.erase(args.begin()); //dont care about the notifier name
 		saveConfig(args);
@@ -111,18 +111,19 @@ void SixMansPlugin::initUtilityCvars() {
 		args.erase(args.begin());
 		loadConfig(args);
 		}, "", PERMISSION_ALL);
-	cvarManager->registerNotifier("test", [this](std::vector<std::string> args) {
+	/*cvarManager->registerNotifier("test", [this](std::vector<std::string> args) {
 		cvarManager->getCvar("6mServerName").setValue("adsfasdf2");
 		cvarManager->getCvar("6mServerPass").setValue("adsfasdf2");
-		}, "", PERMISSION_ALL);
-	cvarManager->registerNotifier("end", [this](std::vector<std::string> args) {
-		gameWrapper->GetPlayerController().NoReservationKick(); //this works on loading screens!
-		}, "", PERMISSION_ALL);
+		}, "", PERMISSION_ALL);*/
+	//cvarManager->registerNotifier("end", [this](std::vector<std::string> args) {
+	//	gameWrapper->GetPlayerController().NoReservationKick(); //this works on loading screens!
+	//	}, "", PERMISSION_ALL);
 }
 
 void SixMansPlugin::unregisterCvars() {
 	cvarManager->executeCommand("closemenu SixMansPluginInterface");
 	cvarManager->executeCommand("6mDisableServer");
+
 	cvarManager->removeCvar("6mServerName");
 	cvarManager->removeCvar("6mServerPass");
 	cvarManager->removeCvar("6mMap");
@@ -132,18 +133,26 @@ void SixMansPlugin::unregisterCvars() {
 	cvarManager->removeCvar("6mAutotabInToggle");
 	cvarManager->removeCvar("6mAutoRetryToggle");
 	cvarManager->removeCvar("6mTimeBeforeRetrying");
+	cvarManager->removeCvar("6mInGame");
+	cvarManager->removeCvar("6mCanBackOut");
+	cvarManager->removeCvar("6mgpmCalled");
+	cvarManager->removeCvar("6mCount");
+
 	cvarManager->removeNotifier("6mGetMatchVars");
 	cvarManager->removeNotifier("6mReady");
 	cvarManager->removeNotifier("6mDisableServer");
 	cvarManager->removeNotifier("6mEnableServer");
 	cvarManager->removeNotifier("6mSaveCvar");
 	cvarManager->removeNotifier("6mLoadCvar");
+
 	cvarManager->removeBind("F3");
-	cvarManager->removeBind("F5");
+	//cvarManager->removeBind("F5");
+
 	gameWrapper->UnhookEventPost("Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete");
 	gameWrapper->UnhookEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed");
 	gameWrapper->UnhookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError");
 	gameWrapper->UnhookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError");
+
 	cvarManager->log("cvars unregistered,mod disabled!");
 }
 

@@ -63,7 +63,6 @@ void SixMansPlugin::renderCountdown() {
 }
 
 void SixMansPlugin::initCountdown() {
-	countdown_c = time_to_wait;
 	countdown_start = ImGui::GetTime(); //THIS IS NOT BEING SET, START ALWAYS IS 0
 	countdown_current = countdown_start;
 }
@@ -73,7 +72,7 @@ void SixMansPlugin::renderActionNotif() {
 	renderLogo();
 	ImGui::SameLine();
 	if (cvarManager->getCvar("6mEventType").getIntValue() == 1) {
-		renderHeader("Join 6Mans:\nLobby #0001");
+		renderHeader("Join 6Mans:\nLobby #" + name.substr(1, name.npos));
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
 		renderText("The match info is loaded in the game!\nPress the button below to join:");
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
@@ -83,7 +82,7 @@ void SixMansPlugin::renderActionNotif() {
 		renderNote("NOTE: For options, press F2->Plugins->6Mans Plugin Settings");
 	}
 	else {
-		renderHeader("Create 6Mans:\nLobby #0001");
+		renderHeader("Create 6Mans:\nLobby #" + name.substr(1, name.npos));
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
 		renderText("The match info is loaded in the game!\nPress the button below to create:");
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
