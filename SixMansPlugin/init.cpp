@@ -148,6 +148,13 @@ void SixMansPlugin::initUtilityCvars() {
 
 void SixMansPlugin::unregisterCvars() {
 	logt("[Disable] Function called!");
+
+	logt("[Disable] Unregistering hooks...");
+	gameWrapper->UnhookEventPost("Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete");
+	gameWrapper->UnhookEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed");
+	gameWrapper->UnhookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError");
+	gameWrapper->UnhookEventPost("Function TAGame.GFxShell_TA.ShowErrorMessage");
+
 	logt("[Disable] Closing interface and disabling the server...");
 	cvarManager->executeCommand("closemenu SixMansPluginInterface");
 	cvarManager->executeCommand("6mDisableServer");
@@ -178,12 +185,6 @@ void SixMansPlugin::unregisterCvars() {
 	logt("[Disable] Removing debug binds...");
 	cvarManager->removeBind("F3");
 	//cvarManager->removeBind("F5");
-
-	logt("[Disable] Unregistering hooks...");
-	gameWrapper->UnhookEventPost("Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete");
-	gameWrapper->UnhookEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed");
-	gameWrapper->UnhookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError");
-	gameWrapper->UnhookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError");
 
 	logt("[Disable] Cvars unregistered, mod soft disabled!");
 }
