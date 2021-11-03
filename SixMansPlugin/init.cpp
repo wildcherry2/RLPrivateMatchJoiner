@@ -1,10 +1,13 @@
 #include "pch.h"
 #include "SixMansPlugin.h"
 
+
 void SixMansPlugin::init() {
-	GetLocalTime(&t);
-	ss << gameWrapper->GetDataFolder().string() << "\\logs\\" << t.wMonth << "-" << t.wDay << "-" << t.wYear << "_6mLog.log";
+	ls.open(logpath,std::ios::trunc);
+	ls.close();
+
 	if (!mod_switch) {
+		logt("[Init] Registering state and notif cvars...");
 		cvarManager->registerNotifier("6mEnableMod", [this](std::vector<std::string> args) {
 			init();
 			cvarManager->executeCommand("6mEnableServer");
@@ -27,13 +30,25 @@ void SixMansPlugin::init() {
 		initNotifVars();
 		mod_switch = true;
 	}
-	
+	logt("[Init] Registering hooks...");
 	initHooks();
+
+	logt("[Init] Registering match cvars...");
 	initMatchCvars();
+
+	logt("[Init] Registering gui cvars...");
 	initGuiCvars();
+
+	logt("[Init] Registering server cvars...");
 	initServerCvars();
+
+	logt("[Init] Registering utility cvars...");
 	initUtilityCvars();
+
+	logt("[Init] Registering autojoin cvars...");
 	initAutojoinCvars();
+
+	logt("[Init] Registering cfg cvars...");
 	initCFGMan();
 }
 
@@ -66,21 +81,30 @@ void SixMansPlugin::initGuiCvars() {
 	cvarManager->registerCvar("6mMapNameSelection", "18", "Enter map name", true, false, false, false,false,false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		cvarManager->getCvar("6mMap").setValue(MAP_CODENAMES[cw.getIntValue()]);
 		selected_map = MAP_CODENAMES[cw.getIntValue()];
-		cvarbuf.clear();
-		cvarbuf.push_back("6mMapNameSelection");
-		saveConfig(cvarbuf);
+		if(!loading)
+		{
+			cvarbuf.clear();
+			cvarbuf.push_back("6mMapNameSelection");
+			saveConfig(cvarbuf);
+		}
 		});
 	cvarManager->registerCvar("6mAutotabInToggle", "1", "Toggles autotab back in on server request", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_autotab_enabled = cw.getBoolValue();
-		cvarbuf.clear();
-		cvarbuf.push_back("6mAutotabInToggle");
-		saveConfig(cvarbuf);
+		if (!loading)
+		{
+			cvarbuf.clear();
+			cvarbuf.push_back("6mAutotabInToggle");
+			saveConfig(cvarbuf);
+		}
 		});;
 	cvarManager->registerCvar("6mAutojoinToggle", "1", "Toggles autojoin once match info is loaded", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_autojoin_enabled = cw.getBoolValue();
-		cvarbuf.clear();
-		cvarbuf.push_back("6mAutojoinToggle");
-		saveConfig(cvarbuf);
+		if (!loading)
+		{
+			cvarbuf.clear();
+			cvarbuf.push_back("6mAutojoinToggle");
+			saveConfig(cvarbuf);
+		}
 		});;
 }
 
@@ -123,9 +147,12 @@ void SixMansPlugin::initUtilityCvars() {
 }
 
 void SixMansPlugin::unregisterCvars() {
+	logt("[Disable] Function called!");
+	logt("[Disable] Closing interface and disabling the server...");
 	cvarManager->executeCommand("closemenu SixMansPluginInterface");
 	cvarManager->executeCommand("6mDisableServer");
 
+	logt("[Disable] Unregistering non-critical cvars...");
 	cvarManager->removeCvar("6mServerName");
 	cvarManager->removeCvar("6mServerPass");
 	cvarManager->removeCvar("6mMap");
@@ -140,6 +167,7 @@ void SixMansPlugin::unregisterCvars() {
 	cvarManager->removeCvar("6mgpmCalled");
 	cvarManager->removeCvar("6mCount");
 
+	logt("[Disable] Unregistering non-critical notifiers...");
 	cvarManager->removeNotifier("6mGetMatchVars");
 	cvarManager->removeNotifier("6mReady");
 	cvarManager->removeNotifier("6mDisableServer");
@@ -147,29 +175,37 @@ void SixMansPlugin::unregisterCvars() {
 	cvarManager->removeNotifier("6mSaveCvar");
 	cvarManager->removeNotifier("6mLoadCvar");
 
+	logt("[Disable] Removing debug binds...");
 	cvarManager->removeBind("F3");
 	//cvarManager->removeBind("F5");
 
+	logt("[Disable] Unregistering hooks...");
 	gameWrapper->UnhookEventPost("Function OnlineGamePrivateMatch_X.Joining.HandleJoinGameComplete");
 	gameWrapper->UnhookEventPost("Function TAGame.GameEvent_Soccar_TA.Destroyed");
 	gameWrapper->UnhookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError");
 	gameWrapper->UnhookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError");
 
-	logt("cvars unregistered,mod disabled!");
+	logt("[Disable] Cvars unregistered, mod soft disabled!");
 }
 
 void SixMansPlugin::initAutojoinCvars() {
 	cvarManager->registerCvar("6mTimeBeforeRetrying", std::to_string(time_to_wait), "", true, true, 30, true, 120, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		time_to_wait = cw.getIntValue();
-		cvarbuf.clear();
-		cvarbuf.push_back("6mTimeBeforeRetrying");
-		saveConfig(cvarbuf);
+		if (!loading)
+		{
+			cvarbuf.clear();
+			cvarbuf.push_back("6mTimeBeforeRetrying");
+			saveConfig(cvarbuf);
+		}
 		});;
 	cvarManager->registerCvar("6mAutoRetryToggle", "1", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		is_enabled_autoretry = cw.getBoolValue();
-		cvarbuf.clear();
-		cvarbuf.push_back("6mAutoRetryToggle");
-		saveConfig(cvarbuf);
+		if (!loading)
+		{
+			cvarbuf.clear();
+			cvarbuf.push_back("6mAutoRetryToggle");
+			saveConfig(cvarbuf);
+		}
 		});
 	cvarManager->registerCvar("6mInGame", "0", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		in_game = cw.getBoolValue();
@@ -233,14 +269,14 @@ void SixMansPlugin::initHooks() {
 
 	//on black screen/cancel, doesnt apply to join failures, TEST TO MAKE SURE THIS IS CALLED AFTER FIRST HOOK SO THE MENU OPENS
 	gameWrapper->HookEventPost("Function TAGame.GFxShell_TA.ShowErrorMessage", [this](std::string eventName) {
-		logt("Error modal!");
+		logt("[Error Modal] Error modal rendered!");
 		
 		if(cvarManager->getCvar("6mgpmCalled").getBoolValue()) cvarManager->executeCommand("openmenu SixMansPluginInterface");
 		});
 
 	//called on join failure
 	gameWrapper->HookEventPost("Function ProjectX.FindServerTask_X.HandleJoinMatchError", [this](std::string eventName) {
-		logt("Join failure!");
+		logt("[Join Match Error] Join failure!");
 		cvarManager->getCvar("6mCount").setValue("1"); cvarManager->executeCommand("openmenu SixMansPluginInterface");
 		});
 }

@@ -36,14 +36,16 @@ void SixMansPlugin::initCFGMan() {
 		is >> set_file;
 		is.close();
 	}
-	else logt("[CFG Manager] json does not exist!");
+	else logt("[CFG Manager] Json does not exist!");
 
 	
-
+	logt("[CFG Manager] Loading persistent cvars from cfg...");
 	cvarManager->executeCommand("6mLoadCvar \"6mMapNameSelection\"");
 	cvarManager->executeCommand("6mLoadCvar \"6mAutotabInToggle\"");
 	//cvarManager->executeCommand("6mLoadCvar \"6mModEnabled\"");
 	cvarManager->executeCommand("6mLoadCvar \"6mTimeBeforeRetrying\"");
 	cvarManager->executeCommand("6mLoadCvar \"6mAutoRetryToggle\"");
 	cvarManager->executeCommand("6mLoadCvar \"6mAutojoinToggle\"");
+
+	loading = false;
 }

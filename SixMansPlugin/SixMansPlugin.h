@@ -5,11 +5,14 @@
 * Make it persistent when going from training -> main menu
 * Save exclusive logging to text file instead of printing on console for bug reports
 * Documentation/wrap everything in namespaces for organization
+* 
+* BUG: enable broke again, logs arent working with extended args
 */
 #pragma once
 
 #include "pch.h"
 #include "version.h"
+#include "aixlog.hpp"
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
 class SixMansPlugin: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow, public BakkesMod::Plugin::PluginWindow
@@ -22,6 +25,7 @@ public:
 	void logt(std::string text);
 	Region getRegion(int region);
 	bool gpm_called = false;
+	bool loading = true;
 
 	//autojoin
 	bool in_game = false;
@@ -119,10 +123,15 @@ public:
 	virtual void OnOpen() override;
 	virtual void OnClose() override;
 
-	//date
-	SYSTEMTIME t = { 0 };
+	//log
+	std::string logpath = gameWrapper->GetDataFolder().string() + "\\6m\\6m.log";
+	/*std::shared_ptr<AixLog::SinkFile> alog = std::make_shared<AixLog::SinkFile>(AixLog::Severity::trace, logpath); */
+	
+	std::ofstream ls;
+	//std::filesystem::path fspath;
+	//SYSTEMTIME t = { 0 };
 	//GetLocalTime(&t);
-	std::ostringstream ss;
+	//std::stringstream ss;
 	//ss << gameWrapper->GetDataFolder().string() << "\\logs\\" << t.wMonth << "-" << t.wDay << "-" << t.wYear << "_6mLog.log";
 
 	const std::string STAT_ERROR[3] = {
