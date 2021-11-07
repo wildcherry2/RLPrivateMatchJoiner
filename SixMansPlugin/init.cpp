@@ -54,19 +54,19 @@ void SixMansPlugin::init() {
 
 void SixMansPlugin::initMatchCvars() {
 	cvarManager->registerCvar("6mEventType", "1", "Set to 0 for create mode, 1 for join mode", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
-		event_code = cw.getIntValue();
+		match_info.event = cw.getIntValue();
 		});
 	cvarManager->registerCvar("6mServerName", "", "Enter the server name", true, false, false, false,false,false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
-		name = cw.getStringValue();
+		match_info.name = cw.getStringValue();
 		});
 	cvarManager->registerCvar("6mServerPass", "", "Enter the server password", true, false, false, false,false,false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
-		pass = cw.getStringValue();
+		match_info.pass = cw.getStringValue();
 		});
 	cvarManager->registerCvar("6mMap", Constants::MAP_CODENAMES[17], "Enter internal map names (see MapsStruct.h for names)", true, false, false, false,false,false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
-		selected_map = cw.getStringValue();
+		match_info.selected_map = cw.getStringValue();
 		}); //gonna want to save this choice
 	cvarManager->registerCvar("6mRegion", "0", "Enter the region code (0-9)", true, true, 0, true, 9, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
-		region = getRegion(cw.getIntValue());
+		match_info.region = getRegion(cw.getIntValue());
 		});
 	cvarManager->registerNotifier("6mGetMatchVars", [this](std::vector<std::string> args) {
 		logt("Event= " + cvarManager->getCvar("6mEventType").getStringValue());
@@ -80,7 +80,7 @@ void SixMansPlugin::initMatchCvars() {
 void SixMansPlugin::initGuiCvars() {
 	cvarManager->registerCvar("6mMapNameSelection", "18", "Enter map name", true, false, false, false,false,false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
 		cvarManager->getCvar("6mMap").setValue(Constants::MAP_CODENAMES[cw.getIntValue()]);
-		selected_map = Constants::MAP_CODENAMES[cw.getIntValue()];
+		match_info.selected_map = Constants::MAP_CODENAMES[cw.getIntValue()];
 		if(!cfg.loading)
 		{
 			cfg.cvarbuf.clear();

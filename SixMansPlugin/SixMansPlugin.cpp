@@ -33,24 +33,24 @@ void SixMansPlugin::gotoPrivateMatch() {
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
 	if (!in_game && mw) [[likely]] {
 		logt("[GoToPrivateMatch] Player ready!");
-		if (event_code == 0) [[unlikely]] {
+		if (match_info.event == 0) [[unlikely]] {
 			logt("[GoToPrivateMatch] Event = create...");
 			CustomMatchSettings cm;
 			CustomMatchTeamSettings blue;
 			CustomMatchTeamSettings red;
 
-			cm.GameTags = gametags;
-			cm.MapName = cvarManager->getCvar("6mMap").getStringValue();
-			cm.ServerName = cvarManager->getCvar("6mServerName").getStringValue();
-			cm.Password = cvarManager->getCvar("6mServerPass").getStringValue();
+			cm.GameTags = match_info.gametags;
+			cm.MapName = match_info.selected_map/*cvarManager->getCvar("6mMap").getStringValue()*/;
+			cm.ServerName = match_info.name/*cvarManager->getCvar("6mServerName").getStringValue()*/;
+			cm.Password = match_info.pass/*cvarManager->getCvar("6mServerPass").getStringValue()*/;
 			cm.BlueTeamSettings = blue;
 			cm.OrangeTeamSettings = red;
 			cm.bClubServer = false;
 
-			logt("[GoToPrivateMatch] Creating with name: " + cm.ServerName + ", pass: " + cm.Password + ", region: " + std::to_string((int)region));
-			mw.CreatePrivateMatch(region, cm);
+			logt("[GoToPrivateMatch] Creating with name: " + cm.ServerName + ", pass: " + cm.Password + ", region: " + std::to_string((int)match_info.region));
+			mw.CreatePrivateMatch(match_info.region, cm);
 		}
-		else if (event_code == 1) [[likely]] {
+		else if (match_info.event == 1) [[likely]] {
 			logt("[GoToPrivateMatch] Event = join...");
 			const std::string thisname = cvarManager->getCvar("6mServerName").getStringValue();
 			const std::string thispass = cvarManager->getCvar("6mServerPass").getStringValue();

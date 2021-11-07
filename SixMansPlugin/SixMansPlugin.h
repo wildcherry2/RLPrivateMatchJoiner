@@ -15,6 +15,7 @@
 #include "version.h"
 #include "Constants.h"
 #include "CFG.h"
+#include "MatchStruct.h"
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
 class SixMansPlugin: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow, public BakkesMod::Plugin::PluginWindow
@@ -52,15 +53,6 @@ public:
 	std::string logpath = gameWrapper->GetDataFolder().string() + "\\6m\\6m.log";
 	std::ofstream ls;
 	CFG cfg = CFG(*gameWrapper, logpath);
-	//void initCFGMan();
-	//void loadConfig(const std::vector<std::string> cvars);
-	//void saveConfig(const std::vector<std::string> cvars);
-	//std::vector<std::string> cvarbuf;
-	//nlohmann::json set_file;
-	//std::ifstream is;
-	//std::ofstream os;
-	////const std::string lpath = gameWrapper->GetDataFolder().string() + "\\config.json";
-	//const std::string path = gameWrapper->GetDataFolder().string() + "\\6m\\config.json";
 
 	//f2 gui
 	void RenderSettings() override;
@@ -84,11 +76,12 @@ public:
 	void MoveGameToFront();
 
 	//match info
-	std::string name = "", pass = "";
+	Match match_info;
+	/*std::string name = "", pass = "";
 	std::string gametags = "BotsNone";
 	Region region = Region::USE;
 	size_t event_code = 1;
-	std::string selected_map = Constants::MAP_CODENAMES[17];
+	std::string selected_map = Constants::MAP_CODENAMES[17];*/
 
 
 	//interface	

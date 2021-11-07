@@ -72,7 +72,7 @@ void SixMansPlugin::renderActionNotif() {
 	renderLogo();
 	ImGui::SameLine();
 	if (cvarManager->getCvar("6mEventType").getIntValue() == 1) {
-		renderHeader("Join 6Mans:\nLobby #" + name.substr(1, name.npos));
+		renderHeader("Join 6Mans:\nLobby #" + match_info.name.substr(1, match_info.name.npos));
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
 		renderText("The match info is loaded in the game!\nPress the button below to join:");
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
@@ -82,7 +82,7 @@ void SixMansPlugin::renderActionNotif() {
 		renderNote("NOTE: For options, press F2->Plugins->6Mans Plugin Settings");
 	}
 	else {
-		renderHeader("Create 6Mans:\nLobby #" + name.substr(1, name.npos));
+		renderHeader("Create 6Mans:\nLobby #" + match_info.name.substr(1, match_info.name.npos));
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
 		renderText("The match info is loaded in the game!\nPress the button below to create:");
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
