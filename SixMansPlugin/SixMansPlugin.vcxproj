@@ -108,6 +108,8 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="_Autojoin.cpp" />
+    <ClCompile Include="_Autoretry.cpp" />
     <ClCompile Include="_Autotab.cpp" />
     <ClCompile Include="CFG.cpp" />
     <ClCompile Include="fmt\src\format.cc" />
@@ -136,6 +138,8 @@
     <ClCompile Include="_ModEnabled.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="_Autojoin.h" />
+    <ClInclude Include="_Autoretry.h" />
     <ClInclude Include="_Autotab.h" />
     <ClInclude Include="CFG.h" />
     <ClInclude Include="Constants.h" />

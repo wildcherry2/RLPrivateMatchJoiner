@@ -90,9 +90,6 @@
     <ClCompile Include="CustomToastGUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CFG.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SettingsComponent.cpp">
       <Filter>Source Files\Settings</Filter>
     </ClCompile>
@@ -100,6 +97,15 @@
       <Filter>Source Files\Settings</Filter>
     </ClCompile>
     <ClCompile Include="_ModEnabled.cpp">
+      <Filter>Source Files\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="_Autojoin.cpp">
+      <Filter>Source Files\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="_Autoretry.cpp">
+      <Filter>Source Files\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="CFG.cpp">
       <Filter>Source Files\Settings</Filter>
     </ClCompile>
   </ItemGroup>
@@ -185,9 +191,6 @@
     <ClInclude Include="Constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CFG.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MatchStruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -201,6 +204,15 @@
       <Filter>Header Files\Settings</Filter>
     </ClInclude>
     <ClInclude Include="_ModEnabled.h">
+      <Filter>Header Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="_Autojoin.h">
+      <Filter>Header Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="_Autoretry.h">
+      <Filter>Header Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="CFG.h">
       <Filter>Header Files\Settings</Filter>
     </ClInclude>
   </ItemGroup>
