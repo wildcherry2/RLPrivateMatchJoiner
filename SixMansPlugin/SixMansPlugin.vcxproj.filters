@@ -25,6 +25,12 @@
     <Filter Include="Simple-Web-Server">
       <UniqueIdentifier>{f73e501b-0bf8-4eb7-8bca-dbb29173a33a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Settings">
+      <UniqueIdentifier>{413fd87f-c352-4b57-a071-879a25d9edb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Settings">
+      <UniqueIdentifier>{172f78b4-0049-4840-a0d5-e7186e7f2525}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SixMansPlugin.cpp">
@@ -86,6 +92,15 @@
     </ClCompile>
     <ClCompile Include="CFG.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsComponent.cpp">
+      <Filter>Source Files\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="_Autotab.cpp">
+      <Filter>Source Files\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="_ModEnabled.cpp">
+      <Filter>Source Files\Settings</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +190,18 @@
     </ClInclude>
     <ClInclude Include="MatchStruct.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsComponent.h">
+      <Filter>Header Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="_Autotab.h">
+      <Filter>Header Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsIncludes.h">
+      <Filter>Header Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="_ModEnabled.h">
+      <Filter>Header Files\Settings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

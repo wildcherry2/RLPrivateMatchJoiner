@@ -19,44 +19,16 @@ void SixMansPlugin::RenderSettings() {
 }
 
 void SixMansPlugin::renderModEnabledCheckbox() { 
-	CVarWrapper cv = cvarManager->getCvar("6mModEnabled");
-	if (!cv) return;
-	bool enabled = cv.getBoolValue();
-
-	if (ImGui::Checkbox("Enabled", &enabled)) cv.setValue(enabled);
-
-
-
-	ImGui::SameLine();
-	ImGui::TextDisabled("(?)");
-	if (ImGui::IsItemHovered())
-	{
-		ImGui::BeginTooltip();
-		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-		ImGui::TextUnformatted("Enable or disable the plugin");
-		ImGui::PopTextWrapPos();
-		ImGui::EndTooltip();
-	}
+	Settings::ModEnabled me = Settings::ModEnabled(*cvarManager);
+	me.Render();
 }
 void SixMansPlugin::renderAutotabEnabled() { 
-	CVarWrapper cv = cvarManager->getCvar("6mAutotabInToggle");
-	if (!cv) return;
-	bool enabled = cv.getBoolValue();
-	
-	if (ImGui::Checkbox("Autotab", &enabled)) cv.setValue(enabled);
-	ImGui::SameLine();
-	ImGui::TextDisabled("(?)");
-	if (ImGui::IsItemHovered())
-	{
-		ImGui::BeginTooltip();
-		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-		ImGui::TextUnformatted("Enable or disable automatically tabbing in after clicking a match link");
-		ImGui::PopTextWrapPos();
-		ImGui::EndTooltip();
-	}
+	Settings::Autotab at = Settings::Autotab(*cvarManager);
+	at.Render();
 }
 
 void SixMansPlugin::renderAutojoinEnabled() {
+	
 	CVarWrapper cv = cvarManager->getCvar("6mAutojoinToggle");
 	if (!cv) return;
 	bool enabled = cv.getBoolValue();
