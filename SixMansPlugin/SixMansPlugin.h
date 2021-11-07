@@ -48,7 +48,10 @@ public:
 	void unregisterCvars();
 
 	//custom cfg
-	CFG cfg = CFG(*gameWrapper);
+	//log
+	std::string logpath = gameWrapper->GetDataFolder().string() + "\\6m\\6m.log";
+	std::ofstream ls;
+	CFG cfg = CFG(*gameWrapper, logpath);
 	//void initCFGMan();
 	//void loadConfig(const std::vector<std::string> cvars);
 	//void saveConfig(const std::vector<std::string> cvars);
@@ -126,7 +129,5 @@ public:
 	virtual void OnOpen() override;
 	virtual void OnClose() override;
 
-	//log
-	std::string logpath = gameWrapper->GetDataFolder().string() + "\\6m\\6m.log";
-	std::ofstream ls;
+	
 };
