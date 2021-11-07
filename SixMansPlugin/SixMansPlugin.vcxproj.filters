@@ -108,6 +108,9 @@
     <ClCompile Include="CFG.cpp">
       <Filter>Source Files\Settings</Filter>
     </ClCompile>
+    <ClCompile Include="_Timeretry.cpp">
+      <Filter>Source Files\Settings</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SixMansPlugin.h">
@@ -213,6 +216,9 @@
       <Filter>Header Files\Settings</Filter>
     </ClInclude>
     <ClInclude Include="CFG.h">
+      <Filter>Header Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="_Timeretry.h">
       <Filter>Header Files\Settings</Filter>
     </ClInclude>
   </ItemGroup>

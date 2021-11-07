@@ -136,6 +136,7 @@
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="CustomToastGUI.cpp" />
     <ClCompile Include="_ModEnabled.cpp" />
+    <ClCompile Include="_Timeretry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_Autojoin.h" />
@@ -173,6 +174,7 @@
     <ClInclude Include="Simple-Web-Server\utility.hpp" />
     <ClInclude Include="version.h" />
     <ClInclude Include="_ModEnabled.h" />
+    <ClInclude Include="_Timeretry.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SixMansPlugin.rc" />

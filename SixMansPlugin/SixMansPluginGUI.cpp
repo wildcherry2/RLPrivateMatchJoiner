@@ -16,6 +16,7 @@ void SixMansPlugin::RenderSettings() {
 	renderAutotabEnabled();
 	renderAutojoinEnabled();
 	renderAutoretryEnabled();
+	renderTimeRetry(); //del this
 }
 
 void SixMansPlugin::renderModEnabledCheckbox() { 
@@ -39,7 +40,9 @@ void SixMansPlugin::renderAutoretryEnabled() {
 }
 void SixMansPlugin::renderTimeRetry() {
 	//if(ar.enabled) { rest of shit here }
-	CVarWrapper cv = cvarManager->getCvar("6mTimeBeforeRetrying");
+	Settings::Timeretry tr = Settings::Timeretry(*cvarManager);
+	tr.Render();
+	/*CVarWrapper cv = cvarManager->getCvar("6mTimeBeforeRetrying");
 	if (!cv) return;
 	int val = cv.getIntValue();
 
@@ -53,7 +56,7 @@ void SixMansPlugin::renderTimeRetry() {
 		ImGui::TextUnformatted("The time to wait before autoretry attempts to join the match");
 		ImGui::PopTextWrapPos();
 		ImGui::EndTooltip();
-	}
+	}*/
 }
 void SixMansPlugin::renderMapCombobox(std::string name) {
 	CVarWrapper cv = cvarManager->getCvar("6mMapNameSelection");
