@@ -2,7 +2,7 @@
 /*
 * TODO:
 * Test join once its working, separate option for disabling auto join for create,grey out things right
-* handle load disabled on launch, persistent log on soft disables
+* handle load disabled on launch, persistent log on soft disables, note about fully unloading
 * Make it persistent when going from training -> main menu
 * Save exclusive logging to text file instead of printing on console for bug reports
 * Documentation/wrap everything in namespaces for organization
@@ -13,6 +13,8 @@
 
 #include "pch.h"
 #include "version.h"
+#include "Constants.h"
+#include "CFG.h"
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
 class SixMansPlugin: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow, public BakkesMod::Plugin::PluginWindow
@@ -46,15 +48,16 @@ public:
 	void unregisterCvars();
 
 	//custom cfg
-	void initCFGMan();
-	void loadConfig(const std::vector<std::string> cvars);
-	void saveConfig(const std::vector<std::string> cvars);
-	std::vector<std::string> cvarbuf;
-	nlohmann::json set_file;
-	std::ifstream is;
-	std::ofstream os;
-	//const std::string lpath = gameWrapper->GetDataFolder().string() + "\\config.json";
-	const std::string path = gameWrapper->GetDataFolder().string() + "\\6m\\config.json";
+	CFG cfg = CFG(*gameWrapper);
+	//void initCFGMan();
+	//void loadConfig(const std::vector<std::string> cvars);
+	//void saveConfig(const std::vector<std::string> cvars);
+	//std::vector<std::string> cvarbuf;
+	//nlohmann::json set_file;
+	//std::ifstream is;
+	//std::ofstream os;
+	////const std::string lpath = gameWrapper->GetDataFolder().string() + "\\config.json";
+	//const std::string path = gameWrapper->GetDataFolder().string() + "\\6m\\config.json";
 
 	//f2 gui
 	void RenderSettings() override;
@@ -82,7 +85,7 @@ public:
 	std::string gametags = "BotsNone";
 	Region region = Region::USE;
 	size_t event_code = 1;
-	std::string selected_map = MAP_CODENAMES[17];
+	std::string selected_map = Constants::MAP_CODENAMES[17];
 
 
 	//interface	
@@ -126,110 +129,4 @@ public:
 	//log
 	std::string logpath = gameWrapper->GetDataFolder().string() + "\\6m\\6m.log";
 	std::ofstream ls;
-
-	const std::string STAT_ERROR[3] = {
-		"Joining match...",
-		"Creating match...",
-		"Error!"
-	};
-	//name arrays
-	const std::string MAP_CODENAMES[35] = {
-		"Underwater_P",
-		"Park_P",
-		"Park_Night_P",
-		"Park_Rainy_P",
-		"cs_p",
-		"cs_day_p",
-		"bb_p",
-		"outlaw_p",
-		"Stadium_P",
-		"Stadium_Race_Day_p",
-		"stadium_day_p",
-		"Stadium_Winter_P",
-		"Stadium_Foggy_P",
-		"farm_p",
-		"Farm_Night_P",
-		"CHN_Stadium_P",
-		"CHN_Stadium_Day_P",
-		"EuroStadium_P",
-		"EuroStadium_Night_P",
-		"eurostadium_snownight_p",
-		"EuroStadium_Rainy_P",
-		"NeoTokyo_Standard_P",
-		"music_p",
-		"cs_hw_p",
-		"beach_P",
-		"beach_night_p",
-		"arc_standard_p",
-		"TrainStation_P",
-		"TrainStation_Dawn_P",
-		"TrainStation_Night_P",
-		"UtopiaStadium_P",
-		"UtopiaStadium_Dusk_P",
-		"UtopiaStadium_Snow_P",
-		"wasteland_s_p",
-		"wasteland_Night_S_P"
-	};
-	const char* MAP_NORMALNAMES[35] = {
-		"Aquadome",
-		"Beckwith Park",
-		"Beckwith Park (Midnight)",
-		"Beckwith Park (Stormy)",
-		"Champions Field",
-		"Champions Field (Day)",
-		"Champions Field (NFL)",
-		"Deadeye Canyon",
-		"DFH Stadium",
-		"DFH Stadium (Circuit)",
-		"DFH Stadium (Day)",
-		"DFH Stadium (Snowy)",
-		"DFH Stadium (Stormy)",
-		"Farmstead",
-		"Farmstead (Night)",
-		"Forbidden Temple",
-		"Forbidden Temple (Day)",
-		"Mannfield",
-		"Mannfield (Night)",
-		"Mannfield (Snowy)",
-		"Mannfield (Stormy)",
-		"Neo Tokyo",
-		"Neon Fields",
-		"Rivals Arena",
-		"Salty Shores",
-		"Salty Shores (Night)",
-		"Starbase ARC",
-		"Urban Central",
-		"Urban Central (Dawn)",
-		"Urban Central (Night)",
-		"Utopia Coliseum",
-		"Utopia Coliseum (Dusk)",
-		"Utopia Coliseum (Snowy)",
-		"Wasteland",
-		"Wasteland (Night)"
-	};
-
-	const char* REGION_NAMES[10] = {
-		"US-East (USE)",
-		"Europe (EU)",
-		"US-West (USW)",
-		"Asia SE-Mainland (ASC)",
-		"Asia SE-Maritime (ASM)",
-		"Asia East (JPN)",
-		"Middle East (ME)",
-		"Oceania (OCE)",
-		"South Africa (SAF)",
-		"South America (SAM)"
-	};
-
-	const std::vector<std::string> PERSISTENT_CVARS = {
-		"6mMapNameSelection",
-		"6mAutotabInToggle",
-		"6mModEnabled",
-		"6mTimeBeforeRetrying",
-		"6mAutoRetryToggle"
-	};
-
-	const size_t NUM_PER_CVARS = 5;
-
-	
 };

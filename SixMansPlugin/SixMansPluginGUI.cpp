@@ -116,7 +116,7 @@ void SixMansPlugin::renderMapCombobox(std::string name) {
 	CVarWrapper cv = cvarManager->getCvar("6mMapNameSelection");
 	if (!cv) return;
 	int current = cv.getIntValue();
-	if (ImGui::Combo(name.c_str(), &current, MAP_NORMALNAMES, IM_ARRAYSIZE(MAP_NORMALNAMES))) { cv.setValue(current); }
+	if (ImGui::Combo(name.c_str(), &current, Constants::MAP_NORMALNAMES, IM_ARRAYSIZE(Constants::MAP_NORMALNAMES))) { cv.setValue(current); }
 	ImGui::SameLine();
 	ImGui::TextDisabled("(?)");
 	if (ImGui::IsItemHovered())

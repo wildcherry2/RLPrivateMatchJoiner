@@ -133,6 +133,8 @@
     <ClCompile Include="CustomToastGUI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CFG.h" />
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imguivariouscontrols.h" />

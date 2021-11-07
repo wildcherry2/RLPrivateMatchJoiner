@@ -21,7 +21,7 @@ void SixMansPlugin::onUnload()
 {
 	cvarManager->executeCommand("6mDisableServer");
 	logt("Saving config...");
-	saveConfig(PERSISTENT_CVARS);
+	cfg.saveConfig(Constants::PERSISTENT_CVARS, *cvarManager);
 	logt("WARNING: If you manually unload the plugin, you'll have to restart the game to load it again.");
 	logt("6Mans Plugin unloaded.");
 	logt("\nEND OF LOG");
