@@ -108,6 +108,7 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Autoretry.cpp" />
     <ClCompile Include="_Autojoin.cpp" />
     <ClCompile Include="_Autoretry.cpp" />
     <ClCompile Include="_Autotab.cpp" />
@@ -139,6 +140,9 @@
     <ClCompile Include="_Timeretry.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Autoretry.h" />
+    <ClInclude Include="Routine.h" />
+    <ClInclude Include="Toast.h" />
     <ClInclude Include="_Autojoin.h" />
     <ClInclude Include="_Autoretry.h" />
     <ClInclude Include="_Autotab.h" />
