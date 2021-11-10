@@ -75,8 +75,8 @@ void SixMansPlugin::gotoPrivateMatch() {
 
 void SixMansPlugin::autoRetry() {
 	initCountdown();
-	gameWrapper->SetTimeout([this](GameWrapper* gw) {
-		if (in_game || can_manually_back_out) [[unlikely]] { countdown = false; logt("[Autoretry] In game or player backed out, unwinding recursion..."); return; } //need to reset these vars after
+	gameWrapper->SetTimeout([this](GameWrapper* gw) { //added fp/ct checks
+		if ((in_game || can_manually_back_out) && !gameWrapper->IsInFreeplay() && !gameWrapper->IsInCustomTraining()) [[unlikely]] { countdown = false; logt("[Autoretry] In game or player backed out, unwinding recursion..."); return; } //need to reset these vars after
 		else [[likely]] { 
 			countdown = true;
 			
