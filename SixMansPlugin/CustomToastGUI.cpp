@@ -44,7 +44,7 @@ void SixMansPlugin::renderCountdown() {
 		countdown_current = ImGui::GetTime();
 		double val = (double)time_to_wait - (countdown_current - countdown_start);
 		std::string t_string = val <= 0 ? "Retrying in 0 seconds..." : "Retrying in " + std::to_string((int)val) + " seconds...";
-		//countdown_current = ImGui::GetTime();
+		//countdown_current = ImGui::GetTime(); 
 
 		//logt(std::to_string(countdown_start));
 		renderText(t_string);
