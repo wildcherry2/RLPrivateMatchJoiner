@@ -90,6 +90,7 @@ public:
 	bool isMinimized_ = false;
 	bool notif_enabled = true;
 	bool countdown = false;
+	bool block_enabled = false;
 	std::string menuTitle_ = "sixmansplugininterface";
 	size_t xres;
 	size_t yres;

@@ -13,6 +13,11 @@ void SixMansPlugin::Render()
 		ImGui::End();
 		return;
 	}
+	//if (!bind_block_enabled) {
+	//	//cvarManager->setBind("Esc","openmenu SixMansPluginInterface");
+	//
+	//	bind_block_enabled = true;
+	//}
 	if (!countdown)
 		renderActionNotif();
 	else
@@ -177,5 +182,11 @@ void SixMansPlugin::OnOpen()
 void SixMansPlugin::OnClose()
 {
 	//add reset everything, close button
+	/*if (bind_block_enabled) {
+		cvarManager->removeBind("Escape");
+		bind_block_enabled = false;
+	}*/
 	isWindowOpen_ = false;
+	gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("openmenu " + GetMenuName()); });
+	//cvarManager->executeCommand("openmenu SixMansPluginInterface");
 }
