@@ -187,6 +187,6 @@ void SixMansPlugin::OnClose()
 		bind_block_enabled = false;
 	}*/
 	isWindowOpen_ = false;
-	gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("openmenu " + GetMenuName()); });
+	//gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("openmenu " + GetMenuName()); });
 	//cvarManager->executeCommand("openmenu SixMansPluginInterface");
 }

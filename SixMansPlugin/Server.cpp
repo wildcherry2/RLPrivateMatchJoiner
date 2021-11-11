@@ -34,9 +34,11 @@ void SixMansPlugin::startServer() {
 			response->write(SimpleWeb::StatusCode::success_accepted, "alright");
 			response->send();
 
-			gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("openmenu SixMansPluginInterface");});
+			//move openinterface above branches
+			//gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("6mReady"); /*cvarManager->executeCommand("openmenu SixMansPluginInterface");*/});
 			if(is_autotab_enabled) MoveGameToFront();
 			if (is_autojoin_enabled) gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("openmenu SixMansPluginInterface"); cvarManager->executeCommand("6mReady"); });
+			else gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("openmenu SixMansPluginInterface");});
 		};
 
 		//URL syntax: localhost:[port]/halt

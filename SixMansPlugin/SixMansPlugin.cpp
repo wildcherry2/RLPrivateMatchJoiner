@@ -33,7 +33,7 @@ void SixMansPlugin::gotoPrivateMatch() {
 	MatchmakingWrapper mw = gameWrapper->GetMatchmakingWrapper();
 	if (!in_game && mw) [[likely]] {
 		logt("[GoToPrivateMatch] Player ready!");
-		if (match_info.event == 0) [[unlikely]] {
+		if (match_info.event == 0) {
 			logt("[GoToPrivateMatch] Event = create...");
 			CustomMatchSettings cm;
 			CustomMatchTeamSettings blue;
@@ -50,11 +50,11 @@ void SixMansPlugin::gotoPrivateMatch() {
 			logt("[GoToPrivateMatch] Creating with name: " + cm.ServerName + ", pass: " + cm.Password + ", region: " + std::to_string((int)match_info.region));
 			mw.CreatePrivateMatch(match_info.region, cm);
 		}
-		else if (match_info.event == 1) [[likely]] {
+		else if (match_info.event == 1) {
 			logt("[GoToPrivateMatch] Event = join...");
-			const std::string thisname = cvarManager->getCvar("6mServerName").getStringValue();
-			const std::string thispass = cvarManager->getCvar("6mServerPass").getStringValue();
-			logt("[GoToPrivateMatch] Joining with name: " + thisname + "and pass: " + thispass);
+			const std::string& thisname = match_info.name/*cvarManager->getCvar("6mServerName").getStringValue()*/;
+			const std::string& thispass = /*"blah"*/match_info.pass/*cvarManager->getCvar("6mServerPass").getStringValue()*/;
+			logt("[GoToPrivateMatch] Joining with name: " + match_info.name + " and pass: " + match_info.pass);
 			mw.JoinPrivateMatch(thisname,thispass);
 		}
 		else [[unlikely]] logt("[GoToPrivateMatch] Invalid event code!");
@@ -62,7 +62,7 @@ void SixMansPlugin::gotoPrivateMatch() {
 	}
 	else logt("[GoToPrivateMatch] Player not ready, is in game or mm is null!");
 
-	if (is_enabled_autoretry) [[likely]] { //need to handle autoretry enabled but autojoin disabled, need to store if we've tried or not before starting
+	if (is_enabled_autoretry) { //need to handle autoretry enabled but autojoin disabled, need to store if we've tried or not before starting
 		logt("[Autoretry] Calling autoretry routine...");
 		autoRetry();	
 	}
@@ -77,7 +77,7 @@ void SixMansPlugin::autoRetry() {
 	initCountdown();
 	gameWrapper->SetTimeout([this](GameWrapper* gw) { //added fp/ct checks
 		if ((in_game || can_manually_back_out) && !gameWrapper->IsInFreeplay() && !gameWrapper->IsInCustomTraining()) [[unlikely]] { countdown = false; logt("[Autoretry] In game or player backed out, unwinding recursion..."); return; } //need to reset these vars after
-		else [[likely]] { 
+		else  { 
 			countdown = true;
 			
 			logt("[Autoretry] Not in game, calling again..."); gotoPrivateMatch();
