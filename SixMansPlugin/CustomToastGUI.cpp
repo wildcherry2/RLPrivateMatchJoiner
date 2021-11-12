@@ -29,7 +29,7 @@ void SixMansPlugin::Render()
 
 	ImGui::End();
 
-	ImGui::SetNextWindowSize(ImVec2{ 500,500 });
+	/*ImGui::SetNextWindowSize(ImVec2{ 500,500 });
 	if (!ImGui::Begin("test"),&isWindowOpen_) {
 		ImGui::End();
 		return;
@@ -37,7 +37,7 @@ void SixMansPlugin::Render()
 
 	ImGui::Text("test text");
 
-	ImGui::End();
+	ImGui::End();*/
 
 	if (!isWindowOpen_)
 	{

@@ -31,20 +31,38 @@
     <Filter Include="Source Files\Settings">
       <UniqueIdentifier>{172f78b4-0049-4840-a0d5-e7186e7f2525}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Routines">
+    <Filter Include="Header Files\Mod Components">
       <UniqueIdentifier>{64062147-f258-4e64-8c5a-525839cf1ebc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Routines">
+    <Filter Include="Source Files\Mod Components">
       <UniqueIdentifier>{1b4fc3b2-59ab-4971-99a3-c6e947108301}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Mod Components\Routines">
+      <UniqueIdentifier>{4d58be40-c5fc-4d2b-b702-2f9e8aef2499}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Mod Components\Routines">
+      <UniqueIdentifier>{df191104-ff36-4379-b6b0-17ae073b0e29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Mod Components\Classes/Structs">
+      <UniqueIdentifier>{8a1a5d39-61dc-4e35-a29f-628b52e57756}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Mod Components\Interface Windows">
+      <UniqueIdentifier>{ab445a17-77e6-4340-a0bb-378dd2c60477}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{8ef9538b-5f0a-47ce-8532-834a54026cc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Mod Components\Classes/Structs">
+      <UniqueIdentifier>{366ae440-01a2-4f01-8e3f-2f474d3dfe76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{06725cf5-cd1c-475b-aa58-a2485b628c15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Mod Components\Interface Windows">
+      <UniqueIdentifier>{03b7ec0a-7ba7-4e3a-8bae-6b7253c56bbb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SixMansPlugin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>imgui\implementation</Filter>
     </ClCompile>
@@ -78,24 +96,6 @@
     <ClCompile Include="imgui\imguivariouscontrols.cpp">
       <Filter>imgui\implementation</Filter>
     </ClCompile>
-    <ClCompile Include="SixMansPluginGUI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="fmt\src\format.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="fmt\src\os.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="init.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Server.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CustomToastGUI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SettingsComponent.cpp">
       <Filter>Source Files\Settings</Filter>
     </ClCompile>
@@ -118,16 +118,37 @@
       <Filter>Source Files\Settings</Filter>
     </ClCompile>
     <ClCompile Include="Autoretry.cpp">
-      <Filter>Source Files\Routines</Filter>
+      <Filter>Source Files\Mod Components\Routines</Filter>
+    </ClCompile>
+    <ClCompile Include="SixMansPlugin.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="SixMansPluginGUI.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="fmt\src\os.cc">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="fmt\src\format.cc">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomToastGUI.cpp">
+      <Filter>Source Files\Mod Components\Interface Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="init.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Source Files\Mod Components\Classes/Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="ToastBase.cpp">
+      <Filter>Source Files\Mod Components\Classes/Structs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SixMansPlugin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="imgui\imgui_rangeslider.h">
       <Filter>imgui\headers</Filter>
     </ClInclude>
@@ -167,12 +188,6 @@
     <ClInclude Include="imgui\imgui_internal.h">
       <Filter>imgui\headers</Filter>
     </ClInclude>
-    <ClInclude Include="version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Simple-Web-Server\asio_compatibility.hpp">
       <Filter>Simple-Web-Server</Filter>
     </ClInclude>
@@ -200,12 +215,6 @@
     <ClInclude Include="Simple-Web-Server\utility.hpp">
       <Filter>Simple-Web-Server</Filter>
     </ClInclude>
-    <ClInclude Include="Constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MatchStruct.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SettingsComponent.h">
       <Filter>Header Files\Settings</Filter>
     </ClInclude>
@@ -231,13 +240,31 @@
       <Filter>Header Files\Settings</Filter>
     </ClInclude>
     <ClInclude Include="Autoretry.h">
-      <Filter>Header Files\Routines</Filter>
+      <Filter>Header Files\Mod Components\Routines</Filter>
     </ClInclude>
     <ClInclude Include="Routine.h">
-      <Filter>Header Files\Routines</Filter>
+      <Filter>Header Files\Mod Components\Routines</Filter>
     </ClInclude>
-    <ClInclude Include="Toast.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Constants.h">
+      <Filter>Header Files\Mod Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MatchStruct.h">
+      <Filter>Header Files\Mod Components\Classes/Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="SixMansPlugin.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="version.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ToastBase.h">
+      <Filter>Header Files\Mod Components\Classes/Structs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
