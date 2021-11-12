@@ -13,12 +13,29 @@ void SixMansPlugin::Render()
 		ImGui::End();
 		return;
 	}
+	//if (!bind_block_enabled) {
+	//	//cvarManager->setBind("Esc","openmenu SixMansPluginInterface");
+	//
+	//	bind_block_enabled = true;
+	//}
 	if (!countdown)
 		renderActionNotif();
 	else
 	{	
 		renderCountdown();
 	}
+
+	
+
+	ImGui::End();
+
+	ImGui::SetNextWindowSize(ImVec2{ 500,500 });
+	if (!ImGui::Begin("test"),&isWindowOpen_) {
+		ImGui::End();
+		return;
+	}
+
+	ImGui::Text("test text");
 
 	ImGui::End();
 
@@ -44,9 +61,9 @@ void SixMansPlugin::renderCountdown() {
 		countdown_current = ImGui::GetTime();
 		double val = (double)time_to_wait - (countdown_current - countdown_start);
 		std::string t_string = val <= 0 ? "Retrying in 0 seconds..." : "Retrying in " + std::to_string((int)val) + " seconds...";
-		//countdown_current = ImGui::GetTime();
+		//countdown_current = ImGui::GetTime(); 
 
-		logt(std::to_string(countdown_start));
+		//logt(std::to_string(countdown_start));
 		renderText(t_string);
 	}
 
@@ -72,7 +89,7 @@ void SixMansPlugin::renderActionNotif() {
 	renderLogo();
 	ImGui::SameLine();
 	if (cvarManager->getCvar("6mEventType").getIntValue() == 1) {
-		renderHeader("Join 6Mans:\nLobby #" + name.substr(1, name.npos));
+		renderHeader("Join 6Mans:\nLobby #" + match_info.name.substr(1, match_info.name.npos));
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
 		renderText("The match info is loaded in the game!\nPress the button below to join:");
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
@@ -82,7 +99,7 @@ void SixMansPlugin::renderActionNotif() {
 		renderNote("NOTE: For options, press F2->Plugins->6Mans Plugin Settings");
 	}
 	else {
-		renderHeader("Create 6Mans:\nLobby #" + name.substr(1, name.npos));
+		renderHeader("Create 6Mans:\nLobby #" + match_info.name.substr(1, match_info.name.npos));
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
 		renderText("The match info is loaded in the game!\nPress the button below to create:");
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
@@ -177,5 +194,11 @@ void SixMansPlugin::OnOpen()
 void SixMansPlugin::OnClose()
 {
 	//add reset everything, close button
+	/*if (bind_block_enabled) {
+		cvarManager->removeBind("Escape");
+		bind_block_enabled = false;
+	}*/
 	isWindowOpen_ = false;
+	//gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("openmenu " + GetMenuName()); });
+	//cvarManager->executeCommand("openmenu SixMansPluginInterface");
 }

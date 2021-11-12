@@ -16,87 +16,33 @@ void SixMansPlugin::RenderSettings() {
 	renderAutotabEnabled();
 	renderAutojoinEnabled();
 	renderAutoretryEnabled();
+	renderTimeRetry(); //del this
 }
 
 void SixMansPlugin::renderModEnabledCheckbox() { 
-	CVarWrapper cv = cvarManager->getCvar("6mModEnabled");
-	if (!cv) return;
-	bool enabled = cv.getBoolValue();
-
-	if (ImGui::Checkbox("Enabled", &enabled)) cv.setValue(enabled);
-
-
-
-	ImGui::SameLine();
-	ImGui::TextDisabled("(?)");
-	if (ImGui::IsItemHovered())
-	{
-		ImGui::BeginTooltip();
-		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-		ImGui::TextUnformatted("Enable or disable the plugin");
-		ImGui::PopTextWrapPos();
-		ImGui::EndTooltip();
-	}
+	Settings::ModEnabled me = Settings::ModEnabled(*cvarManager);
+	me.Render();
 }
 void SixMansPlugin::renderAutotabEnabled() { 
-	CVarWrapper cv = cvarManager->getCvar("6mAutotabInToggle");
-	if (!cv) return;
-	bool enabled = cv.getBoolValue();
-	
-	if (ImGui::Checkbox("Autotab", &enabled)) cv.setValue(enabled);
-	ImGui::SameLine();
-	ImGui::TextDisabled("(?)");
-	if (ImGui::IsItemHovered())
-	{
-		ImGui::BeginTooltip();
-		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-		ImGui::TextUnformatted("Enable or disable automatically tabbing in after clicking a match link");
-		ImGui::PopTextWrapPos();
-		ImGui::EndTooltip();
-	}
+	Settings::Autotab at = Settings::Autotab(*cvarManager);
+	at.Render();
 }
 
 void SixMansPlugin::renderAutojoinEnabled() {
-	CVarWrapper cv = cvarManager->getCvar("6mAutojoinToggle");
-	if (!cv) return;
-	bool enabled = cv.getBoolValue();
-
-	if (ImGui::Checkbox("Autojoin", &enabled)) cv.setValue(enabled);
-	ImGui::SameLine();
-	ImGui::TextDisabled("(?)");
-	if (ImGui::IsItemHovered())
-	{
-		ImGui::BeginTooltip();
-		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-		ImGui::TextUnformatted("Enable or disable automatically joining once match info is loaded");
-		ImGui::PopTextWrapPos();
-		ImGui::EndTooltip();
-	}
+	Settings::Autojoin aj = Settings::Autojoin(*cvarManager);
+	aj.Render();
 }
 
 void SixMansPlugin::renderAutoretryEnabled() { 
-	CVarWrapper cv = cvarManager->getCvar("6mAutoRetryToggle");
-	if (!cv) return;
-	bool enabled = cv.getBoolValue();
-
-	if (ImGui::Checkbox("Autoretry", &enabled)) { 
-		cv.setValue(enabled);
-		
-	}
-	ImGui::SameLine();
-	ImGui::TextDisabled("(?)");
-	if (ImGui::IsItemHovered())
-	{
-		ImGui::BeginTooltip();
-		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-		ImGui::TextUnformatted("Enable or disable automatically retrying to join/create a match after the first attempt");
-		ImGui::PopTextWrapPos();
-		ImGui::EndTooltip();
-	}
-	if(enabled) renderTimeRetry();
+	Settings::Autoretry ar = Settings::Autoretry(*cvarManager);
+	ar.Render();
+	//if(enabled) renderTimeRetry();
 }
 void SixMansPlugin::renderTimeRetry() {
-	CVarWrapper cv = cvarManager->getCvar("6mTimeBeforeRetrying");
+	//if(ar.enabled) { rest of shit here }
+	Settings::Timeretry tr = Settings::Timeretry(*cvarManager);
+	tr.Render();
+	/*CVarWrapper cv = cvarManager->getCvar("6mTimeBeforeRetrying");
 	if (!cv) return;
 	int val = cv.getIntValue();
 
@@ -110,13 +56,13 @@ void SixMansPlugin::renderTimeRetry() {
 		ImGui::TextUnformatted("The time to wait before autoretry attempts to join the match");
 		ImGui::PopTextWrapPos();
 		ImGui::EndTooltip();
-	}
+	}*/
 }
 void SixMansPlugin::renderMapCombobox(std::string name) {
 	CVarWrapper cv = cvarManager->getCvar("6mMapNameSelection");
 	if (!cv) return;
 	int current = cv.getIntValue();
-	if (ImGui::Combo(name.c_str(), &current, MAP_NORMALNAMES, IM_ARRAYSIZE(MAP_NORMALNAMES))) { cv.setValue(current); }
+	if (ImGui::Combo(name.c_str(), &current, Constants::MAP_NORMALNAMES, IM_ARRAYSIZE(Constants::MAP_NORMALNAMES))) { cv.setValue(current); }
 	ImGui::SameLine();
 	ImGui::TextDisabled("(?)");
 	if (ImGui::IsItemHovered())

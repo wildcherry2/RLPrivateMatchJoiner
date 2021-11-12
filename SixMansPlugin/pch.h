@@ -25,10 +25,16 @@
 
 #include "nlohmann/json.hpp"
 
+//std::ofstream logstr;
+
 extern std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
 template<typename S, typename... Args>
 void log(const S& format_str, Args&&... args)
 {
 	_globalCvarManager->log(fmt::format(format_str, args...));
+	/*ls.open(gameWrapper->GetDataFolder().string() + "\\6m\\6m.log", std::ios::app);
+	ls << text << std::endl;
+	ls.close();
+	cvarManager->log(text);*/
 }

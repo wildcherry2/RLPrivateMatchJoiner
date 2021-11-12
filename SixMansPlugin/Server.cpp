@@ -34,9 +34,11 @@ void SixMansPlugin::startServer() {
 			response->write(SimpleWeb::StatusCode::success_accepted, "alright");
 			response->send();
 
-			gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("openmenu SixMansPluginInterface");});
+			//move openinterface above branches
+			//gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("6mReady"); /*cvarManager->executeCommand("openmenu SixMansPluginInterface");*/});
 			if(is_autotab_enabled) MoveGameToFront();
 			if (is_autojoin_enabled) gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("openmenu SixMansPluginInterface"); cvarManager->executeCommand("6mReady"); });
+			else gameWrapper->Execute([this](GameWrapper* gw) {cvarManager->executeCommand("openmenu SixMansPluginInterface");});
 		};
 
 		//URL syntax: localhost:[port]/halt
@@ -54,6 +56,11 @@ void SixMansPlugin::startServer() {
 			server.stop();
 		};
 
+		//URL syntax: localhost:[port]/status?name0=name?action0=join?name1=name?action1=leave...
+		//(EXPERIMENTAL) communicates with BetterDiscord plugin to give status updates from mined bot messages
+		server.resource["^/status$"]["GET"] = [this](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response, std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request) {
+
+		};
 		server.start();
 		//this->cvarManager->logt("[Server] Thread closing!");
 		this->logt("[Server] Thread closing!");

@@ -25,6 +25,18 @@
     <Filter Include="Simple-Web-Server">
       <UniqueIdentifier>{f73e501b-0bf8-4eb7-8bca-dbb29173a33a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Settings">
+      <UniqueIdentifier>{413fd87f-c352-4b57-a071-879a25d9edb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Settings">
+      <UniqueIdentifier>{172f78b4-0049-4840-a0d5-e7186e7f2525}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Routines">
+      <UniqueIdentifier>{64062147-f258-4e64-8c5a-525839cf1ebc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Routines">
+      <UniqueIdentifier>{1b4fc3b2-59ab-4971-99a3-c6e947108301}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SixMansPlugin.cpp">
@@ -84,8 +96,29 @@
     <ClCompile Include="CustomToastGUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SettingsComponent.cpp">
+      <Filter>Source Files\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="_Autotab.cpp">
+      <Filter>Source Files\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="_ModEnabled.cpp">
+      <Filter>Source Files\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="_Autojoin.cpp">
+      <Filter>Source Files\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="_Autoretry.cpp">
+      <Filter>Source Files\Settings</Filter>
+    </ClCompile>
     <ClCompile Include="CFG.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="_Timeretry.cpp">
+      <Filter>Source Files\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="Autoretry.cpp">
+      <Filter>Source Files\Routines</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +199,45 @@
     </ClInclude>
     <ClInclude Include="Simple-Web-Server\utility.hpp">
       <Filter>Simple-Web-Server</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MatchStruct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsComponent.h">
+      <Filter>Header Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="_Autotab.h">
+      <Filter>Header Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsIncludes.h">
+      <Filter>Header Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="_ModEnabled.h">
+      <Filter>Header Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="_Autojoin.h">
+      <Filter>Header Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="_Autoretry.h">
+      <Filter>Header Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="CFG.h">
+      <Filter>Header Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="_Timeretry.h">
+      <Filter>Header Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Autoretry.h">
+      <Filter>Header Files\Routines</Filter>
+    </ClInclude>
+    <ClInclude Include="Routine.h">
+      <Filter>Header Files\Routines</Filter>
+    </ClInclude>
+    <ClInclude Include="Toast.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
