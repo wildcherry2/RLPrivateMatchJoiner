@@ -56,6 +56,11 @@ void SixMansPlugin::startServer() {
 			server.stop();
 		};
 
+		//URL syntax: localhost:[port]/status?name0=name?action0=join?name1=name?action1=leave...
+		//(EXPERIMENTAL) communicates with BetterDiscord plugin to give status updates from mined bot messages
+		server.resource["^/status$"]["GET"] = [this](std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Response> response, std::shared_ptr<SimpleWeb::Server<SimpleWeb::HTTP>::Request> request) {
+
+		};
 		server.start();
 		//this->cvarManager->logt("[Server] Thread closing!");
 		this->logt("[Server] Thread closing!");

@@ -3,11 +3,11 @@
 using namespace std;
 struct Match {
 	Match() {
-		name = "";
-		pass = "";
+		name = "nullname";
+		pass = "nullpass";
 		this->event = 1;
 		gametags = "BotsNone";
-		selected_map = "";
+		selected_map = "Park_P";
 		region = Region::USE;
 	};
 	string name;

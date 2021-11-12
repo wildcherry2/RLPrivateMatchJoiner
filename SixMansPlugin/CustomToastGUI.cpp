@@ -25,6 +25,18 @@ void SixMansPlugin::Render()
 		renderCountdown();
 	}
 
+	
+
+	ImGui::End();
+
+	ImGui::SetNextWindowSize(ImVec2{ 500,500 });
+	if (!ImGui::Begin("test"),&isWindowOpen_) {
+		ImGui::End();
+		return;
+	}
+
+	ImGui::Text("test text");
+
 	ImGui::End();
 
 	if (!isWindowOpen_)
