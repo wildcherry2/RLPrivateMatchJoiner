@@ -145,7 +145,7 @@
       <Filter>Source Files\Mod Components\Classes/Structs</Filter>
     </ClCompile>
     <ClCompile Include="ToastBase.cpp">
-      <Filter>Source Files\Mod Components\Classes/Structs</Filter>
+      <Filter>Source Files\Mod Components\Interface Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -264,7 +264,7 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="ToastBase.h">
-      <Filter>Header Files\Mod Components\Classes/Structs</Filter>
+      <Filter>Header Files\Mod Components\Interface Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

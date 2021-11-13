@@ -27,7 +27,7 @@ void SixMansPlugin::init() {
 			else cvarManager->executeCommand("6mDisableMod");
 			});
 
-		initNotifVars();
+		//initNotifVars();
 		mod_switch = true;
 	}
 	logt("[Init] Registering hooks...");
@@ -218,45 +218,45 @@ void SixMansPlugin::initAutojoinCvars() {
 		gpm_called = cw.getBoolValue();
 		});
 	cvarManager->registerCvar("6mCount", "0", "", true, true, 0, true, 1, false).addOnValueChanged([this](std::string old, CVarWrapper cw) {
-		countdown = cw.getBoolValue();
+		//countdown = cw.getBoolValue();
 		});
 }
 
-//inits logo, fonts, helper vars for interface
-void SixMansPlugin::initNotifVars() {
-	logo = std::make_shared<ImageWrapper>(gameWrapper->GetDataFolder() / "sixmanlogo.png", false, true);
-	setRes(xres, yres);
-
-	action_notif_width = res_ratio_w * xres;
-	action_notif_height = res_ratio_h * yres;
-	action_notif_x = res_ratio_x * xres;
-	action_notif_y = res_ratio_y * yres;
-
-	ImGuiIO& io = ImGui::GetIO();
-	ImFontConfig config;
-	config.OversampleH = 2;
-	config.OversampleV = 2;
-
-	std::string font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Regular.ttf";
-	roboto_reg = io.Fonts->AddFontFromFileTTF(font_path.c_str(), (14.0f/1080.0f)*yres, &config);
-
-	font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Bold.ttf";
-	roboto_bold = io.Fonts->AddFontFromFileTTF(font_path.c_str(), (23.0f/1080.0f)*yres, &config);
-
-	font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Black.ttf";
-	roboto_black = io.Fonts->AddFontFromFileTTF(font_path.c_str(), (40.0f/1080.0f)*yres, &config);
-
-	io.Fonts->Build();
-
-	
-}
-
-void SixMansPlugin::setRes(size_t& x, size_t& y) {
-	std::string res_str = gameWrapper->GetSettings().GetVideoSettings().Resolution;
-	size_t pos = res_str.find("x");
-	x = std::stoi(res_str.substr(0, pos));
-	y = std::stoi(res_str.substr(pos + 1, res_str.length() - pos + 1));
-}
+////inits logo, fonts, helper vars for interface
+//void SixMansPlugin::initNotifVars() {
+//	logo = std::make_shared<ImageWrapper>(gameWrapper->GetDataFolder() / "sixmanlogo.png", false, true);
+//	setRes(xres, yres);
+//
+//	action_notif_width = res_ratio_w * xres;
+//	action_notif_height = res_ratio_h * yres;
+//	action_notif_x = res_ratio_x * xres;
+//	action_notif_y = res_ratio_y * yres;
+//
+//	ImGuiIO& io = ImGui::GetIO();
+//	ImFontConfig config;
+//	config.OversampleH = 2;
+//	config.OversampleV = 2;
+//
+//	std::string font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Regular.ttf";
+//	roboto_reg = io.Fonts->AddFontFromFileTTF(font_path.c_str(), (14.0f/1080.0f)*yres, &config);
+//
+//	font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Bold.ttf";
+//	roboto_bold = io.Fonts->AddFontFromFileTTF(font_path.c_str(), (23.0f/1080.0f)*yres, &config);
+//
+//	font_path = gameWrapper->GetDataFolder().string() + "\\Roboto-Black.ttf";
+//	roboto_black = io.Fonts->AddFontFromFileTTF(font_path.c_str(), (40.0f/1080.0f)*yres, &config);
+//
+//	io.Fonts->Build();
+//
+//	
+//}
+//
+//void SixMansPlugin::setRes(size_t& x, size_t& y) {
+//	std::string res_str = gameWrapper->GetSettings().GetVideoSettings().Resolution;
+//	size_t pos = res_str.find("x");
+//	x = std::stoi(res_str.substr(0, pos));
+//	y = std::stoi(res_str.substr(pos + 1, res_str.length() - pos + 1));
+//}
 
 void SixMansPlugin::initHooks() {
 	gameWrapper->HookEventPost("Function ProjectX.OnlineGameJoinGame_X.EventJoinGameComplete", [this](std::string eventName) { //still gets called on black screen, try rewards function

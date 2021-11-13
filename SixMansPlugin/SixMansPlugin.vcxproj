@@ -55,7 +55,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)plugins\</OutDir>
     <IntDir>$(SolutionDir)build\.intermediates\$(Configuration)\</IntDir>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(WindowsSDK_IncludePath);$(IncludePath)</IncludePath>
     <CustomBuildAfterTargets>FinalizeBuildStatus</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">

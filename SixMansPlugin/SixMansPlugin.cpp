@@ -68,17 +68,17 @@ void SixMansPlugin::gotoPrivateMatch() {
 	}
 	else {
 		logt("[GoToPrivateMatch] Autoretry not enabled, showing retry toast if unsucessful...");
-		countdown = true;
+		//countdown = true;
 	}
 
 }
 
 void SixMansPlugin::autoRetry() {
-	initCountdown();
+	//initCountdown();
 	gameWrapper->SetTimeout([this](GameWrapper* gw) { //added fp/ct checks
-		if ((in_game || can_manually_back_out) && !gameWrapper->IsInFreeplay() && !gameWrapper->IsInCustomTraining()) [[unlikely]] { countdown = false; logt("[Autoretry] In game or player backed out, unwinding recursion..."); return; } //need to reset these vars after
+		if ((in_game || can_manually_back_out) && !gameWrapper->IsInFreeplay() && !gameWrapper->IsInCustomTraining()) [[unlikely]] { /*countdown = false;*/ logt("[Autoretry] In game or player backed out, unwinding recursion..."); return; } //need to reset these vars after
 		else  { 
-			countdown = true;
+			//countdown = true;
 			
 			logt("[Autoretry] Not in game, calling again..."); gotoPrivateMatch();
 		} //CHANGED THIS 10/24 NEEDS BUILDING AND TESTING

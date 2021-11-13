@@ -17,7 +17,7 @@
 #include "CFG.h"
 #include "MatchStruct.h"
 #include "SettingsIncludes.h"
-//#include "ToastBase.h"
+#include "ToastBase.h"
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
 class SixMansPlugin: public BakkesMod::Plugin::BakkesModPlugin, public BakkesMod::Plugin::PluginSettingsWindow, public BakkesMod::Plugin::PluginWindow
@@ -89,34 +89,34 @@ public:
 	//interface	
 	bool isWindowOpen_ = false;
 	bool isMinimized_ = false;
-	bool notif_enabled = true;
-	bool countdown = false;
-	bool block_enabled = false;
+	//bool notif_enabled = true;
+	//bool countdown = false;
+	//bool block_enabled = false;
 	std::string menuTitle_ = "sixmansplugininterface";
-	size_t xres;
-	size_t yres;
-	double countdown_start = 20;
-	double countdown_current;
-	float res_ratio_x = 1550 / 1920.0; //multiply these by res to get scaled toast
-	float res_ratio_y = 20 / 1080.0;
-	float res_ratio_w = 350 / 1920.0;
-	float res_ratio_h = 400 / 1080.0;
-	float action_notif_width, action_notif_height, action_notif_x, action_notif_y;
-	std::shared_ptr<ImageWrapper> logo;
-	ImFont* roboto_reg;
-	ImFont* roboto_black;
-	ImFont* roboto_bold;
-	void setRes(size_t& x, size_t& y);
-	void initNotifVars();
-	void renderBlankNotif();
-	void renderLogo();
-	void renderHeader(std::string header);
-	void renderText(std::string text);
-	void renderButton(std::string text);
-	void renderNote(std::string text);
-	void renderCountdown();
-	void initCountdown();
-	void renderActionNotif();
+	//size_t xres;
+	//size_t yres;
+	//double countdown_start = 20;
+	//double countdown_current;
+	//float res_ratio_x = 1550 / 1920.0; //multiply these by res to get scaled toast
+	//float res_ratio_y = 20 / 1080.0;
+	//float res_ratio_w = 350 / 1920.0;
+	//float res_ratio_h = 400 / 1080.0;
+	//float action_notif_width, action_notif_height, action_notif_x, action_notif_y;
+	//std::shared_ptr<ImageWrapper> logo;
+	//ImFont* roboto_reg;
+	//ImFont* roboto_black;
+	//ImFont* roboto_bold;
+	//void setRes(size_t& x, size_t& y);
+	//void initNotifVars();
+	//void renderBlankNotif();
+	//void renderLogo();
+	//void renderHeader(std::string header);
+	//void renderText(std::string text);
+	//void renderButton(std::string text);
+	//void renderNote(std::string text);
+	//void renderCountdown();
+	//void initCountdown();
+	//void renderActionNotif();
 	virtual void Render() override;
 	virtual std::string GetMenuName() override;
 	virtual std::string GetMenuTitle() override;
