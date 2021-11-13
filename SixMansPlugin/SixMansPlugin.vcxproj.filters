@@ -147,6 +147,9 @@
     <ClCompile Include="ToastBase.cpp">
       <Filter>Source Files\Mod Components\Interface Windows</Filter>
     </ClCompile>
+    <ClCompile Include="tw.cpp">
+      <Filter>Source Files\Mod Components\Interface Windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imgui_rangeslider.h">
@@ -264,6 +267,9 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="ToastBase.h">
+      <Filter>Header Files\Mod Components\Interface Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="tw.h">
       <Filter>Header Files\Mod Components\Interface Windows</Filter>
     </ClInclude>
   </ItemGroup>

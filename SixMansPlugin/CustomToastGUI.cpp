@@ -5,39 +5,40 @@
 // Do ImGui rendering here
 void SixMansPlugin::Render()
 {
+	test.Render(*gameWrapper, *cvarManager);
 	//if (!notif_enabled) return;
-	int flags = ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoResize + ImGuiWindowFlags_NoScrollbar + ImGuiWindowFlags_NoTitleBar;
-	if (!ImGui::Begin(menuTitle_.c_str(), &isWindowOpen_, flags))
-	{
-		// Early out if the window is collapsed, as an optimization.
-		ImGui::End();
-		return;
-	}
-	//if (!bind_block_enabled) {
-	//	//cvarManager->setBind("Esc","openmenu SixMansPluginInterface");
-	//
-	//	bind_block_enabled = true;
+	//int flags = ImGuiWindowFlags_NoCollapse + ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoResize + ImGuiWindowFlags_NoScrollbar + ImGuiWindowFlags_NoTitleBar;
+	//if (!ImGui::Begin(menuTitle_.c_str(), &isWindowOpen_, flags))
+	//{
+	//	// Early out if the window is collapsed, as an optimization.
+	//	ImGui::End();
+	//	return;
 	//}
-	/*if (!countdown)
-		renderActionNotif();
-	else
-	{	
-		renderCountdown();
-	}*/
+	////if (!bind_block_enabled) {
+	////	//cvarManager->setBind("Esc","openmenu SixMansPluginInterface");
+	////
+	////	bind_block_enabled = true;
+	////}
+	///*if (!countdown)
+	//	renderActionNotif();
+	//else
+	//{	
+	//	renderCountdown();
+	//}*/
 
-	
+	//
 
-	ImGui::End();
+	//ImGui::End();
 
-	/*ImGui::SetNextWindowSize(ImVec2{ 500,500 });
-	if (!ImGui::Begin("test"),&isWindowOpen_) {
-		ImGui::End();
-		return;
-	}
+	///*ImGui::SetNextWindowSize(ImVec2{ 500,500 });
+	//if (!ImGui::Begin("test"),&isWindowOpen_) {
+	//	ImGui::End();
+	//	return;
+	//}
 
-	ImGui::Text("test text");
+	//ImGui::Text("test text");
 
-	ImGui::End();*/
+	//ImGui::End();*/
 
 	if (!isWindowOpen_)
 	{

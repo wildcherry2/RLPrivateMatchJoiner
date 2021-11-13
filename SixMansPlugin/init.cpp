@@ -50,6 +50,9 @@ void SixMansPlugin::init() {
 
 	logt("[Init] Registering cfg cvars...");
 	cfg.initCFG(*cvarManager);
+
+	tb = ToastUtils(*gameWrapper);
+	test = tw(tb);
 }
 
 void SixMansPlugin::initMatchCvars() {
