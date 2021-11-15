@@ -1,40 +1,23 @@
-#pragma once
 #include "pch.h"
-#include <chrono>
-#include <thread>
-#include <string>
-#include <vector>
-
-using namespace std;
-
-struct Timer_Instance;
+#include <time.h>
 
 class Timer {
 	public:
-		size_t pushNewInstance(double& shared_var,int time_to_run);
-		Timer_Instance* getInstance(int id);
-		void deleteInstance(int id);
-		void clearVector();
-		void begin();
-		void destroy();
-
+	Timer() {};
+	void start() { if (!block) { init = clock(); cock = init; } };
+	float getTime() {
+		if (current_time > 0) { 
+			cock = clock(); 
+			return current_time = (((float)cock) / CLOCKS_PER_SEC) - (((float)init) / CLOCKS_PER_SEC); 
+		} 
+		return 0; 
+	};
+	//void stop();
+	//void restart();
+	bool block = false;
+	float current_time = 0;
 	private:
-		thread time_th;
-		vector<Timer_Instance> timers;
-		bool timer_running = true;
+	clock_t cock,init;
+	
+	
 };
-
-struct Timer_Instance {
-	Timer_Instance(int id,double& shared_var, int time_to_run);
-	void start();
-	void tock();
-
-	double* shared_var;
-	double start_time;
-	int time_to_run = -1;
-	int tick = 1;
-	string err = "";
-	bool done = false, has_started = false;
-	int id = -1;
-};
-

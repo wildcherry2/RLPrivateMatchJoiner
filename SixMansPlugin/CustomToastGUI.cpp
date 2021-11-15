@@ -58,9 +58,16 @@ void SixMansPlugin::renderCountdown() {
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
 		ImGui::NewLine();
 
-		countdown_current = ImGui::GetTime();
-		double val = (double)time_to_wait - (countdown_current - countdown_start);
-		std::string t_string = val <= 0 ? "Retrying in 0 seconds..." : "Retrying in " + std::to_string((int)val) + " seconds...";
+		if (!timer_is_started) { timer_is_started = true; time.start(); }
+		//countdown_current = ImGui::GetTime();
+		double val = (float)time_to_wait - time.getTime();
+		std::string t_string /*= val <= 0 ? "Retrying in 0 seconds..." : "Retrying in " + std::to_string((int)val) + " seconds..."*/;
+		if (val <= 0) {
+			t_string = "Retrying in 0 seconds";
+			timer_is_started = false;
+			time.block = true;
+		}
+		else t_string = "Retrying in " + std::to_string((int)val) + " seconds...";
 		//countdown_current = ImGui::GetTime(); 
 
 		//logt(std::to_string(countdown_start));
@@ -82,6 +89,10 @@ void SixMansPlugin::renderCountdown() {
 void SixMansPlugin::initCountdown() {
 	countdown_start = ImGui::GetTime(); //THIS IS NOT BEING SET, START ALWAYS IS 0
 	countdown_current = countdown_start;
+	time.block = false;
+	//time.ttw = cvarManager->getCvar("6mTimeBeforeRetrying").getFloatValue();
+	time.current_time = cvarManager->getCvar("6mTimeBeforeRetrying").getFloatValue();
+	timer_is_started = false;
 }
 
 void SixMansPlugin::renderActionNotif() {

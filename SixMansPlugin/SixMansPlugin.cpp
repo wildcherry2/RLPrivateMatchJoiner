@@ -52,8 +52,8 @@ void SixMansPlugin::gotoPrivateMatch() {
 		}
 		else if (match_info.event == 1) {
 			logt("[GoToPrivateMatch] Event = join...");
-			const std::string& thisname = match_info.name/*cvarManager->getCvar("6mServerName").getStringValue()*/;
-			const std::string& thispass = /*"blah"*/match_info.pass/*cvarManager->getCvar("6mServerPass").getStringValue()*/;
+			const std::string thisname = std::string(match_info.name);//match_info.name/*cvarManager->getCvar("6mServerName").getStringValue()*/;
+			const std::string thispass = std::string(match_info.pass);// "blah";///*"blah"*/match_info.pass/*cvarManager->getCvar("6mServerPass").getStringValue()*/;
 			logt("[GoToPrivateMatch] Joining with name: " + match_info.name + " and pass: " + match_info.pass);
 			mw.JoinPrivateMatch(thisname,thispass);
 		}
@@ -82,6 +82,7 @@ void SixMansPlugin::autoRetry() {
 			
 			logt("[Autoretry] Not in game, calling again...");
 			gameWrapper->Execute([this](GameWrapper* gw) {
+				//cvarManager->executeCommand("6mReady");
 				gotoPrivateMatch();
 				});
 			

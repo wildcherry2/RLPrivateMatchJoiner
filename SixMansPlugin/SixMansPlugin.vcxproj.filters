@@ -144,9 +144,6 @@
     <ClCompile Include="Server.cpp">
       <Filter>Source Files\Mod Components\Classes/Structs</Filter>
     </ClCompile>
-    <ClCompile Include="ToastBase.cpp">
-      <Filter>Source Files\Mod Components\Classes/Structs</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imgui_rangeslider.h">
@@ -263,8 +260,8 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="ToastBase.h">
-      <Filter>Header Files\Mod Components\Classes/Structs</Filter>
+    <ClInclude Include="Timer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
