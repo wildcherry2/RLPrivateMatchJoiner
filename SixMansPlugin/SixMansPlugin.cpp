@@ -80,7 +80,11 @@ void SixMansPlugin::autoRetry() {
 		else  { 
 			countdown = true;
 			
-			logt("[Autoretry] Not in game, calling again..."); gotoPrivateMatch();
+			logt("[Autoretry] Not in game, calling again...");
+			gameWrapper->Execute([this](GameWrapper* gw) {
+				gotoPrivateMatch();
+				});
+			
 		} //CHANGED THIS 10/24 NEEDS BUILDING AND TESTING
 
 		}, cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue());

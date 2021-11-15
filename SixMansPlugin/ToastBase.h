@@ -38,6 +38,15 @@ namespace ToastBase {
 		//static constexpr ImFont* roboto_bold;
 
 
+	struct ToastUtils {
+		ToastUtils() {};
+		ToastUtils(GameWrapper& gw);
+		//void init(GameWrapper& gw);
+		static void RenderBlankNotif(float& xres, float& yres, float& res_ratio_x, float& res_ratio_y, float& res_ratio_w);
+		static void RenderLogo(ImageWrapper& logo, float& xres);
+		static void RenderHeader(string text, ImFont* roboto_black);
+		static void RenderText(string text, ImFont* roboto_bold);
+		static void RenderNote(string text, ImFont* roboto_reg);
 
 	};
 }
