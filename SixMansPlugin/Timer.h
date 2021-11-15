@@ -4,18 +4,17 @@
 class Timer {
 	public:
 	Timer() {};
-	void start() { if (!block) { init = clock(); cock = init; } };
+	void start() { init = clock(); cock = init; current = time_to_count; };
 	float getTime() {
-		if (current_time > 0) { 
+		if (current > 0) { 
 			cock = clock(); 
-			return current_time = (((float)cock) / CLOCKS_PER_SEC) - (((float)init) / CLOCKS_PER_SEC); 
+			current = time_to_count - (((float)cock - (float)init)/CLOCKS_PER_SEC);
+			return current; 
 		} 
 		return 0; 
 	};
-	//void stop();
-	//void restart();
-	bool block = false;
-	float current_time = 0;
+	float time_to_count = 0;
+	float current = 0;
 	private:
 	clock_t cock,init;
 	

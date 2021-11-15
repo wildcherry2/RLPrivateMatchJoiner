@@ -57,24 +57,11 @@ void SixMansPlugin::renderCountdown() {
 		renderText("Autoretry is enabled!"); //branch here if autoretry is disabled to click a button
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
 		ImGui::NewLine();
-
-		if (!timer_is_started) { timer_is_started = true; time.start(); }
-		//countdown_current = ImGui::GetTime();
-		double val = (float)time_to_wait - time.getTime();
-		std::string t_string /*= val <= 0 ? "Retrying in 0 seconds..." : "Retrying in " + std::to_string((int)val) + " seconds..."*/;
-		if (val <= 0) {
-			t_string = "Retrying in 0 seconds";
-			timer_is_started = false;
-			time.block = true;
-		}
-		else t_string = "Retrying in " + std::to_string((int)val) + " seconds...";
-		//countdown_current = ImGui::GetTime(); 
-
-		//logt(std::to_string(countdown_start));
-		renderText(t_string);
+		std::string out = "Retrying in " + std::to_string((int)time.getTime()) + " seconds";
+		renderText(out);
 	}
 
-	else {
+	else if(!is_enabled_autoretry) {
 		renderText("Try again?");
 		ImGui::Dummy(ImVec2(3.0f, 3.0f));
 		ImGui::NewLine();
@@ -87,12 +74,8 @@ void SixMansPlugin::renderCountdown() {
 }
 
 void SixMansPlugin::initCountdown() {
-	countdown_start = ImGui::GetTime(); //THIS IS NOT BEING SET, START ALWAYS IS 0
-	countdown_current = countdown_start;
-	time.block = false;
-	//time.ttw = cvarManager->getCvar("6mTimeBeforeRetrying").getFloatValue();
-	time.current_time = cvarManager->getCvar("6mTimeBeforeRetrying").getFloatValue();
-	timer_is_started = false;
+	time.time_to_count = cvarManager->getCvar("6mTimeBeforeRetrying").getIntValue();
+	time.start();
 }
 
 void SixMansPlugin::renderActionNotif() {

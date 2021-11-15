@@ -55,6 +55,7 @@ void SixMansPlugin::gotoPrivateMatch() {
 			const std::string thisname = std::string(match_info.name);//match_info.name/*cvarManager->getCvar("6mServerName").getStringValue()*/;
 			const std::string thispass = std::string(match_info.pass);// "blah";///*"blah"*/match_info.pass/*cvarManager->getCvar("6mServerPass").getStringValue()*/;
 			logt("[GoToPrivateMatch] Joining with name: " + match_info.name + " and pass: " + match_info.pass);
+			cvarManager->executeCommand("closemenu SixMansPluginInterface");
 			mw.JoinPrivateMatch(thisname,thispass);
 		}
 		else [[unlikely]] logt("[GoToPrivateMatch] Invalid event code!");
